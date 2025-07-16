@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BunnysLie_Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+af9ea8e6f28901fd1347a610dcbd3f30fe390e67")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aaff548f80e0995dfd64a24895bccc77114dea03")]
 [assembly: System.Reflection.AssemblyProductAttribute("BunnysLie_Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BunnysLie_Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
