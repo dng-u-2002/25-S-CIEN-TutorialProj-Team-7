@@ -1,0 +1,89 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|e:\\tup_client\\25-s-cien-tutorialproj-team-7\\bunnyslie\\assets\\scripts\\user2userconnection\\chatsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\user2userconnection\\chatsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\assets\\scripts\\ingameuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ingameuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\assets\\scripts\\networkclientmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\networkclientmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\assets\\scripts\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ChatSender.cs",
+              "DocumentMoniker": "E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\User2UserConnection\\ChatSender.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\User2UserConnection\\ChatSender.cs",
+              "ToolTip": "E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\User2UserConnection\\ChatSender.cs",
+              "RelativeToolTip": "Assets\\Scripts\\User2UserConnection\\ChatSender.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-16T11:47:41.908Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "InGameUser.cs",
+              "DocumentMoniker": "E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\InGameUser.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\InGameUser.cs",
+              "ToolTip": "E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\InGameUser.cs",
+              "RelativeToolTip": "Assets\\Scripts\\InGameUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-16T11:42:29.925Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NetworkClientManager.cs",
+              "DocumentMoniker": "E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\NetworkClientManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\NetworkClientManager.cs",
+              "ToolTip": "E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\NetworkClientManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\NetworkClientManager.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAADwvwcAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-16T11:41:03.292Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "User.cs",
+              "DocumentMoniker": "E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\User.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\User.cs",
+              "ToolTip": "E:\\tup_client\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\User.cs",
+              "RelativeToolTip": "Assets\\Scripts\\User.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAA7wDAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-16T11:39:40.681Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
