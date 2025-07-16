@@ -4,7 +4,15 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+
+            InGameServer server = new InGameServer();
+            server.Start(9000);
+
+            while(true)
+            {
+                server.Run_SingleTick();
+            }
+
             Console.WriteLine("Press Any Key to Exit...");
             Console.ReadLine();
         }
