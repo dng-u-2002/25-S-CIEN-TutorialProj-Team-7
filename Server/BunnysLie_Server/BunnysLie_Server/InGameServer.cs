@@ -31,28 +31,33 @@ namespace BunnysLie_Server
     {
         public List<User> Players;
         public eRoomState State = eRoomState.None;
-        public eRoomGameMode Mode = eRoomGameMode.TwoCards;
+        public eRoomGameMode Mode = eRoomGameMode.TwoCards; //2장 모드 / 3장 모드
 
-        public Dictionary<int, byte> OutCounts = new Dictionary<int, byte>();
+        public Dictionary<int, byte> OutCounts = new Dictionary<int, byte>(); //아웃카운트(남은 목숨)
+        /// <summary>
+        /// 현재 보유중인 카드. 일반 게임 / 스페셜 룰 무관하게 사용됨.
+        /// </summary>
         public Dictionary<int, List<Tuple<byte, byte>>> Cards = new Dictionary<int, List<Tuple<byte, byte>>>();
 
-        public int PlayerCounter_SuccessfullyReceivedCard = 0;
-        public int? RPSFirst;
-        public int? RPSSecond;
-        public int? RPSThird;
-        public byte NowRPSRoundCounter = 0;
-        public byte PlayerCounter_SuccessfullyReceivedOrders;
+        
+        public int PlayerCounter_SuccessfullyReceivedCard = 0; //성공적으로 카드를 받은 플레이어 수. 3명이 모두 카드를 받으면 RPS 시작
+        public int? RPSFirst; //가위바위보 1등 플레이어 ID
+        public int? RPSSecond; //가위바위보 2등 플레이어 ID
+        public int? RPSThird; //가위바위보 3등 플레이어 ID
+        public byte NowRPSRoundCounter = 0; //현재 가위바위보 라운드
+        public byte PlayerCounter_SuccessfullyReceivedOrders; // 가위바위보 순위를 성공적으로 받은 플레이어 수. 3명이 모두 받으면 In/Out 선택 시작
+
         public List<int> RPSTargetPlayers = new List<int>(); // 지금 가위바위보 중인 플레이어 ID 목록
-        public Dictionary<int, eRPS> RPSSelections = new Dictionary<int, eRPS>();
+        public Dictionary<int, eRPS> RPSSelections = new Dictionary<int, eRPS>(); // 가위바위보 선택 결과. Key: 플레이어 ID, Value: 선택한 가위바위보 모양
 
         public List<int> NowSpecialRulePlayers = new List<int>(); // 현재 스페셜 룰에 참여 중인 플레이어 ID 목록
-        public Dictionary<int, Tuple<byte, byte>> Cards2ExchangeInSpecialRule = new Dictionary<int, Tuple<byte, byte>>();
+        public Dictionary<int, Tuple<byte, byte>> Cards2ExchangeInSpecialRule = new Dictionary<int, Tuple<byte, byte>>(); // 스페셜 룰에서 교환할 카드. Key: 플레이어 ID, Value: (카드 타입, 카드 값)
         public byte PlayerCountWhoAcceptedExchangeInSpecialRule = 0; // 스페셜 룰에서 카드 교환을 수락한 플레이어 수
 
-        public int GoPlayerCountInSpecialRule = 0;
+        public int GoPlayerCountInSpecialRule = 0; // 스페셜 룰에서 Go를 선택한 플레이어 수. 2명이 되면 스페셜 룰 시작
 
-        public List<int> InPlayers = new List<int>();
-        public List<int> OutPlayers = new List<int>();
+        public List<int> InPlayers = new List<int>(); // In 플레이어 ID 목록
+        public List<int> OutPlayers = new List<int>(); // Out 플레이어 ID 목록
 
     }
     public class InGameServer : Server
