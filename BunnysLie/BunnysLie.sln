@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{459FE50E-006C-92ED-291B-A834AF4EDF48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParrelSync", "ParrelSync.csproj", "{C8E28E3B-0647-DD65-45B4-0426E4FF3161}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteNetLib", "LiteNetLib.csproj", "{49744ADC-EC88-8B72-6FFF-F418F1157765}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{B59A6459-EA3D-8ABA-43C0-20EAB130986B}"
 EndProject
@@ -21,6 +21,10 @@ Global
 		{459FE50E-006C-92ED-291B-A834AF4EDF48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{459FE50E-006C-92ED-291B-A834AF4EDF48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{459FE50E-006C-92ED-291B-A834AF4EDF48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8E28E3B-0647-DD65-45B4-0426E4FF3161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8E28E3B-0647-DD65-45B4-0426E4FF3161}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8E28E3B-0647-DD65-45B4-0426E4FF3161}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,10 +33,6 @@ Global
 		{49744ADC-EC88-8B72-6FFF-F418F1157765}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49744ADC-EC88-8B72-6FFF-F418F1157765}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49744ADC-EC88-8B72-6FFF-F418F1157765}.Release|Any CPU.Build.0 = Release|Any CPU
-		{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B59A6459-EA3D-8ABA-43C0-20EAB130986B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B59A6459-EA3D-8ABA-43C0-20EAB130986B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B59A6459-EA3D-8ABA-43C0-20EAB130986B}.Release|Any CPU.ActiveCfg = Release|Any CPU

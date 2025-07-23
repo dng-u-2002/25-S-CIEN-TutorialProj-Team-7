@@ -69,8 +69,8 @@
     <Compile Include="Assets\Plugins\LiteNetLib-1.3.1\LibSample\Program.cs" />
     <Compile Include="Assets\Plugins\LiteNetLib-1.3.1\LibSample\GithubSample.cs" />
     <Compile Include="Assets\Plugins\LiteNetLib-1.3.1\LibSample\AesEncryptionTest.cs" />
-    <Compile Include="Assets\Plugins\LiteNetLib-1.3.1\LibSample\PacketProcessorExample.cs" />
     <Compile Include="Assets\Plugins\LiteNetLib-1.3.1\LibSample\SpeedBench.cs" />
+    <Compile Include="Assets\Plugins\LiteNetLib-1.3.1\LibSample\PacketProcessorExample.cs" />
     <Compile Include="Assets\Plugins\LiteNetLib-1.3.1\LibSample\IExample.cs" />
     <Compile Include="Assets\Plugins\LiteNetLib-1.3.1\LiteNetLibSampleUnity\Assets\GameClient.cs" />
     <Compile Include="Assets\Plugins\LiteNetLib-1.3.1\LibSample\HolePunchServerTest.cs" />
