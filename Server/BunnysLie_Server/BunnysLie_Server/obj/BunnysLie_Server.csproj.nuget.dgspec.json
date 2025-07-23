@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\BunnysLie_Server.csproj": {}
+    "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\BunnysLie_Server.csproj": {}
   },
   "projects": {
-    "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\BunnysLie_Server.csproj": {
+    "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\BunnysLie_Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\BunnysLie_Server.csproj",
+        "projectUniqueName": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\BunnysLie_Server.csproj",
         "projectName": "BunnysLie_Server",
-        "projectPath": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\BunnysLie_Server.csproj",
+        "projectPath": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\BunnysLie_Server.csproj",
         "packagesPath": "C:\\Users\\문종욱\\.nuget\\packages\\",
-        "outputPath": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\obj\\",
+        "outputPath": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

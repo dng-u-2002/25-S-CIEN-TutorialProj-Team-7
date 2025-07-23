@@ -26,7 +26,14 @@ namespace BunnysLie_Server
 
         protected void SendPacket(User receiver)
         {
+            if(ConnectedUsers.TryGetValue(receiver.Id, out var userTuple) == false)
+            {
+                Console.WriteLine($"[Warning] User {receiver.Id} not found in connected users.");
+                PacketWriter.Clear();
+                return;
+            }
             PacketWriter.SendPacket(ConnectedUsers[receiver.Id].Item2);
+            PacketWriter.Clear();
         }
         public void OnConnectionRequest(ConnectionRequest request)
         {
@@ -109,10 +116,10 @@ namespace BunnysLie_Server
             //while (true)
             {
                 InternelServer.PollEvents();
+                    Update();
                 if (DateTime.UtcNow >= nextTick)
                 {
                     nextTick = DateTime.UtcNow.AddMilliseconds(1000 / TICK_RATE);
-                    Update();
                 }
                 //Thread.Sleep(1);
             }

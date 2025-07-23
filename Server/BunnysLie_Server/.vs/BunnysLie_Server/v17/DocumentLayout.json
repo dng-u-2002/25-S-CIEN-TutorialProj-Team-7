@@ -1,21 +1,21 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\",
+  "WorkspaceRootPath": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|e:\\25-s-cien-tutorialproj-team-7\\server\\bunnyslie_server\\bunnyslie_server\\ingameserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|e:\\server\\25-s-cien-tutorialproj-team-7\\server\\bunnyslie_server\\bunnyslie_server\\ingameserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|solutionrelative:bunnyslie_server\\ingameserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|e:\\25-s-cien-tutorialproj-team-7\\server\\bunnyslie_server\\bunnyslie_server\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|e:\\server\\25-s-cien-tutorialproj-team-7\\server\\bunnyslie_server\\bunnyslie_server\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|solutionrelative:bunnyslie_server\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|e:\\25-s-cien-tutorialproj-team-7\\server\\bunnyslie_server\\bunnyslie_server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|e:\\server\\25-s-cien-tutorialproj-team-7\\server\\bunnyslie_server\\bunnyslie_server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|solutionrelative:bunnyslie_server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|e:\\25-s-cien-tutorialproj-team-7\\server\\bunnyslie_server\\bunnyslie_server\\networkdatawriter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|e:\\server\\25-s-cien-tutorialproj-team-7\\server\\bunnyslie_server\\bunnyslie_server\\networkdatawriter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{48F9DC69-9524-4896-AC96-1CA630A26693}|BunnysLie_Server\\BunnysLie_Server.csproj|solutionrelative:bunnyslie_server\\networkdatawriter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -36,11 +36,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "InGameServer.cs",
-              "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\InGameServer.cs",
+              "DocumentMoniker": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\InGameServer.cs",
               "RelativeDocumentMoniker": "BunnysLie_Server\\InGameServer.cs",
-              "ToolTip": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\InGameServer.cs",
+              "ToolTip": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\InGameServer.cs",
               "RelativeToolTip": "BunnysLie_Server\\InGameServer.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAIwDIAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAP0DAAAAAAAAAAAqwNoDAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-16T11:34:35.548Z",
               "EditorCaption": ""
@@ -49,40 +49,37 @@
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "NetworkDataWriter.cs",
-              "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\NetworkDataWriter.cs",
+              "DocumentMoniker": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\NetworkDataWriter.cs",
               "RelativeDocumentMoniker": "BunnysLie_Server\\NetworkDataWriter.cs",
-              "ToolTip": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\NetworkDataWriter.cs",
+              "ToolTip": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\NetworkDataWriter.cs",
               "RelativeToolTip": "BunnysLie_Server\\NetworkDataWriter.cs",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAgwAkAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAFUAAAAAAAAAAAAhwGUAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-16T11:34:15.452Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-16T11:34:15.452Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "Server.cs",
-              "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\Server.cs",
+              "DocumentMoniker": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\Server.cs",
               "RelativeDocumentMoniker": "BunnysLie_Server\\Server.cs",
-              "ToolTip": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\Server.cs",
+              "ToolTip": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\Server.cs",
               "RelativeToolTip": "BunnysLie_Server\\Server.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAewEgAAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAIA2wBwAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-16T11:34:02.473Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-16T11:34:02.473Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "Program.cs",
-              "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\Program.cs",
+              "DocumentMoniker": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\Program.cs",
               "RelativeDocumentMoniker": "BunnysLie_Server\\Program.cs",
-              "ToolTip": "E:\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\Program.cs",
+              "ToolTip": "E:\\server\\25-S-CIEN-TutorialProj-Team-7\\Server\\BunnysLie_Server\\BunnysLie_Server\\Program.cs",
               "RelativeToolTip": "BunnysLie_Server\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-16T11:07:06.599Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-16T11:07:06.599Z"
             }
           ]
         }
