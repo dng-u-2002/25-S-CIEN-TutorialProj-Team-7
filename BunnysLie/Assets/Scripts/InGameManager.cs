@@ -667,6 +667,97 @@ public class InGameManager : MonoBehaviour
             });
         }
     }
+    internal void StartSpecialRule_ThreeCardMode(Action<Card> selectCard2Delete, int user1Id, int user2Id, List<Card> user1Cards, List<Card> user2Cards, System.Action onGo, System.Action<Card> onExchangeWithDeck, System.Action onExhangeWithOpponentButtonClicked, System.Action<Card> onExchangeWithOther)
+    {
+        if(Mode != eGameMode.ThreeCards)
+        {
+            Debug.LogError("Cannot start special rule in ThreeCard mode when the game mode is not set to ThreeCards.");
+            return;
+        }
+
+        foreach (var rp in RemotePlayerUIDrawers)
+        {
+            rp.Target.ThisDeck.RemoveAllCards();
+        }
+        LocalPlayer.ThisDeck.RemoveAllCards();
+        bool isLocalObserver = (user1Id == LocalPlayer.ID || user2Id == LocalPlayer.ID) ? false : true;
+        if (isLocalObserver == true)
+        {
+            LocalPlayerUIDrawer.SetSpecialRuleObserverMode();
+            foreach (var rp in RemotePlayerUIDrawers)
+            {
+                if (rp.Target.ID == user1Id)
+                {
+                    rp.Target.ThisDeck.AddCards(user1Cards.ToArray());
+                }
+                else if (rp.Target.ID == user2Id)
+                {
+                    rp.Target.ThisDeck.AddCards(user2Cards.ToArray());
+                }
+            }
+        }
+        else
+        {
+            foreach (var rp in RemotePlayerUIDrawers)
+            {
+                if (rp.Target.ID == user1Id)
+                {
+                    rp.SetSpecialRuleMode();
+                    rp.Target.ThisDeck.AddCards(user1Cards.ToArray());
+                }
+                else if (rp.Target.ID == user2Id)
+                {
+                    rp.SetSpecialRuleMode();
+                    rp.Target.ThisDeck.AddCards(user2Cards.ToArray());
+                }
+                else
+                {
+                    rp.SetSpecialRuleObserverMode();
+                }
+            }
+
+            LocalPlayerUIDrawer.SetSpecialRuleMode();
+            if (LocalPlayer.ID == user1Id)
+            {
+                LocalPlayer.ThisDeck.AddCards(user1Cards.ToArray());
+                foreach (var c in user1Cards)
+                    c.CardGameObject.SetFace(true);
+            }
+            else if (LocalPlayer.ID == user2Id)
+            {
+                LocalPlayer.ThisDeck.AddCards(user2Cards.ToArray());
+                foreach (var c in user2Cards)
+                    c.CardGameObject.SetFace(true);
+            }
+
+            LocalPlayerUIDrawer.SelectCard2Delete((card) =>
+            {
+                // Card selected for deletion
+                selectCard2Delete(card);
+            });
+
+            LocalPlayerUIDrawer.SetSpecialRuleEvents(() =>
+            {
+                //go
+                onGo?.Invoke();
+            },
+            (card) =>
+            {
+                //exchange with deck
+                onExchangeWithDeck?.Invoke(card);
+            },
+            () =>
+            {
+                //exchange with opponent button clicked
+                onExhangeWithOpponentButtonClicked?.Invoke();
+            },
+            (card) =>
+            {
+                //exchange with opponent
+                onExchangeWithOther?.Invoke(card);
+            });
+        }
+    }
 
     internal void StartNextRound(byte reason)
     {
@@ -710,5 +801,57 @@ public class InGameManager : MonoBehaviour
         {
             ShowRPSResult_Order_Accumulated(firstPlayerId, firstPlayerOrder, secondPlayerId, secondPlayerOrder, thirdPlayerId, thirdPlayerOrder);
         }, 1.5f);
+    }
+
+    internal void SomeoneSelectedCard2Delete(int playerId)
+    {
+        foreach(var rp in RemotePlayerUIDrawers)
+        {
+            if (rp.Target.ID == playerId)
+            {
+                rp.DeleteAnycard();
+            }
+        }
+    }
+
+    internal void ShowCards2Delete(int id1, Card c1, int id2, Card c2, int id3, Card c3)
+    {
+        if(id1 == LocalPlayer.ID)
+        {
+            LocalPlayerUIDrawer.ShowCard2Delete(c1);
+        }
+        else if (id2 == LocalPlayer.ID)
+        {
+            LocalPlayerUIDrawer.ShowCard2Delete(c2);
+        }
+        else if (id3 == LocalPlayer.ID)
+        {
+            LocalPlayerUIDrawer.ShowCard2Delete(c3);
+        }
+
+        foreach (var rp in RemotePlayerUIDrawers)
+        {
+            if (rp.Target.ID == id1)
+            {
+                rp.ShowCard2Delete(c1);
+            }
+            else if (rp.Target.ID == id2)
+            {
+                rp.ShowCard2Delete(c2);
+            }
+            else if (rp.Target.ID == id3)
+            {
+                rp.ShowCard2Delete(c3);
+            }
+        }
+    }
+
+    internal void RemoveAllCard2Delete()
+    {
+        LocalPlayerUIDrawer.RemoveCard2Delete();
+        foreach (var rp in RemotePlayerUIDrawers)
+        {
+            rp.RemoveCard2Delete();
+        }
     }
 }

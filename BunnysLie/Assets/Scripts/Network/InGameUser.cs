@@ -3,7 +3,6 @@ using LiteNetLib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using VOYAGER_Server;
@@ -24,6 +23,12 @@ public enum ePacketType_InGameServer : byte
 
     DistributeCardsFromServer,
     U2SResponse_SuccessfullyReceivedCards,
+
+
+    S2URequest_SelectCard2Delete,
+    U2SResponse_SelectCard2Delete, //유저가 삭제할 카드를 선택했을 때 서버에 전송하는 패킷
+    Broadcast_SomeoneSelectedCard2Delete, //유저가 삭제할 카드를 선택했을 때 다른 유저들에게 전송하는 패킷
+    Broadcast_ShowCards2Delete, //유저가 삭제할 카드를 선택했을 때 다른 유저들에게 전송하는 패킷(삭제할 카드 보여주기)
 
 
 
@@ -59,6 +64,10 @@ public enum ePacketType_InGameServer : byte
     Broadcast_LoserOfThisRound,
 
     Broadcast_StartSpecialRule,
+    S2URequest_SelectCard2DeleteISR,
+    U2SResponse_SelectCard2DeleteISR, //유저가 스페셜 룰에서 제거할 카드를 선택했을 때 서버에 전송하는 패킷
+    Broadcast_SomeoneSelectedCard2RemoveISR, //유저가 스페셜 룰에서 제거할 카드를 선택했을 때 다른 유저들에게 전송하는 패킷
+    Broadcast_ShowCards2DeleteISR, //유저가 스페셜 룰에서 제거할 카드를 선택했을 때 다른 유저들에게 전송하는 패킷(제거할 카드 보여주기)
     GoInSpecialRule,
     Broadcast_ShowSpecialRuleCards,
     Broadcast_LoserOfSpecialRule,
@@ -151,8 +160,48 @@ public class InGameUser : User
                 Writer.WriteInt(InGameManager.Instance.RoomID);
                 Writer.SendPacket(ServerPeer);
                 break;
+            case ePacketType_InGameServer.S2URequest_SelectCard2Delete:
+                {
+                    InGameManager.Instance.LocalPlayerUIDrawer.SelectCard2Delete((card) =>
+                    {
+                        Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SelectCard2Delete);
+                        Writer.WriteInt(Id);
+                        Writer.WriteInt(InGameManager.Instance.RoomID);
+                        Writer.WriteByte((byte)card.Type);
+                        Writer.WriteByte(card.Value);
+                        Writer.SendPacket(ServerPeer);
 
+
+                        InGameManager.Instance.LocalPlayerUIDrawer.SelectedCard2Delete(card);
+                    });
+                }
+                break;
+            case ePacketType_InGameServer.Broadcast_SomeoneSelectedCard2Delete:
+                {
+                    int playerId = reader.ReadInt();
+                    if(playerId != InGameManager.Instance.LocalPlayer.ID)
+                    {
+                        InGameManager.Instance.SomeoneSelectedCard2Delete(playerId);
+                    }
+                }
+                break;
+            case ePacketType_InGameServer.Broadcast_ShowCards2Delete:
+                {
+                    int id1 = reader.ReadInt();
+                    Card c1 = new Card((Card.CardType)reader.ReadByte(), reader.ReadByte());
+                    int id2 = reader.ReadInt();
+                    Card c2 = new Card((Card.CardType)reader.ReadByte(), reader.ReadByte());
+                    int id3 = reader.ReadInt();
+                    Card c3 = new Card((Card.CardType)reader.ReadByte(), reader.ReadByte());
+                    InGameManager.Instance.ShowCards2Delete(id1, c1, id2, c2, id3, c3);
+                }
+                break;
             case ePacketType_InGameServer.S2URequest_RPSSelection:
+                if(InGameManager.Instance.Mode == InGameManager.eGameMode.ThreeCards)
+                {
+                    InGameManager.Instance.RemoveAllCard2Delete();
+                }
+
                 void SendMyRPSSelection2Server(eRPS rps)
                 {
                     Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_RPSSelection);
@@ -245,6 +294,10 @@ public class InGameUser : User
 
             case ePacketType_InGameServer.Broadcast_RPSFinalResult:
                 {
+                    if (InGameManager.Instance.Mode == InGameManager.eGameMode.ThreeCards)
+                    {
+                        InGameManager.Instance.RemoveAllCard2Delete();
+                    }
                     int round = reader.ReadByte();
                     int firstPlayerId = reader.ReadInt();
                     int secondPlayerId = reader.ReadInt();
@@ -357,7 +410,7 @@ public class InGameUser : User
                         }
                         else if (InGameManager.Instance.Mode == InGameManager.eGameMode.ThreeCards)
                         {
-                            for (int c = 0; c < 3; c++)
+                            for (int c = 0; c < 2; c++)
                             {
                                 byte type = reader.ReadByte();
                                 byte value = reader.ReadByte();
@@ -381,6 +434,29 @@ public class InGameUser : User
                     int loserId = reader.ReadInt();
                     byte outCount = reader.ReadByte();
                     InGameManager.Instance.ShowLoserOfThisRound(loserId, outCount);
+                }
+                break;
+            case ePacketType_InGameServer.Broadcast_SomeoneSelectedCard2RemoveISR:
+                {
+                    int playerId = reader.ReadInt();
+                    if (playerId != InGameManager.Instance.LocalPlayer.ID)
+                    {
+                        InGameManager.Instance.SomeoneSelectedCard2Delete(playerId);
+                    }
+                }
+                break;
+            case ePacketType_InGameServer.Broadcast_ShowCards2DeleteISR:
+                {
+                    int id1 = reader.ReadInt();
+                    Card c1 = new Card((Card.CardType)reader.ReadByte(), reader.ReadByte());
+                    int id2 = reader.ReadInt();
+                    Card c2 = new Card((Card.CardType)reader.ReadByte(), reader.ReadByte());
+                    InGameManager.Instance.ShowCards2Delete(id1, c1, id2, c2, -1, new Card(Card.CardType.Dummy, 100));
+
+                    DelayedFunctionHelper.InvokeDelayed(() =>
+                    {
+                        InGameManager.Instance.RemoveAllCard2Delete();
+                    }, 2.0f);
                 }
                 break;
             case ePacketType_InGameServer.Broadcast_StartSpecialRule:
@@ -475,7 +551,7 @@ public class InGameUser : User
                             user2Cards.Add(new Card(Card.CardType.Dummy, 100));
                         }
                         //카드 타입-값 출력
-                        IEnumerator S()
+                        IEnumerator S2()
                         {
                             yield return new WaitForSeconds(2.0f);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
@@ -520,7 +596,69 @@ public class InGameUser : User
                                 //exchange with opponent
                             });
                         }
-                        StartCoroutine(S());
+                        IEnumerator S3()
+                        {
+                            yield return new WaitForSeconds(2.0f);
+                            InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
+                            InGameManager.Instance.StartSpecialRule_ThreeCardMode((card2Delete) =>
+                            {
+                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SelectCard2DeleteISR);
+                                Writer.WriteInt(Id);
+                                Writer.WriteInt(InGameManager.Instance.RoomID);
+                                Writer.WriteByte((byte)card2Delete.Type);
+                                Writer.WriteByte(card2Delete.Value);
+                                Writer.SendPacket(ServerPeer);
+                                InGameManager.Instance.LocalPlayerUIDrawer.SelectedCard2Delete(card2Delete);
+                            },
+                                id, opponentId, myCards, user2Cards,
+                            () =>
+                            {
+                                //go
+                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.GoInSpecialRule);
+                                Writer.WriteInt(Id);
+                                Writer.WriteInt(InGameManager.Instance.RoomID);
+                                Writer.SendPacket(ServerPeer);
+                            },
+                            (card) =>
+                            {
+                                //exchange with deck
+                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithDeckInSpecialRule);
+                                Writer.WriteInt(Id);
+                                Writer.WriteInt(InGameManager.Instance.RoomID);
+                                Writer.WriteByte((byte)card.Type);
+                                Writer.WriteByte(card.Value);
+                                Writer.SendPacket(ServerPeer);
+
+                                InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(card);
+                                //InGameManager.Instance.LocalPlayerUIDrawer.Card2Exchange = null;
+                            },
+                            () =>
+                            {
+                                //교환 버튼을 누름
+                                //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+                                //Writer.WriteInt(Id);
+                                //Writer.WriteInt(InGameManager.Instance.RoomID);
+                                //Writer.SendPacket(ServerPeer);
+                            },
+                            (card) =>
+                            {
+                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+                                Writer.WriteInt(Id);
+                                Writer.WriteInt(InGameManager.Instance.RoomID);
+                                Writer.WriteByte((byte)card.Type);
+                                Writer.WriteByte(card.Value);
+                                Writer.SendPacket(ServerPeer);
+                                //exchange with opponent
+                            });
+                        }
+                        if (InGameManager.Instance.Mode == InGameManager.eGameMode.TwoCards)
+                        {
+                            StartCoroutine(S2());
+                        }
+                        else if (InGameManager.Instance.Mode == InGameManager.eGameMode.ThreeCards)
+                        {
+                            StartCoroutine(S3());
+                        }
                     }
                 }
                 break;
@@ -682,6 +820,16 @@ public class InGameUser : User
                 break;
             case ePacketType_InGameServer.Broadcast_ShowSpecialRuleCards:
                 {
+                    Dictionary<int, List<Card>> specialRuleCards = new Dictionary<int, List<Card>>();
+                    for (int i = 0; i < 2; i++)
+                    {
+                        int id = reader.ReadInt();
+                        Card card1 = new Card((Card.CardType)reader.ReadByte(), reader.ReadByte());
+                        Card card2 = new Card((Card.CardType)reader.ReadByte(), reader.ReadByte());
+                        List<Card> cards = new List<Card> { card1, card2 };
+                        specialRuleCards[id] = cards;
+                    }
+                    InGameManager.Instance.SetAllCards(specialRuleCards);
                     InGameManager.Instance.ShowAllCards();
                 }
                 break;

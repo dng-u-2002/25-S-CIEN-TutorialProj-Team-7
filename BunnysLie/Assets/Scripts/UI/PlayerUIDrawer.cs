@@ -162,4 +162,25 @@ public class PlayerUIDrawer : MonoBehaviour
     {
 
     }
+
+    [SerializeField] protected RectTransform DeletedCardContainer;
+
+    internal void DeleteAnycard()
+    {
+        if (CardObjects.Count > 0)
+        {
+            CardObject lastCard = CardObjects[CardObjects.Count - 1];
+            lastCard.transform.SetParent(DeletedCardContainer);
+            lastCard.transform.localPosition = Vector3.zero; // Reset position to center of DeletedCardContainer
+            lastCard.SetFace(false); // Set the card face to back
+        }
+    }
+
+    public virtual void ShowCard2Delete(Card c1)
+    {
+    }
+
+    public virtual void RemoveCard2Delete()
+    {
+    }
 }
