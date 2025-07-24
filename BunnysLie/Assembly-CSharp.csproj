@@ -68,10 +68,12 @@
     <Compile Include="Assets\Scripts\User2UserConnection\ChatSender.cs" />
     <Compile Include="Assets\Scripts\Cards\CardImages.cs" />
     <Compile Include="Assets\EditorCools\InspectorButton\ButtonAttribute.cs" />
+    <Compile Include="Assets\Helpers\ObjectMoveHelper.cs" />
     <Compile Include="Assets\Scripts\UI\PlayerUIDrawer.cs" />
     <Compile Include="Assets\Scripts\Cards\CardObject.cs" />
     <Compile Include="Assets\Helpers\DelayedFunctionHelper.cs" />
     <Compile Include="Assets\Scripts\Network\NetworkDataReaderWriter.cs" />
+    <Compile Include="Assets\Helpers\ExtendedEnumeratorRunner.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\EditorCools\Vector2MinMax\MinMaxSliderAttribute.cs" />
     <Compile Include="Assets\Scripts\Network\User.cs" />

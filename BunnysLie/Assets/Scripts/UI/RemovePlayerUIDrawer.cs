@@ -1,3 +1,4 @@
+using Helpers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,9 +8,12 @@ public class RemovePlayerUIDrawer : PlayerUIDrawer
     public override void SetSpecialRuleMode()
     {
         base.SetSpecialRuleMode();
-        var rectTransform = GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = new Vector2(-196, 350);
-        rectTransform.localScale = Vector3.one * 0.9f;
+
+        ObjectMoveHelper.TryStop(ObserverModeAnimationIDPosition);
+        ObjectMoveHelper.TryStop(ObserverModeAnimationIDScale);
+
+        ObserverModeAnimationIDPosition = ObjectMoveHelper.MoveObject(transform, new Vector3(-196, 350, 0), 1.0f, ePosition.Local);
+        ObserverModeAnimationIDScale = ObjectMoveHelper.ScaleObject(transform, Vector3.one * 0.9f, 1.0f);
     }
     public override void ShowCard2Delete(Card cardData)
     {
@@ -28,11 +32,14 @@ public class RemovePlayerUIDrawer : PlayerUIDrawer
             Destroy(card.gameObject);
         }
     }
+
     public override void SetSpecialRuleObserverMode()
     {
         base.SetSpecialRuleObserverMode();
-        var rectTransform = GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = new Vector2(736, 359);
-        rectTransform.localScale = Vector3.one * 0.7f;
+        ObjectMoveHelper.TryStop(ObserverModeAnimationIDPosition);
+        ObjectMoveHelper.TryStop(ObserverModeAnimationIDScale);
+
+        ObserverModeAnimationIDPosition = ObjectMoveHelper.MoveObject(transform, new Vector3(736, 359, 0), 1.0f, ePosition.Local);
+        ObserverModeAnimationIDScale= ObjectMoveHelper.ScaleObject(transform, Vector3.one * 0.7f, 1.0f);
     }
 }

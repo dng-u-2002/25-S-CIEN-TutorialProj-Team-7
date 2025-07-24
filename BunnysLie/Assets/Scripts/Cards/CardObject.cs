@@ -1,3 +1,4 @@
+using Helpers;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,9 @@ public class CardObject : MonoBehaviour
     [SerializeField] private Image BackSprite;
     [SerializeField] Button SelectButton;
     [SerializeField] Transform SelectionBackground;
+
+    [SerializeField] Transform FaceTransform;
+    [SerializeField] Transform MovementTransform;
     private void Awake()
     {
         SelectButton.interactable = false;
@@ -61,17 +65,74 @@ public class CardObject : MonoBehaviour
     {
         if(isFront)
         {
-            transform.rotation = Quaternion.Euler(0, 180, 0);
+            FaceTransform.rotation = Quaternion.Euler(0, 180, 0);
         }
         else
         {
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            FaceTransform.rotation = Quaternion.Euler(0, 0, 0);
         }
+    }
+
+    public void SetMovementTransformPosition(Vector3 position)
+    {
+        Helpers.ObjectMoveHelper.TryStop(MovementTransformAnimationIDPosition);
+        MovementTransform.position = position;
+    }
+    public void SetMovementTransformScale(Vector3 scale)
+    {
+        Helpers.ObjectMoveHelper.TryStop(MovementTransformAnimationIDScale);
+        MovementTransform.localScale = scale;
+    }
+    string MovementTransformAnimationIDPosition;
+    public Vector3 GetMoverPosition()
+    {
+        return MovementTransform.position;
+    }
+    public Vector3 GetMoverScale()
+    {
+        return MovementTransform.localScale;
+    }
+    public void SetMoverDefaultTransform()
+    {
+        MovementTransform.localPosition = Vector3.zero;
+        MovementTransform.localRotation = Quaternion.identity;
+        MovementTransform.localScale = Vector3.one;
+    }
+    public void MoveMovementTransformPosition(Vector3 target, float duration, Helpers.ePosition positionType = Helpers.ePosition.World)
+    {
+        Helpers.ObjectMoveHelper.TryStop(MovementTransformAnimationIDPosition);
+        MovementTransformAnimationIDPosition = Helpers.ObjectMoveHelper.MoveObject(MovementTransform, target, duration, positionType);
+    }
+    public void MoveMovementTransformScale(Vector3 target, float duration)
+    {
+        Helpers.ObjectMoveHelper.TryStop(MovementTransformAnimationIDScale);
+        MovementTransformAnimationIDScale = Helpers.ObjectMoveHelper.ScaleObject(MovementTransform, target, duration);
+    }
+
+    string MovementTransformAnimationIDRotation;
+    string MovementTransformAnimationIDScale;
+    public void SetFaceAnimated(bool isFront, float scaleFactor, float duration)
+    {
+        Helpers.ObjectMoveHelper.TryStop(MovementTransformAnimationIDRotation);
+        Helpers.ObjectMoveHelper.TryStop(MovementTransformAnimationIDScale);
+
+        Vector3 originScale = MovementTransform.localScale;
+        MovementTransformAnimationIDScale = Helpers.ObjectMoveHelper.ScaleObject(MovementTransform, originScale * scaleFactor, duration/2);
+        DelayedFunctionHelper.InvokeDelayed(() =>
+        {
+            MovementTransformAnimationIDRotation = Helpers.ObjectMoveHelper.RotatebjectSlerp(FaceTransform, isFront ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0), duration, Helpers.ePosition.World);
+        }, duration * 0.4f);
+
+        DelayedFunctionHelper.InvokeDelayed(() =>
+        {
+            Helpers.ObjectMoveHelper.TryStop(MovementTransformAnimationIDScale);
+            MovementTransformAnimationIDScale = Helpers.ObjectMoveHelper.ScaleObject(MovementTransform, originScale, duration / 2);
+        }, duration / 2);
     }
 
     private void Update()
     {
-        Vector3 dir = transform.forward;
+        Vector3 dir = FaceTransform.forward;
         if(Vector3.Dot(new Vector3(0, 0, 1), dir) <0)
         {
             IsFront = true;

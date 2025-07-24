@@ -1,3 +1,4 @@
+using Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ public class InGameManager : MonoBehaviour
     }
 
     public eGameMode Mode = eGameMode.TwoCards;
+    public RectTransform DeckTransform;
 
     private void Awake()
     {
@@ -203,17 +205,17 @@ public class InGameManager : MonoBehaviour
         if (LocalPlayer.ID == first && first >= 0)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false); // Hide panel on screen center for local player
-            LocalPlayerUIDrawer.SetRPSTextBox(true, f); // Set RPS text box for local player
+            LocalPlayerUIDrawer.SetRPSTextBox(true, f, true); // Set RPS text box for local player
         }
         else if (LocalPlayer.ID == second && second >= 0)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false); // Hide panel on screen center for local player
-            LocalPlayerUIDrawer.SetRPSTextBox(true, s); // Set RPS text box for local player
+            LocalPlayerUIDrawer.SetRPSTextBox(true, s, true); // Set RPS text box for local player
         }
         else if (LocalPlayer.ID == third && third >= 0)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false); // Hide panel on screen center for local player
-            LocalPlayerUIDrawer.SetRPSTextBox(true, t); // Set RPS text box for local player
+            LocalPlayerUIDrawer.SetRPSTextBox(true, t, true); // Set RPS text box for local player
         }
         else
         {
@@ -327,8 +329,8 @@ public class InGameManager : MonoBehaviour
         {
             if(rp.Target.ID == first && first >= 0)
             {
-                rp.SetOrderText(0); // First player
-                rp.Target.Order = 0;
+                rp.SetOrderText(2); // First player
+                rp.Target.Order = 2;
             }
             else if (rp.Target.ID == second && second >= 0)
             {
@@ -337,8 +339,8 @@ public class InGameManager : MonoBehaviour
             }
             else if (rp.Target.ID == third && third >= 0)
             {
-                rp.SetOrderText(2); // Third player
-                rp.Target.Order = 2;
+                rp.SetOrderText(0); // Third player
+                rp.Target.Order = 0;
             }
             rp.SetRPSTextBox(false, eRPS.None); // Reset RPS text box for remote players
             rp.ShowGrayPanel(false);
@@ -348,8 +350,8 @@ public class InGameManager : MonoBehaviour
         if (LocalPlayer.ID == first && first >= 0)
         {
             isLocalPlayerRanked = true;
-            LocalPlayerUIDrawer.SetOrderText(0); // First player
-            LocalPlayer.Order = 0;
+            LocalPlayerUIDrawer.SetOrderText(2); // First player
+            LocalPlayer.Order = 2;
         }
         else if (LocalPlayer.ID == second && second >= 0)
         {
@@ -360,8 +362,8 @@ public class InGameManager : MonoBehaviour
         else if (LocalPlayer.ID == third && third >= 0)
         {
             isLocalPlayerRanked = true;
-            LocalPlayerUIDrawer.SetOrderText(2); // Third player
-            LocalPlayer.Order = 2;
+            LocalPlayerUIDrawer.SetOrderText(0); // Third player
+            LocalPlayer.Order = 0;
         }
         else
         {
@@ -538,6 +540,10 @@ public class InGameManager : MonoBehaviour
             {
                 player.ThisDeck.RemoveAllCards();
                 player.ThisDeck.AddCards(cards.ToArray());
+                foreach(var c in cards)
+                {
+                    c.CardGameObject.SetFace(false);
+                }
             }
             else
             {
@@ -555,13 +561,19 @@ public class InGameManager : MonoBehaviour
         //}
         //status[LocalPlayer.ID] = new Tuple<List<Card>, eIO>(LocalPlayer.ThisDeck.GetCardsAsList(), LocalPlayer.IO);
     }
-    internal void ShowAllCardsByOrder()
+    internal void ShowAllCardsWithAnimation()
     {
-        foreach(var rp in RemotePlayerUIDrawers)
+        float interval = 0.2f;
+        IEnumerator SACWA()
         {
-            rp.ShowAllCards();
+            foreach (var rp in RemotePlayerUIDrawers)
+            {
+                rp.ShowAllCardWithAnimatedIntervalDelay(0.1f, 0.4f);
+                yield return new WaitForSeconds(interval);
+            }
+            LocalPlayerUIDrawer.ShowAllCardWithAnimatedIntervalDelay(0.1f, 0.4f);
         }
-        LocalPlayerUIDrawer.ShowAllCards();
+        StartCoroutine(SACWA());
     }
     internal void ShowAllCards()
     {
@@ -574,7 +586,7 @@ public class InGameManager : MonoBehaviour
 
     internal void ShowLoserOfThisRound(int loserId, byte count)
     {
-        LocalPlayerUIDrawer.ShowPanelOnScreenCenter("Loser of this round is Player " + loserId);
+        LocalPlayerUIDrawer.ShowPanelOnScreenCenter("패배: " + loserId + "번 플레이어");
         foreach (var rp in RemotePlayerUIDrawers)
         {
             if (rp.Target.ID == loserId)
@@ -590,6 +602,10 @@ public class InGameManager : MonoBehaviour
 
     internal void StartSpecialRule(int user1Id, int user2Id, List<Card> user1Cards, List<Card> user2Cards, System.Action onGo, System.Action<Card> onExchangeWithDeck, System.Action onExhangeWithOpponentButtonClicked, System.Action<Card> onExchangeWithOther)
     {
+
+        List<Card> cards2Animated = new List<Card>();
+        List<Card> cards2AnimatedLocal = new List<Card>();
+
         foreach (var rp in RemotePlayerUIDrawers)
         {
             rp.Target.ThisDeck.RemoveAllCards();
@@ -604,26 +620,48 @@ public class InGameManager : MonoBehaviour
                 if (rp.Target.ID == user1Id)
                 {
                     rp.Target.ThisDeck.AddCards(user1Cards.ToArray());
+                    cards2Animated.AddRange(user1Cards);
                 }
                 else if (rp.Target.ID == user2Id)
                 {
                     rp.Target.ThisDeck.AddCards(user2Cards.ToArray());
+                    cards2Animated.AddRange(user2Cards);
                 }
             }
+
+            foreach (var c in cards2Animated)
+            {
+                c.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+                c.CardGameObject.SetFace(false);
+            }
+            foreach (var c in cards2AnimatedLocal)
+            {
+                c.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+                c.CardGameObject.SetFace(false);
+            }
+
+            IEnumerator SSR()
+            {
+                foreach (var c in cards2Animated)
+                {
+                    c.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.4f, ePosition.Local);
+                    yield return new WaitForSeconds(0.3f);
+                }
+            }
+            StartCoroutine(SSR());
         }
         else
         {
+            //모드 설정만 먼저(카드 에니메이션을 위함)
             foreach (var rp in RemotePlayerUIDrawers)
             {
                 if (rp.Target.ID == user1Id)
                 {
                     rp.SetSpecialRuleMode();
-                    rp.Target.ThisDeck.AddCards(user1Cards.ToArray());
                 }
                 else if (rp.Target.ID == user2Id)
                 {
                     rp.SetSpecialRuleMode();
-                    rp.Target.ThisDeck.AddCards(user2Cards.ToArray());
                 }
                 else
                 {
@@ -632,39 +670,89 @@ public class InGameManager : MonoBehaviour
             }
 
             LocalPlayerUIDrawer.SetSpecialRuleMode();
-            if (LocalPlayer.ID == user1Id)
-            {
-                LocalPlayer.ThisDeck.AddCards(user1Cards.ToArray());
-                foreach (var c in user1Cards)
-                    c.CardGameObject.SetFace(true);
-            }
-            else if (LocalPlayer.ID == user2Id)
-            {
-                LocalPlayer.ThisDeck.AddCards(user2Cards.ToArray());
-                foreach (var c in user2Cards)
-                    c.CardGameObject.SetFace(true);
-            }
 
-            LocalPlayerUIDrawer.SetSpecialRuleEvents(() =>
+            DelayedFunctionHelper.InvokeDelayed(() =>
             {
-                //go
-                onGo?.Invoke();
-            },
-            (card) =>
-            {
-                //exchange with deck
-                onExchangeWithDeck?.Invoke(card);
-            },
-            () =>
-            {
-                //exchange with opponent button clicked
-                onExhangeWithOpponentButtonClicked?.Invoke();
-            },
-            (card) =>
-            {
-                //exchange with opponent
-                onExchangeWithOther?.Invoke(card);
-            });
+                foreach (var rp in RemotePlayerUIDrawers)
+                {
+                    if (rp.Target.ID == user1Id)
+                    {
+                        rp.Target.ThisDeck.AddCards(user1Cards.ToArray());
+                        cards2Animated.AddRange(user1Cards);
+                    }
+                    else if (rp.Target.ID == user2Id)
+                    {
+                        rp.Target.ThisDeck.AddCards(user2Cards.ToArray());
+                        cards2Animated.AddRange(user2Cards);
+                    }
+                }
+
+                if (LocalPlayer.ID == user1Id)
+                {
+                    LocalPlayer.ThisDeck.AddCards(user1Cards.ToArray());
+                    cards2AnimatedLocal.AddRange(user1Cards);
+                    foreach (var c in user1Cards)
+                        c.CardGameObject.SetFace(true);
+                }
+                else if (LocalPlayer.ID == user2Id)
+                {
+                    LocalPlayer.ThisDeck.AddCards(user2Cards.ToArray());
+                    cards2AnimatedLocal.AddRange(user2Cards);
+                    foreach (var c in user2Cards)
+                        c.CardGameObject.SetFace(true);
+                }
+
+                foreach (var c in cards2Animated)
+                {
+                    c.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+                    c.CardGameObject.SetFace(false);
+                }
+                foreach (var c in cards2AnimatedLocal)
+                {
+                    c.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+                    c.CardGameObject.SetFace(false);
+                }
+
+                IEnumerator SSR()
+                {
+                    foreach (var c in cards2Animated)
+                    {
+                        c.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.4f, ePosition.Local);
+                        yield return new WaitForSeconds(0.3f);
+                    }
+                    foreach (var c in cards2AnimatedLocal)
+                    {
+                        c.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.4f, ePosition.Local);
+                        c.CardGameObject.SetFaceAnimated(true, 1.2f, 0.2f);
+                        yield return new WaitForSeconds(0.3f);
+                    }
+                    LocalPlayerUIDrawer.SetSpecialRuleEvents(() =>
+                    {
+                        //go
+                        onGo?.Invoke();
+                    },
+                    (card) =>
+                    {
+                        //exchange with deck
+                        DelayedFunctionHelper.InvokeDelayed(() =>
+                        {
+                            onExchangeWithDeck?.Invoke(card);
+                        }, 0.8f);
+                    },
+                    () =>
+                    {
+                        //exchange with opponent button clicked
+                        onExhangeWithOpponentButtonClicked?.Invoke();
+                    },
+                    (card) =>
+                    {
+                        //exchange with opponent
+                        onExchangeWithOther?.Invoke(card);
+                    });
+                    }
+                    StartCoroutine(SSR());
+            }, 1.1f);
+         
         }
     }
     internal void StartSpecialRule_ThreeCardMode(Action<Card> selectCard2Delete, int user1Id, int user2Id, List<Card> user1Cards, List<Card> user2Cards, System.Action onGo, System.Action<Card> onExchangeWithDeck, System.Action onExhangeWithOpponentButtonClicked, System.Action<Card> onExchangeWithOther)

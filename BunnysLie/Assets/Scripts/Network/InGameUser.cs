@@ -3,6 +3,7 @@ using LiteNetLib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using VOYAGER_Server;
@@ -210,10 +211,13 @@ public class InGameUser : User
                     Writer.WriteByte((byte)rps);
                     Writer.SendPacket(ServerPeer);
                 }
-                InGameManager.Instance.LocalPlayer.StartSelectRPS((rps) =>
+                DelayedFunctionHelper.InvokeDelayed(() =>
                 {
-                    SendMyRPSSelection2Server(rps);
-                });
+                    InGameManager.Instance.LocalPlayer.StartSelectRPS((rps) =>
+                    {
+                        SendMyRPSSelection2Server(rps);
+                    });
+                }, 3.0f); //카드 에니메이션 딜레이
                 break;
 
             case ePacketType_InGameServer.Broadcast_RPSRoundResult:
@@ -275,20 +279,29 @@ public class InGameUser : User
                     {
                         players2Rematch.Add(reader.ReadInt());
                     }
-                    if(players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true) // 내가 리매치
+                    DelayedFunctionHelper.InvokeDelayed(() =>
                     {
-                        InGameManager.Instance.LocalPlayer.StartSelectRPS((rps) =>
+                        if (players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true) // 내가 리매치
                         {
-                            SendMyRPSSelection2Server(rps);
-                        });
-                    }
-                    else
-                    {
-                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("리매치에 참여하지 않습니다.\n다른 플레이어가 리매치 중입니다.");
-                        InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-                        InGameManager.Instance.LocalPlayer.IsOrderDetermined = true;
-                        return;
-                    }
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("다시!");
+                            InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
+                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            {
+                                InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
+                                InGameManager.Instance.LocalPlayer.StartSelectRPS((rps) =>
+                                {
+                                    SendMyRPSSelection2Server(rps);
+                                });
+                            }, 1.3f); //리매치 시작 딜레이
+                        }
+                        else
+                        {
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("리매치에 참여하지 않습니다.\n다른 플레이어가 리매치 중입니다.");
+                            InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
+                            InGameManager.Instance.LocalPlayer.IsOrderDetermined = true;
+                            return;
+                        }
+                    }, 0.5f); //가위바위보 결과 보여주기 딜레이 <- 이미 서버에 딜레이가 있나? 어쨌든 짧아도 됨
                 }
                 break;
 
@@ -425,7 +438,10 @@ public class InGameUser : User
 
             case ePacketType_InGameServer.Broadcast_ShowAllCards:
                 {
-                    InGameManager.Instance.ShowAllCardsByOrder();
+                    DelayedFunctionHelper.InvokeDelayed(() =>
+                    {
+                        InGameManager.Instance.ShowAllCardsWithAnimation();
+                    }, 1.0f);
                 }
                 break;
 
@@ -574,7 +590,11 @@ public class InGameUser : User
                                 Writer.WriteByte(card.Value);
                                 Writer.SendPacket(ServerPeer);
 
-                                InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(card);
+                                card.CardGameObject.MoveMovementTransformPosition(InGameManager.Instance.DeckTransform.position, 0.75f, ePosition.World);
+                                card.CardGameObject.MoveMovementTransformScale(Vector3.one * 0.5f, 0.75f);
+                                InGameManager.Instance.LocalPlayer.Card2Exchange = card;
+
+                                //InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(card);
                                 //InGameManager.Instance.LocalPlayerUIDrawer.Card2Exchange = null;
                             },
                             () =>
@@ -743,6 +763,7 @@ public class InGameUser : User
                                     }, 2.0f);
                                 }
                             }
+                            InGameManager.Instance.LocalPlayerUIDrawer.SetAllCards2DefaultState();
                             //교환 거절
                             //InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("상대가 교환을 거절했습니다.");
                         }
@@ -811,10 +832,49 @@ public class InGameUser : User
                     int id = reader.ReadInt();
                     if(id == InGameManager.Instance.LocalPlayer.ID)
                     {
-                        //내가 요청한 교환임
                         Card card = new Card((Card.CardType)reader.ReadByte(), reader.ReadByte());
-                        InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card);
-                        card.CardGameObject.SetFace(true);
+                        DelayedFunctionHelper.InvokeDelayed(() =>
+                        {
+                            int originIdx = InGameManager.Instance.LocalPlayer.Card2Exchange.CardGameObject.transform.GetSiblingIndex();
+                            InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(InGameManager.Instance.LocalPlayer.Card2Exchange);
+
+                            //내가 요청한 교환임
+                            InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card);
+
+                            //순서 바꾸기
+                            card.CardGameObject.transform.SetSiblingIndex(originIdx);
+
+                            //card.CardGameObject.SetFace(true);
+                            card.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+                            card.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.75f, ePosition.Local);
+                            Vector3 originScale = card.CardGameObject.GetMoverScale();
+                            card.CardGameObject.SetMovementTransformScale(originScale * 0.5f);
+                            card.CardGameObject.MoveMovementTransformScale(originScale, 0.75f);
+                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            {
+                                card.CardGameObject.SetFaceAnimated(true, 1.2f, 0.4f);
+                            }, 1.0f);
+                        }, 0.8f);
+                    }
+                    else
+                    {
+                        //내가 요청한건 아님
+                        var rp = InGameManager.Instance.RemotePlayerUIDrawers.First((u) => u.Target.ID == id);
+
+                        var c = rp.Target.ThisDeck.GetCard(1);
+                        c.CardGameObject.MoveMovementTransformPosition(InGameManager.Instance.DeckTransform.position, 0.8f, ePosition.World);
+                        c.CardGameObject.MoveMovementTransformScale(Vector3.one * 0.5f, 0.8f);
+
+                        DelayedFunctionHelper.InvokeDelayed(() =>
+                        {
+                            rp.Target.ThisDeck.RemoveCard(c);
+                            Card dummy = new Card(Card.CardType.Dummy, 100); //더미 카드 생성
+                            rp.Target.ThisDeck.AddCard(dummy);
+                            dummy.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+                            dummy.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.8f, ePosition.Local);
+                        }, 0.9f);                        
+                        //rp.Target.ThisDeck.RemoveCard(rp.Target.ThisDeck.GetCard(1)); //첫번째 카드 삭제
+
                     }
                 }
                 break;
@@ -830,7 +890,7 @@ public class InGameUser : User
                         specialRuleCards[id] = cards;
                     }
                     InGameManager.Instance.SetAllCards(specialRuleCards);
-                    InGameManager.Instance.ShowAllCards();
+                    InGameManager.Instance.ShowAllCardsWithAnimation();
                 }
                 break;
             case ePacketType_InGameServer.Broadcast_LoserOfSpecialRule:
@@ -921,20 +981,51 @@ public class InGameUser : User
     {
         Card card1 = new Card((Card.CardType)cardType1, cardValue1);
         Card card2 = new Card((Card.CardType)cardType2, cardValue2);
-        InGameManager.Instance.LocalPlayer.ThisDeck.AddCards(new Card[] { card1, card2 });
-        for(int i = 0; i < 2; i++)
-        {
-            InGameManager.Instance.LocalPlayer.ThisDeck.GetCard(i).CardGameObject.SetFace(true);
-        }
+
+        List<Card> cards2Animated = new List<Card>();
+
         foreach (var rp in InGameManager.Instance.RemotePlayers)
         {
             rp.ThisDeck.AddCards(new Card[] { new Card(Card.CardType.Dummy, 100), new Card(Card.CardType.Dummy, 100) });
 
             for (int i = 0; i < 2; i++)
             {
+                cards2Animated.Add(rp.ThisDeck.GetCard(i));
                 rp.ThisDeck.GetCard(i).CardGameObject.SetFace(false);
             }
         }
+        InGameManager.Instance.LocalPlayer.ThisDeck.AddCards(new Card[] { card1, card2 });
+        for(int i = 0; i < 2; i++)
+        {
+            cards2Animated.Add(InGameManager.Instance.LocalPlayer.ThisDeck.GetCard(i));
+            InGameManager.Instance.LocalPlayer.ThisDeck.GetCard(i).CardGameObject.SetFace(true);
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            var card = cards2Animated[i];
+            card.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+            card.CardGameObject.SetFace(false);
+        }
+
+
+        IEnumerator animation(List<Card> cards)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                var card = cards[i];
+                card.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.4f, ePosition.Local);
+                yield return new WaitForSeconds(0.3f);
+            }
+
+            for (int i = 4; i < 6; i++)
+            {
+                var card = cards[i];
+                card.CardGameObject.SetFaceAnimated(true, 1.2f, 0.2f);
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+        InGameManager.Instance.StartCoroutine(animation(cards2Animated));
     }
 
     private void NetworkResponse_Broadcast_StartGame(int roomID, List<int> remotePlayers)

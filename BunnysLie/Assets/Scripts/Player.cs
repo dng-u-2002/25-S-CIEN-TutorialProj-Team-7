@@ -19,6 +19,7 @@ public enum eIO
 
 public class Player : MonoBehaviour
 {
+    public Card Card2Exchange;
     public Deck ThisDeck { get; private set; }
     int NowOutcount = 0;
 

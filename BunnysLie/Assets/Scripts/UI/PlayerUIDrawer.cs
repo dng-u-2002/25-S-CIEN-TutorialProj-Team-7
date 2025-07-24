@@ -1,3 +1,4 @@
+using Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,10 +11,15 @@ public class PlayerUIDrawer : MonoBehaviour
     [SerializeField] Transform RPSTextBoxBackground;
     [SerializeField] TMP_Text RPSTextBox;
 
+    protected string ObserverModeAnimationIDPosition;
+    protected string ObserverModeAnimationIDScale;
     public void Go2OriginTransform()
     {
-        transform.position = OriginalPosition;
-        transform.localScale = OriginalScale;
+        ObjectMoveHelper.TryStop(ObserverModeAnimationIDPosition);
+        ObjectMoveHelper.TryStop(ObserverModeAnimationIDScale);
+
+        ObserverModeAnimationIDPosition = ObjectMoveHelper.MoveObjectSlerp(transform, OriginalPosition, 1.0f, ePosition.Local);
+        ObserverModeAnimationIDScale = ObjectMoveHelper.ScaleObject(transform, OriginalScale, 1.0f);
         ShowGrayPanel(false);
     }
     public void SetOutCount(byte length)
@@ -30,6 +36,23 @@ public class PlayerUIDrawer : MonoBehaviour
             }
         }
     }
+
+    public void ShowAllCardWithAnimatedIntervalDelay(float delay, float durationPerCard)
+    {
+        CardObjects.RemoveAll(item => item == null);
+        IEnumerator SACWAID()
+        {
+            foreach (var cardObject in CardObjects)
+            {
+                if (cardObject != null)
+                {
+                    cardObject.SetFaceAnimated(true, 1.2f, durationPerCard);
+                    yield return new WaitForSeconds(delay);
+                }
+            }
+        }
+        StartCoroutine(SACWAID());
+    }
     public void ShowAllCards()
     {
         CardObjects.RemoveAll(item => item == null);
@@ -41,11 +64,12 @@ public class PlayerUIDrawer : MonoBehaviour
             }
         }
     }
-    public void SetRPSTextBox(bool active, eRPS rps)
+    string RPSTextBoxAnimationID;
+    string RPSTextBoxAlphaAnimationID;
+    public void SetRPSTextBox(bool active, eRPS rps, bool ignoreSame = false, bool animated = true)
     {
         if (rps == eRPS.None)
             active = false;
-        RPSTextBoxBackground.gameObject.SetActive(active);
 
         if (active)
         {
@@ -65,6 +89,57 @@ public class PlayerUIDrawer : MonoBehaviour
         else
         {
             RPSTextBox.text = "";
+        }
+
+        if (animated)
+        {
+            if(active)
+            {
+                if ((ignoreSame == true))
+                {
+                    if (RPSTextBox.text == "가위" && rps == eRPS.Scissors)
+                        return;
+                    if (RPSTextBox.text == "바위" && rps == eRPS.Rock)
+                        return;
+                    if (RPSTextBox.text == "보" && rps == eRPS.Paper)
+                        return;
+                }
+                ObjectMoveHelper.TryStop(RPSTextBoxAnimationID);
+                ObjectMoveHelper.TryStop(RPSTextBoxAlphaAnimationID);
+                RPSTextBoxBackground.gameObject.SetActive(true);
+
+                Quaternion originalRotation = Quaternion.identity;
+                float diffAngle = 10f;
+                Quaternion startRotation = Quaternion.Euler(0, 0, diffAngle) * originalRotation;
+                RPSTextBoxBackground.localRotation = startRotation;
+
+                var image = RPSTextBoxBackground.GetComponentInChildren<Image>();
+                var originalColor = image.color;
+                originalColor.a = 0.2f;
+                image.color = originalColor;
+
+
+                RPSTextBoxAnimationID = ObjectMoveHelper.RotatebjectSlerp(RPSTextBoxBackground, originalRotation, 0.12f, Helpers.ePosition.Local);
+                RPSTextBoxAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 1.0f, 0.12f);
+            }
+            else
+            {
+                RPSTextBoxBackground.gameObject.SetActive(true);
+
+                Quaternion originalRotation = RPSTextBoxBackground.localRotation;
+                float diffAngle = -10f;
+                Quaternion targetRotation = Quaternion.Euler(0, 0, diffAngle) * Quaternion.identity;
+
+                var image = RPSTextBoxBackground.GetComponentInChildren<Image>();
+
+
+                RPSTextBoxAnimationID = ObjectMoveHelper.RotatebjectSlerp(RPSTextBoxBackground, targetRotation, 0.12f, Helpers.ePosition.Local);
+                RPSTextBoxAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 0.0f, 0.12f);
+            }
+        }
+        else
+        {
+            RPSTextBoxBackground.gameObject.SetActive(active);
         }
     }
     public void Initialize(Player target)
@@ -119,7 +194,7 @@ public class PlayerUIDrawer : MonoBehaviour
         SetIOText("");
         ShowGrayPanel(false);
         SetOutCount(3);
-        OriginalPosition = transform.position;
+        OriginalPosition = transform.localPosition;
         OriginalScale = transform.localScale;
         CardObjects = new List<CardObject>();
     }
@@ -133,7 +208,11 @@ public class PlayerUIDrawer : MonoBehaviour
                 CardObject co = CardObjects[i];
                 if (co.GetCard().Equals(c))
                 {
-                    Destroy(co.gameObject);
+                        Destroy(co.gameObject);
+                    //ObjectMoveHelper.ScaleObject(co.transform, Vector3.zero, 0.28f);
+                    //DelayedFunctionHelper.InvokeDelayed(() =>
+                    //{
+                    //}, 0.3f);
                     CardObjects.RemoveAt(i);
                     i--; // Adjust index after removal
                 }
@@ -149,6 +228,9 @@ public class PlayerUIDrawer : MonoBehaviour
             newCardObject.SetFace(false);
             newCardObject.gameObject.SetActive(true);
             CardObjects.Add(newCardObject);
+
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(CardContainer.GetComponent<RectTransform>());
         }
     }
     Vector3 OriginalPosition;

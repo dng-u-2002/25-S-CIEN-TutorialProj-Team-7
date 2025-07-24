@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Helpers;
 
 public class LocalPlayerUIDrawer : PlayerUIDrawer
 {
@@ -102,6 +103,9 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             c.ActiveSelection(true, (card) =>
             {
                 //Card2Exchange = card;
+                Vector3 originScale = card.CardGameObject.transform.localScale;
+                ObjectMoveHelper.ScaleObject(card.CardGameObject.transform, originScale * 1.1f, 0.2f);
+                card.CardGameObject.MoveMovementTransformPosition(new Vector3(0, 50, 0), 0.2f, ePosition.Local);
                 onSelected?.Invoke(card);
                 foreach (var oc in CardObjects)
                 {
@@ -207,5 +211,13 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         c.transform.SetParent(DeletedCardContainer);
         c.transform.localPosition = Vector3.zero; // Reset position to center of DeletedCardContainer
         c.SetFace(true); // Set the card face to back
+    }
+
+    internal void SetAllCards2DefaultState()
+    {
+        foreach(var c in CardObjects)
+        {
+            c.SetMoverDefaultTransform();
+        }
     }
 }
