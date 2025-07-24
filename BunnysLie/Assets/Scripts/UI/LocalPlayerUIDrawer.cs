@@ -110,6 +110,21 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             });
         }
     }
+    public void SelectCard2Delete(System.Action<Card> onSelected)
+    {
+        foreach (var c in CardObjects)
+        {
+            c.ActiveSelection(true, (card) =>
+            {
+                //Card2Exchange = card;
+                onSelected?.Invoke(card);
+                foreach (var oc in CardObjects)
+                {
+                    oc.ActiveSelection(false, null); // Disable selection for all other cards
+                }
+            });
+        }
+    }
     public override void SetSpecialRuleMode()
     {
         base.SetSpecialRuleMode();
@@ -164,5 +179,33 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     {
         InOutButton_In.onClick.RemoveAllListeners();
         InOutButton_Out.onClick.RemoveAllListeners();
+    }
+    public override void ShowCard2Delete(Card cardData)
+    {
+        Card realCard = null;
+        foreach (var c in CardObjects)
+        {
+            if (c.GetCard().Type == cardData.Type && c.GetCard().Value == cardData.Value)
+            {
+                realCard = c.GetCard();
+                break;
+            }
+        }
+        realCard.CardGameObject.SetFace(true); // Set the card face to back
+    }
+    public override void RemoveCard2Delete()
+    {
+        var card = DeletedCardContainer.transform.GetComponentInChildren<CardObject>();
+        if (card != null)
+        {
+            Target.ThisDeck.RemoveCard(card.GetCard());
+        }
+    }
+    internal void SelectedCard2Delete(Card card)
+    {
+        CardObject c = card.CardGameObject;
+        c.transform.SetParent(DeletedCardContainer);
+        c.transform.localPosition = Vector3.zero; // Reset position to center of DeletedCardContainer
+        c.SetFace(true); // Set the card face to back
     }
 }
