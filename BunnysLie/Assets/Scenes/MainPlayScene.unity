@@ -3349,8 +3349,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 675470940}
-  - component: {fileID: 675470939}
-  - component: {fileID: 675470938}
+  - component: {fileID: 675470942}
   m_Layer: 0
   m_Name: User
   m_TagString: Untagged
@@ -3358,35 +3357,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &675470938
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 675470937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 718b09975d10701448b1256c90307fd0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ChatInputField: {fileID: 0}
-  ChatText: {fileID: 0}
---- !u!114 &675470939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 675470937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9a28d1475bc0554998d56533832822e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serverIP: 192.168.219.134
-  serverPort: 9000
-  ConnectOnStart: 1
 --- !u!4 &675470940
 Transform:
   m_ObjectHideFlags: 0
@@ -3402,6 +3372,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &675470942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 675470937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b10f89f69c979f4dacdd5e4517f02d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &686951023
 GameObject:
   m_ObjectHideFlags: 0
@@ -7673,6 +7655,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2040274974}
   - component: {fileID: 2040274973}
+  - component: {fileID: 2040274975}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -7718,6 +7701,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2040274975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040274972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eaf33d18220bb342ae825bf0b3c33d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2045842209
 GameObject:
   m_ObjectHideFlags: 0
@@ -8339,5 +8334,5 @@ SceneRoots:
   - {fileID: 675470940}
   - {fileID: 1488587082}
   - {fileID: 270764916}
-  - {fileID: 95929426}
   - {fileID: 150157111}
+  - {fileID: 95929426}
