@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
             onSelected?.Invoke(eIO.In);
             u.SetActivePanelOnScreenCenter(true);
             u.ShowPanelOnScreenCenter("기다리는 중...");
-
+            u.IOSelectSound.Play();
             u.RemoveAllListenersFromIOButtons();
             u.SetIOButtonsActive(false);
         });
@@ -52,6 +52,7 @@ public class Player : MonoBehaviour
             onSelected?.Invoke(eIO.Out);
             u.SetActivePanelOnScreenCenter(true);
             u.ShowPanelOnScreenCenter("기다리는 중...");
+            u.IOSelectSound.Play();
 
             u.RemoveAllListenersFromIOButtons();
             u.SetIOButtonsActive(false);
@@ -79,6 +80,7 @@ public class Player : MonoBehaviour
             u.SetRPSButtonsActive(false);
             u.SetActivePanelOnScreenCenter(true);
             u.ShowPanelOnScreenCenter("기다리는 중...");
+            u.RPSSelectSound.Play();
 
             u.SetRPSTextBox(true, rps);
         }

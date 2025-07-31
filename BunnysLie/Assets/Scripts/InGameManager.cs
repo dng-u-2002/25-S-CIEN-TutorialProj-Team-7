@@ -600,9 +600,12 @@ public class InGameManager : MonoBehaviour
         }
     }
 
+    [SerializeField] AudioSource NormalBGM;
+    [SerializeField] AudioSource SpecailBGM;
     internal void StartSpecialRule(int user1Id, int user2Id, List<Card> user1Cards, List<Card> user2Cards, System.Action onGo, System.Action<Card> onExchangeWithDeck, System.Action onExhangeWithOpponentButtonClicked, System.Action<Card> onExchangeWithOther)
     {
-
+        NormalBGM.Stop();
+        SpecailBGM.Play();
         List<Card> cards2Animated = new List<Card>();
         List<Card> cards2AnimatedLocal = new List<Card>();
 
@@ -757,7 +760,9 @@ public class InGameManager : MonoBehaviour
     }
     internal void StartSpecialRule_ThreeCardMode(Action<Card> selectCard2Delete, int user1Id, int user2Id, List<Card> user1Cards, List<Card> user2Cards, System.Action onGo, System.Action<Card> onExchangeWithDeck, System.Action onExhangeWithOpponentButtonClicked, System.Action<Card> onExchangeWithOther)
     {
-        if(Mode != eGameMode.ThreeCards)
+        NormalBGM.Stop();
+        SpecailBGM.Play();
+        if (Mode != eGameMode.ThreeCards)
         {
             Debug.LogError("Cannot start special rule in ThreeCard mode when the game mode is not set to ThreeCards.");
             return;
@@ -878,6 +883,8 @@ public class InGameManager : MonoBehaviour
             player.Order = -1;
             player.IO = eIO.None; // Reset IO for remote players
         }
+        NormalBGM.Play();
+        SpecailBGM.Stop();
     }
 
     internal void ShowRPSRoundResult(int round, int firstPlayerId, eRPS firstPlayerRPS, byte firstPlayerOrder, int secondPlayerId, eRPS secondPlayerRPS, byte secondPlayerOrder, int thirdPlayerId, eRPS thirdPlayerRPS, byte thirdPlayerOrder)

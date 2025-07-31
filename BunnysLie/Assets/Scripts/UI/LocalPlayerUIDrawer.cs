@@ -27,6 +27,11 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     [SerializeField] Button POSCWBButton_Left;
     [SerializeField] Button POSCWBButton_Right;
 
+
+    [SerializeField] public AudioSource RPSSelectSound;
+    [SerializeField] public AudioSource IOSelectSound;
+    [SerializeField] public AudioSource POSCSelectSound;
+
     public void ShowPanelOnScreenCenterWithButtons(string text, string leftButtonText, string rightButtonText, Action onLeftButtonClick, Action onRightButtonClick)
     {
         if (PanelOnScreenCenterWithButtons != null)
@@ -37,8 +42,16 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             POSCWBButton_Right.GetComponentInChildren<TMP_Text>().text = rightButtonText;
             POSCWBButton_Left.onClick.RemoveAllListeners();
             POSCWBButton_Right.onClick.RemoveAllListeners();
-            POSCWBButton_Left.onClick.AddListener(() => onLeftButtonClick?.Invoke());
-            POSCWBButton_Right.onClick.AddListener(() => onRightButtonClick?.Invoke());
+            POSCWBButton_Left.onClick.AddListener(() =>
+            {
+                onLeftButtonClick?.Invoke();
+                POSCSelectSound.Play();
+            });
+            POSCWBButton_Right.onClick.AddListener(() =>
+            {
+                onRightButtonClick?.Invoke();
+                POSCSelectSound.Play();
+            });
         }
     }
     public void SetActivePanelOnScreenCenterWithButtons(bool active)

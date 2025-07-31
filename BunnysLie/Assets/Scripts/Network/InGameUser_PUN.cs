@@ -994,7 +994,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    private static void NetworkResponse_DistributeCardsFromServer_ThreeCardsMode(byte cardType1, byte cardValue1, byte cardType2, byte cardValue2, byte cardType3, byte cardValue3)
+    private void NetworkResponse_DistributeCardsFromServer_ThreeCardsMode(byte cardType1, byte cardValue1, byte cardType2, byte cardValue2, byte cardType3, byte cardValue3)
     {
         Card card1 = new Card((Card.CardType)cardType1, cardValue1);
         Card card2 = new Card((Card.CardType)cardType2, cardValue2);
@@ -1015,7 +1015,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    private static void NetworkResponse_DistributeCardsFromServer_TwoCardsMode(byte cardType1, byte cardValue1, byte cardType2, byte cardValue2)
+    [SerializeField] AudioSource CardDistributionSound;
+    private void NetworkResponse_DistributeCardsFromServer_TwoCardsMode(byte cardType1, byte cardValue1, byte cardType2, byte cardValue2)
     {
         Card card1 = new Card((Card.CardType)cardType1, cardValue1);
         Card card2 = new Card((Card.CardType)cardType2, cardValue2);
@@ -1049,6 +1050,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
         IEnumerator animation(List<Card> cards)
         {
+            CardDistributionSound.Play();
             for (int i = 0; i < 6; i++)
             {
                 var card = cards[i];
@@ -1062,6 +1064,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 card.CardGameObject.SetFaceAnimated(true, 1.2f, 0.2f);
                 yield return new WaitForSeconds(0.1f);
             }
+            CardDistributionSound.Stop();
         }
         InGameManager.Instance.StartCoroutine(animation(cards2Animated));
     }
