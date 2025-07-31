@@ -11,6 +11,30 @@ public class PlayerUIDrawer : MonoBehaviour
     [SerializeField] Transform RPSTextBoxBackground;
     [SerializeField] TMP_Text RPSTextBox;
 
+    [SerializeField] Transform Character_WhieRabbit;
+    [SerializeField] Transform Character_DownRabbit;
+    [SerializeField] Transform Character_BlackRabbit;
+
+    public void SetChatacter(int idx)
+    {
+        Character_WhieRabbit.gameObject.SetActive(false);
+        Character_DownRabbit.gameObject.SetActive(false);
+        Character_BlackRabbit.gameObject.SetActive(false);
+
+        if (idx == 0)
+        {
+            Character_WhieRabbit.gameObject.SetActive(true);
+        }
+        else if (idx == 1)
+        {
+            Character_DownRabbit.gameObject.SetActive(true);
+        }
+        else
+        {
+            Character_BlackRabbit.gameObject.SetActive(true);
+        }
+    }
+
     protected string ObserverModeAnimationIDPosition;
     protected string ObserverModeAnimationIDScale;
     public void Go2OriginTransform()
@@ -197,6 +221,8 @@ public class PlayerUIDrawer : MonoBehaviour
         OriginalPosition = transform.localPosition;
         OriginalScale = transform.localScale;
         CardObjects = new List<CardObject>();
+
+        SetChatacter(UnityEngine.Random.Range(0, 3));
     }
 
     void OnCardRemoved(Card c)
