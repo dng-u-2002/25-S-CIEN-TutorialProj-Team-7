@@ -15,8 +15,11 @@ public class CardObject : MonoBehaviour
     [SerializeField] Transform SelectionBackground;
 
     [SerializeField] Transform FaceTransform;
+
     [SerializeField] Transform _MT;
     [SerializeField] public Transform MovementTransform { get { return _MT; } }
+    [SerializeField] AudioSource FlipSound;
+
     private void Awake()
     {
         SelectButton.interactable = false;
@@ -131,6 +134,7 @@ public class CardObject : MonoBehaviour
         }, duration / 2);
     }
 
+    bool preFrontFlag = false;
     private void Update()
     {
         Vector3 dir = FaceTransform.forward;
@@ -142,6 +146,10 @@ public class CardObject : MonoBehaviour
         {
             IsFront = false;
         }
+        if(preFrontFlag != IsFront)
+        {
+            FlipSound.Play();
+        }
         if (IsFront)
         {
                 FrontSprite.gameObject.SetActive(true);
@@ -150,6 +158,7 @@ public class CardObject : MonoBehaviour
         {
             FrontSprite.gameObject.SetActive(false);
         }
+        preFrontFlag = IsFront;
     }
 
     private void OnValidate()

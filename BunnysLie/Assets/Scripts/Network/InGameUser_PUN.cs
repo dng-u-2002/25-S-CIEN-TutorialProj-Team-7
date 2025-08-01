@@ -151,7 +151,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 break;
 
             case ePacketType_InGameServer.Response_JoinGame:
-                Debug.Log("´Ù¸¥ ÇÃ·¹ÀÌ¾î¸¦ ±â´Ù¸®´Â Áß...");
+                Debug.Log("ï¿½Ù¸ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½ï¿½...");
                 break;
 
             case ePacketType_InGameServer.Broadcast_StartGame:
@@ -166,7 +166,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     return;
                 }
                 Debug.Log($"My ID : {Id}");
-                users.Remove(Id); //³»°Ç Áö¿ò
+                users.Remove(Id); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 NetworkResponse_Broadcast_StartGame(roomID, users);
                 break;
 
@@ -257,7 +257,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         SendMyRPSSelection2Server(rps);
                     });
-                }, 3.0f); //Ä«µå ¿¡´Ï¸ÞÀÌ¼Ç µô·¹ÀÌ
+                }, 3.0f); //Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 break;
 
             case ePacketType_InGameServer.Broadcast_RPSRoundResult:
@@ -306,7 +306,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             //    {
             //        var LocalPlayerUIDrawer = FindObjectOfType<LocalPlayerUIDrawer>();
             //        LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            //        LocalPlayerUIDrawer.ShowPanelOnScreenCenter("±â´Ù¸®´Â Áß 2");
+            //        LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½ï¿½ 2");
             //        InGameManager.Instance.LocalPlayer.IsOrderDetermined = true;
             //    }
             //    break;
@@ -321,9 +321,9 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     }
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
-                        if (players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true) // ³»°¡ ¸®¸ÅÄ¡
+                        if (players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("´Ù½Ã!");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ï¿½Ù½ï¿½!");
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
                             DelayedFunctionHelper.InvokeDelayed(() =>
                             {
@@ -332,16 +332,16 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 {
                                     SendMyRPSSelection2Server(rps);
                                 });
-                            }, 1.3f); //¸®¸ÅÄ¡ ½ÃÀÛ µô·¹ÀÌ
+                            }, 1.3f); //ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                         }
                         else
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("¸®¸ÅÄ¡¿¡ Âü¿©ÇÏÁö ¾Ê½À´Ï´Ù.\n´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡ ¸®¸ÅÄ¡ ÁßÀÔ´Ï´Ù.");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.\nï¿½Ù¸ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
                             InGameManager.Instance.LocalPlayer.IsOrderDetermined = true;
                             return;
                         }
-                    }, 0.5f); //°¡À§¹ÙÀ§º¸ °á°ú º¸¿©ÁÖ±â µô·¹ÀÌ <- ÀÌ¹Ì ¼­¹ö¿¡ µô·¹ÀÌ°¡ ÀÖ³ª? ¾îÂ·µç Âª¾Æµµ µÊ
+                    }, 0.5f); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <- ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½Ö³ï¿½? ï¿½ï¿½Â·ï¿½ï¿½ Âªï¿½Æµï¿½ ï¿½ï¿½
                 }
                 break;
 
@@ -519,17 +519,17 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 {
                     byte reason = reader.ReadByte();
                     Debug.Log(reason);
-                    if (reason == 10)//ÀÌÀü ½ºÆä¼È ·ê¿¡¼­ µ¿Á¡ÀÚ ¹ß»ý
+                    if (reason == 10)//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ê¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
                     {
-                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ÀÌÀü ½ºÆä¼È ·ê¿¡¼­ µ¿Á¡ÀÚ°¡ ¹ß»ýÇß½À´Ï´Ù.\n»õ·Î¿î ½ºÆä¼È ·êÀ» ½ÃÀÛÇÕ´Ï´Ù.");
+                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ê¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½ß»ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.\nï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.");
                     }
 
                     int id = reader.ReadInt();
                     int opponentId = reader.ReadInt();
                     if (id != InGameManager.Instance.LocalPlayer.ID)
                     {
-                        //³»°¡ ½ºÆä¼È ·êÀ» ½ÃÀÛÇÏ´Â°Ô ¾Æ´Ô
-                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("½ºÆä¼È ·êÀÌ ½ÃÀÛµÇ¾ú½À´Ï´Ù.\nÀá½Ã ±â´Ù·ÁÁÖ¼¼¿ä.");
+                        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Â°ï¿½ ï¿½Æ´ï¿½
+                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÛµÇ¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\nï¿½ï¿½ï¿½ ï¿½ï¿½Ù·ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
                         IEnumerator S()
                         {
                             yield return new WaitForSeconds(2.0f);
@@ -606,7 +606,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             user2Cards.Add(new Card(Card.CardType.Dummy, 100));
                             user2Cards.Add(new Card(Card.CardType.Dummy, 100));
                         }
-                        //Ä«µå Å¸ÀÔ-°ª Ãâ·Â
+                        //Ä«ï¿½ï¿½ Å¸ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½ï¿½
                         IEnumerator S2()
                         {
                             yield return new WaitForSeconds(2.0f);
@@ -639,7 +639,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             },
                             () =>
                             {
-                                //±³È¯ ¹öÆ°À» ´©¸§
+                                //ï¿½ï¿½È¯ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                                 //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
                                 //Writer.WriteInt(Id);
                                 //Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -694,7 +694,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             },
                             () =>
                             {
-                                //±³È¯ ¹öÆ°À» ´©¸§
+                                //ï¿½ï¿½È¯ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                                 //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
                                 //Writer.WriteInt(Id);
                                 //Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -729,18 +729,18 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     if (myId != InGameManager.Instance.LocalPlayer.ID)
                     {
                         //Debug.LogWarning(Equals(asker, InGameManager.Instance.LocalPlayer.ID) + " " + myId + " " + InGameManager.Instance.LocalPlayer.ID);
-                        //³»°¡ ¿äÃ»¹ÞÀº°Ô ¾Æ´Ô
+                        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½
                         return;
                     }
 
-                    //³»°¡ ¿äÃ»¹ÞÀº°ÅÀÓ
-                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("»ó´ë°¡ Ä«µå ±³È¯À» ¿äÃ»Çß½À´Ï´Ù", "¼ö¶ô", "°ÅÀý",
+                    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("ï¿½ï¿½ë°¡ Ä«ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ß½ï¿½ï¿½Ï´ï¿½", "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½",
                         () =>
                         {
                             Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
                             Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
                             Writer.WriteInt(InGameManager.Instance.RoomID);
-                            Writer.WriteBool(true); //¼ö¶ô
+                            Writer.WriteBool(true); //ï¿½ï¿½ï¿½ï¿½
                             Writer.SendPacket(ServerPeer);
 
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
@@ -759,7 +759,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
                             Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
                             Writer.WriteInt(InGameManager.Instance.RoomID);
-                            Writer.WriteBool(false); //°ÅÀý
+                            Writer.WriteBool(false); //ï¿½ï¿½ï¿½ï¿½
                             Writer.SendPacket(ServerPeer);
 
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
@@ -777,25 +777,25 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                         if (isAccepted)
                         {
-                            //±³È¯ ¼ö¶ô
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"»ó´ë°¡ ±³È¯À» ¼ö¶ôÇß½À´Ï´Ù.\nÄ«µå ¼±ÅÃÀ» ±â´Ù¸®´Â Áß...");
+                            //ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"ï¿½ï¿½ë°¡ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.\nÄ«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½ï¿½...");
                             foreach (var rp in InGameManager.Instance.RemotePlayerUIDrawers)
                             {
                                 if (rp.Target.ID == opponentId)
                                 {
-                                    rp.SetIOText("±³È¯ ¼ö¶ô");
+                                    rp.SetIOText("ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½");
                                 }
                             }
                         }
                         else
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"»ó´ë°¡ ±³È¯À» °ÅÀýÇß½À´Ï´Ù.");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"ï¿½ï¿½ë°¡ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
                             foreach (var rp in InGameManager.Instance.RemotePlayerUIDrawers)
                             {
                                 if (rp.Target.ID == opponentId)
                                 {
                                     string originText = rp.GetIOText();
-                                    rp.SetIOText("±³È¯ °ÅÀý");
+                                    rp.SetIOText("ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½");
                                     DelayedFunctionHelper.InvokeDelayed(() =>
                                     {
                                         rp.SetIOText(originText);
@@ -804,8 +804,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 }
                             }
                             InGameManager.Instance.LocalPlayerUIDrawer.SetAllCards2DefaultState();
-                            //±³È¯ °ÅÀý
-                            //InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("»ó´ë°¡ ±³È¯À» °ÅÀýÇß½À´Ï´Ù.");
+                            //ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½
+                            //InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ï¿½ï¿½ë°¡ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
                         }
                     }
                 }
@@ -836,7 +836,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         var p = opp.Target.ThisDeck.GetCard(1);
                         Vector3 oppOriginPos = p.CardGameObject.GetMoverPosition();
                         Vector3 oppOriginScl = p.CardGameObject.GetMoverScale();
-                        //³»°¡ ±³È¯ÇÑ Ä«µå
+                        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ Ä«ï¿½ï¿½
                         Vector3 originPos = localCard.CardGameObject.GetMoverPosition();
                         Vector3 originScl = localCard.CardGameObject.GetMoverScale();
 
@@ -845,7 +845,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         opp.Target.ThisDeck.RemoveCard(p);
                         opp.Target.ThisDeck.AddCard(localCard);
 
-                        //¼ø¼­ ¹Ù²Ù±â
+                        //ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²Ù±ï¿½
                         card2.CardGameObject.transform.SetSiblingIndex(originIdx);
                         InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
                         opp.UpdateCardsLayout();
@@ -898,7 +898,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         var p = opp.Target.ThisDeck.GetCard(1);
                         Vector3 oppOriginPos = p.CardGameObject.GetMoverPosition();
                         Vector3 oppOriginScl = p.CardGameObject.GetMoverScale();
-                        //³»°¡ ±³È¯ÇÑ Ä«µå
+                        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ Ä«ï¿½ï¿½
                         Vector3 originPos = localCard.CardGameObject.GetMoverPosition();
                         Vector3 originScl = localCard.CardGameObject.GetMoverScale();
                         InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(localCard);
@@ -906,7 +906,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         opp.Target.ThisDeck.RemoveCard(p);
                         opp.Target.ThisDeck.AddCard(localCard);
 
-                        //¼ø¼­ ¹Ù²Ù±â
+                        //ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²Ù±ï¿½
                         card1.CardGameObject.transform.SetSiblingIndex(originIdx);
                         InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
                         opp.UpdateCardsLayout();
@@ -960,10 +960,10 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             int originIdx = InGameManager.Instance.LocalPlayer.Card2Exchange.CardGameObject.transform.GetSiblingIndex();
                             InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(InGameManager.Instance.LocalPlayer.Card2Exchange);
 
-                            //³»°¡ ¿äÃ»ÇÑ ±³È¯ÀÓ
+                            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½
                             InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card);
 
-                            //¼ø¼­ ¹Ù²Ù±â
+                            //ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²Ù±ï¿½
                             card.CardGameObject.transform.SetSiblingIndex(originIdx);
 
                             //card.CardGameObject.SetFace(true);
@@ -980,7 +980,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     }
                     else
                     {
-                        //³»°¡ ¿äÃ»ÇÑ°Ç ¾Æ´Ô
+                        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½Ñ°ï¿½ ï¿½Æ´ï¿½
                         var rp = InGameManager.Instance.RemotePlayerUIDrawers.First((u) => u.Target.ID == id);
 
                         var c = rp.Target.ThisDeck.GetCard(1);
@@ -990,7 +990,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         DelayedFunctionHelper.InvokeDelayed(() =>
                         {
                             rp.Target.ThisDeck.RemoveCard(c);
-                            Card dummy = new Card(Card.CardType.Dummy, 100); //´õ¹Ì Ä«µå »ý¼º
+                            Card dummy = new Card(Card.CardType.Dummy, 100); //ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                             rp.Target.ThisDeck.AddCard(dummy);
                             dummy.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
                             dummy.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.8f, ePosition.Local);
@@ -999,7 +999,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 FindObjectOfType<CardDeck>().PlayShuffleAnimation();
                             }, 1.2f);
                         }, 0.9f);
-                        //rp.Target.ThisDeck.RemoveCard(rp.Target.ThisDeck.GetCard(1)); //Ã¹¹øÂ° Ä«µå »èÁ¦
+                        //rp.Target.ThisDeck.RemoveCard(rp.Target.ThisDeck.GetCard(1)); //Ã¹ï¿½ï¿½Â° Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
                     }
                 }
@@ -1029,7 +1029,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.Broadcast_StartNextRound:
                 {
                     byte reason = reader.ReadByte();
-                    if (reason == 0) //ÀüÆÇÀÌ 3¸í ´Ù ÀÎ & µ¿Á¡ÀÎ »óÈ²
+                    if (reason == 0) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 3ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ & ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È²
                     {
 
                     }
@@ -1040,7 +1040,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.Broadcast_FinalResult:
                 {
                     int loserID = reader.ReadInt();
-                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\n°ÔÀÓÀÌ Á¾·áµÇ¾ú½À´Ï´Ù.");
+                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
                 }
                 break;
         }
@@ -1050,7 +1050,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (InGameManager.Instance.LocalPlayer.Order == 2 && InGameManager.Instance.OutPlayerCount == 2)
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2¸íÀÌ ¸ÕÀú OUTÀ» °ñ¶ú½À´Ï´Ù.\nINÀ» ¼±ÅÃÇÕ´Ï´Ù.");
+            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ OUTï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\nINï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.");
             //Task.Delay(2000).ContinueWith((_) =>
             DelayedFunctionHelper.InvokeDelayed(() =>
             {
@@ -1083,7 +1083,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    private static void NetworkResponse_DistributeCardsFromServer_ThreeCardsMode(byte cardType1, byte cardValue1, byte cardType2, byte cardValue2, byte cardType3, byte cardValue3)
+    private void NetworkResponse_DistributeCardsFromServer_ThreeCardsMode(byte cardType1, byte cardValue1, byte cardType2, byte cardValue2, byte cardType3, byte cardValue3)
     {
         Card card1 = new Card((Card.CardType)cardType1, cardValue1);
         Card card2 = new Card((Card.CardType)cardType2, cardValue2);
@@ -1104,7 +1104,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    private static void NetworkResponse_DistributeCardsFromServer_TwoCardsMode(byte cardType1, byte cardValue1, byte cardType2, byte cardValue2)
+    [SerializeField] AudioSource CardDistributionSound;
+    private void NetworkResponse_DistributeCardsFromServer_TwoCardsMode(byte cardType1, byte cardValue1, byte cardType2, byte cardValue2)
     {
         Card card1 = new Card((Card.CardType)cardType1, cardValue1);
         Card card2 = new Card((Card.CardType)cardType2, cardValue2);
@@ -1138,6 +1139,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
         IEnumerator animation(List<Card> cards)
         {
+            CardDistributionSound.Play();
             for (int i = 0; i < 6; i++)
             {
                 var card = cards[i];
@@ -1152,13 +1154,14 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 yield return new WaitForSeconds(0.1f);
             }
             FindObjectOfType<CardDeck>().PlayShuffleAnimation();
+            CardDistributionSound.Stop();
         }
         InGameManager.Instance.StartCoroutine(animation(cards2Animated));
     }
 
     private void NetworkResponse_Broadcast_StartGame(int roomID, List<int> remotePlayers)
     {
-        Debug.Log("°ÔÀÓÀÌ ½ÃÀÛµÇ¾ú½À´Ï´Ù!");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÛµÇ¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
         InGameManager.Instance.RoomID = roomID;
         InGameManager.Instance.StartGame();
         //InGameManager.Instance.LocalPlayer.ID = Id;
