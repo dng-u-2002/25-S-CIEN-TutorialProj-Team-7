@@ -39,12 +39,18 @@ public class InGameManager : MonoBehaviour
     public PlayerUIDrawer[] RemotePlayerUIDrawers;
     internal int RoomID;
 
-    public void SetRemotePlayersID(List<int> ids)
+    public void SetRemotePlayersID(List<int> ids, List<byte> characters)
     {
         for (int i = 0; i < ids.Count; i++)
         {
             RemotePlayers[i].ID = ids[i];
+
+            RemotePlayerUIDrawers[i].SetChatacter(characters[i]);
         }
+    }
+    public void SetLocalPlayerCharacter(byte idx)
+    {
+        LocalPlayerUIDrawer.SetChatacter(idx);
     }
 
     public int CalculateOutPlayerCount(Dictionary<int, Tuple<List<Card>, eIO>> status)
@@ -219,14 +225,14 @@ public class InGameManager : MonoBehaviour
         }
         else
         {
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...");
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
             LocalPlayerUIDrawer.SetRPSTextBox(false, eRPS.None); // Reset RPS text box for local player
         }
         LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
         if (LocalPlayer.IsOrderDetermined == true)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...");
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
             LocalPlayerUIDrawer.SetRPSButtonsActive(false);
         }
     }
@@ -519,7 +525,7 @@ public class InGameManager : MonoBehaviour
         if (LocalPlayer.IsOrderDetermined == true)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...");
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
             LocalPlayerUIDrawer.SetRPSButtonsActive(false);
             if (isAllPlayerRanked)
                 LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
@@ -586,11 +592,11 @@ public class InGameManager : MonoBehaviour
 
     internal void ShowLoserOfThisRound(int loserId, byte count)
     {
-        LocalPlayerUIDrawer.ShowPanelOnScreenCenter("패배: " + loserId + "번 플레이어");
         foreach (var rp in RemotePlayerUIDrawers)
         {
             if (rp.Target.ID == loserId)
             {
+                LocalPlayerUIDrawer.ShowPanelOnScreenCenter("패배: " + loserId + "번 플레이어", rp.Character + 2);
                 rp.SetOutCount(count);
             }
         }

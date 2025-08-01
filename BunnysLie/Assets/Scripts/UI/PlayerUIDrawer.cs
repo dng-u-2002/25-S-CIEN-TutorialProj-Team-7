@@ -15,12 +15,14 @@ public class PlayerUIDrawer : MonoBehaviour
     [SerializeField] Transform Character_DownRabbit;
     [SerializeField] Transform Character_BlackRabbit;
 
+    public int Character { get; private set; }
     public void SetChatacter(int idx)
     {
         Character_WhieRabbit.gameObject.SetActive(false);
         Character_DownRabbit.gameObject.SetActive(false);
         Character_BlackRabbit.gameObject.SetActive(false);
 
+        Character = idx;
         if (idx == 0)
         {
             Character_WhieRabbit.gameObject.SetActive(true);

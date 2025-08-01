@@ -159,15 +159,21 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 // Ids of Users : List<int>
                 int roomID = reader.ReadInt();
                 List<int> users = new List<int>(new int[] { reader.ReadInt(), reader.ReadInt(), reader.ReadInt() });
+                List<byte> characters = new List<byte>(new byte[] { reader.ReadByte(), reader.ReadByte(), reader.ReadByte() });
                 if (users.Contains(Id) == false)
                 {
                     Debug.LogError($"[InGameUser_PUN] User ID {Id} not found in the user list for room {roomID}.");
                     Debug.LogError("[InGameUser_PUN] Current User IDs: " + string.Join(", ", users));
                     return;
                 }
+                Debug.Log($"Characters : " + string.Join(',', characters));
                 Debug.Log($"My ID : {Id}");
+                var idx = users.IndexOf(Id);
+                InGameManager.Instance.SetLocalPlayerCharacter(characters[idx]);
+
                 users.Remove(Id); //내건 지움
-                NetworkResponse_Broadcast_StartGame(roomID, users);
+                characters.RemoveAt(idx);
+                NetworkResponse_Broadcast_StartGame(roomID, users, characters);
                 break;
 
             case ePacketType_InGameServer.DistributeCardsFromServer:
@@ -323,7 +329,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         if (players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true)// 내가 리매치
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("다시!");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("다시!", 1);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
                             DelayedFunctionHelper.InvokeDelayed(() =>
                             {
@@ -336,7 +342,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         }
                         else
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("리매치에 참여하지 않습니다.\n다른 플레이어가 리매치 중입니다.");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("리매치에 참여하지 않습니다.\n다른 플레이어가 리매치 중입니다.", 0);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
                             InGameManager.Instance.LocalPlayer.IsOrderDetermined = true;
                             return;
@@ -521,7 +527,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     Debug.Log(reason);
                     if (reason == 10)//이전 스페셜 룰에서 동점자 발생
                     {
-                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("이전 스페셜 룰에서 동점자가 발생했습니다.\n새로운 스페셜 룰을 시작합니다.");
+                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("이전 스페셜 룰에서 동점자가 발생했습니다.\n새로운 스페셜 룰을 시작합니다.", 1);
                     }
 
                     int id = reader.ReadInt();
@@ -531,7 +537,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         //내가 스페셜 룰을 시작하는게 아님
                         IEnumerator S()
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("스페셜 룰이 시작되었습니다.\n잠시 기다려주세요.");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"{id}와 {opponentId}가 동률입니다.\n1 vs. 1 룰로 돌입삽니다.", 1);
                             yield return new WaitForSeconds(2.0f);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
                             List<Card> dummyCards = new List<Card>();
@@ -609,7 +615,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         //카드 타입-값 출력
                         IEnumerator S2()
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("스페셜 룰이 시작되었습니다.\n잠시 기다려주세요.");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"{id}와 {opponentId}가 동률입니다.\n1 vs. 1 룰로 돌입삽니다.", 1);
                             yield return new WaitForSeconds(2.0f);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
                             InGameManager.Instance.StartSpecialRule(id, opponentId, myCards, user2Cards,
@@ -735,7 +741,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     }
 
                     //내가 요청받은거임
-                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("상대가 카드 교환을 요청했습니다", "수락", "거절",
+                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("상대가 카드 교환을 요청했습니다", 8, "수락", "거절",
                         () =>
                         {
                             Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
@@ -779,7 +785,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         if (isAccepted)
                         {
                             //교환 수락
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"상대가 교환을 수락했습니다.\n카드 선택을 기다리는 중...");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"상대가 교환을 수락했습니다.\n카드 선택을 기다리는 중...", 0);
                             foreach (var rp in InGameManager.Instance.RemotePlayerUIDrawers)
                             {
                                 if (rp.Target.ID == opponentId)
@@ -790,7 +796,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         }
                         else
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"상대가 교환을 거절했습니다.");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"상대가 교환을 거절했습니다.", 0);
                             foreach (var rp in InGameManager.Instance.RemotePlayerUIDrawers)
                             {
                                 if (rp.Target.ID == opponentId)
@@ -1041,7 +1047,18 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.Broadcast_FinalResult:
                 {
                     int loserID = reader.ReadInt();
-                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\n게임이 종료되었습니다.");
+                    if(loserID == InGameManager.Instance.LocalPlayerUIDrawer.Target.ID)
+                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\n게임이 종료되었습니다.", InGameManager.Instance.LocalPlayerUIDrawer.Character + 5);
+                    else
+                    {
+                        foreach(var rp in InGameManager.Instance.RemotePlayerUIDrawers)
+                        {
+                            if(rp.Target.ID == loserID)
+                            {
+                                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\n게임이 종료되었습니다.", rp.Character + 5);
+                            }
+                        }
+                    }
                 }
                 break;
         }
@@ -1051,7 +1068,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (InGameManager.Instance.LocalPlayer.Order == 2 && InGameManager.Instance.OutPlayerCount == 2)
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2명이 먼저 OUT을 골랐습니다.\nIN을 선택합니다.");
+            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2명이 먼저 OUT을 골랐습니다.\nIN을 선택합니다.", 0);
             //Task.Delay(2000).ContinueWith((_) =>
             DelayedFunctionHelper.InvokeDelayed(() =>
             {
@@ -1160,13 +1177,13 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         InGameManager.Instance.StartCoroutine(animation(cards2Animated));
     }
 
-    private void NetworkResponse_Broadcast_StartGame(int roomID, List<int> remotePlayers)
+    private void NetworkResponse_Broadcast_StartGame(int roomID, List<int> remotePlayers, List<byte> remoteCharacters)
     {
         Debug.Log("게임이 시작되었습니다!");
         InGameManager.Instance.RoomID = roomID;
         InGameManager.Instance.StartGame();
         //InGameManager.Instance.LocalPlayer.ID = Id;
-        InGameManager.Instance.SetRemotePlayersID(remotePlayers);
+        InGameManager.Instance.SetRemotePlayersID(remotePlayers, remoteCharacters);
     }
 
     private void NetworkResponse_Chat_Receive(int id, string message)

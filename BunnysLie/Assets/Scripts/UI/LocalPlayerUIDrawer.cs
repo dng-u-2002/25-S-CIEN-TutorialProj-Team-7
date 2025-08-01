@@ -32,10 +32,11 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     [SerializeField] public AudioSource IOSelectSound;
     [SerializeField] public AudioSource POSCSelectSound;
 
-    public void ShowPanelOnScreenCenterWithButtons(string text, string leftButtonText, string rightButtonText, Action onLeftButtonClick, Action onRightButtonClick)
+    public void ShowPanelOnScreenCenterWithButtons(string text, int background, string leftButtonText, string rightButtonText, Action onLeftButtonClick, Action onRightButtonClick)
     {
         if (PanelOnScreenCenterWithButtons != null)
         {
+            SetPOSCBackground(background);
             PanelOnScreenCenterWithButtons.gameObject.SetActive(true);
             POSCWBText.text = text;
             POSCWBButton_Left.GetComponentInChildren<TMP_Text>().text = leftButtonText;
@@ -61,14 +62,20 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             PanelOnScreenCenterWithButtons.gameObject.SetActive(active);
         }
     }
-
+    [SerializeField] List<Sprite> POSCBakcgrounds;
+    public void SetPOSCBackground(int idx)
+    {
+        PanelOnScreenCenter.GetComponent<Image>().sprite = POSCBakcgrounds[idx];
+        PanelOnScreenCenterWithButtons.GetComponent<Image>().sprite = POSCBakcgrounds[idx];
+    }
     public Action<Card> ExchangeWithDeck;
     public Action<Card> ExchangeWithOpponent;
-    public void ShowPanelOnScreenCenter(string text)
+    public void ShowPanelOnScreenCenter(string text, int background)
     {
         if (PanelOnScreenCenter != null)
         {
             PanelOnScreenCenter.gameObject.SetActive(true);
+            SetPOSCBackground(background);
             POSCText.text = text;
         }
     }
@@ -103,7 +110,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             SelectCard2Exchange((card) =>
             {
                 ExchangeWithOpponent?.Invoke(card);
-                ShowPanelOnScreenCenter("상대의 응답을 기다리는중...");
+                ShowPanelOnScreenCenter("상대의 응답을 기다리는중...", 0);
                 SpecialRuleButton_ExchangeWithOpponent.interactable = false;
             });
         });

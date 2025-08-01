@@ -243,6 +243,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 userIDs.Add(user.Id);
                 room.OutCounts[user.Id] = 3;
             }
+            byte character = 0;
             foreach (var user in room.Players)
             {
                 //Photon.Pun.PhotonNetwork.RaiseEvent((byte)ePacketType_InGameServer.Broadcast_StartGame,)
@@ -252,6 +253,13 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 {
                     PacketWriter.WriteInt(userIDs[i]);
                 }
+                character = 0;
+                for (int i = 0; i < userIDs.Count; i++)
+                {
+                    PacketWriter.WriteByte(character);
+                    character++;
+                }
+                
                 SendPacket(user);
             }
             Debug.Log($"[Game Start] A new 2-player game has started with Users: {string.Join(", ", room.Players.Select(u => u.Id))}.");
