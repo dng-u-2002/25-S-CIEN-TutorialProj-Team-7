@@ -1576,12 +1576,13 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     public void StartRPS(Room room)
     {
         bool test = false;
-        test = false;
+        test = true;
         if (test == true)
         {
-            room.RPSFirst = 0;
-            room.RPSSecond = 1;
-            room.RPSThird = 2;
+            room.RPSFirst = room.Players[0].Id;
+            room.RPSSecond = room.Players[1].Id;
+            room.RPSThird = room.Players[2].Id;
+            //room.State = eRoomState.
             foreach (var p in room.Players)
             {
                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_RPSFinalResult);

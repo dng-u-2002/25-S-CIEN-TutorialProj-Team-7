@@ -106,7 +106,11 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
                 Vector3 originScale = card.CardGameObject.transform.localScale;
                 ObjectMoveHelper.ScaleObject(card.CardGameObject.transform, originScale * 1.1f, 0.2f);
                 card.CardGameObject.MoveMovementTransformPosition(new Vector3(0, 50, 0), 0.2f, ePosition.Local);
-                onSelected?.Invoke(card);
+                DelayedFunctionHelper.InvokeDelayed(() =>
+                {
+                    onSelected?.Invoke(card);
+
+                }, 0.5f);
                 foreach (var oc in CardObjects)
                 {
                     oc.ActiveSelection(false, null); // Disable selection for all other cards

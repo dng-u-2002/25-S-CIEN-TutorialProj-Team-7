@@ -378,7 +378,7 @@ MonoBehaviour:
   SelectButton: {fileID: 5222610323527671186}
   SelectionBackground: {fileID: 2033181547419316440}
   FaceTransform: {fileID: 3250270513946771774}
-  MovementTransform: {fileID: 9134083447616036811}
+  _MT: {fileID: 9134083447616036811}
 --- !u!1 &5037946202598148222
 GameObject:
   m_ObjectHideFlags: 0
