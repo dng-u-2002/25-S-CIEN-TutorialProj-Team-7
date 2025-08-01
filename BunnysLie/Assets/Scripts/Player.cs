@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,7 +24,29 @@ public class Player : MonoBehaviour
     public Deck ThisDeck { get; private set; }
     int NowOutcount = 0;
 
-    public int ID;
+    public int _ID;
+    public int ID
+    {
+        get
+        {
+            if(IsLocal)
+            {
+                return PhotonNetwork.LocalPlayer.ActorNumber;
+            }
+            return _ID;
+        }
+        set
+        {
+           if(IsLocal)
+            {
+                Debug.LogError("Not allowed to set id of local player");
+            }
+           else
+            {
+                _ID = value;
+            }
+        }
+    }
     public bool IsLocal = false;
 
     public bool IsOrderDetermined = false;

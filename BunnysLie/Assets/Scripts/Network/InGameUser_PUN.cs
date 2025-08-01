@@ -68,7 +68,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             Debug.Log(p.Value.NickName);
         }
 
-        
+
     }
     NetworkDataWriter_PUN Writer = new NetworkDataWriter_PUN();
     public int Id => PhotonNetwork.LocalPlayer.ActorNumber;
@@ -104,9 +104,9 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
 
         User user = null;
-        foreach(var u in Photon.Pun.PhotonNetwork.CurrentRoom.Players)
+        foreach (var u in Photon.Pun.PhotonNetwork.CurrentRoom.Players)
         {
-            if(u.Value.ActorNumber == photonEvent.Sender)
+            if (u.Value.ActorNumber == photonEvent.Sender)
             {
                 user = new User(u.Value);
                 break;
@@ -126,7 +126,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.HandShake_S2U:
                 //My id in Server : int
                 //this.Id = reader.ReadInt();
-                if(Id != reader.ReadInt())
+                if (Id != reader.ReadInt())
                 {
                     Debug.LogError($"[InGameUser_PUN] ID mismatch! Expected: {Id}, Received: {reader.ReadInt()}");
                     return;
@@ -159,12 +159,13 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 // Ids of Users : List<int>
                 int roomID = reader.ReadInt();
                 List<int> users = new List<int>(new int[] { reader.ReadInt(), reader.ReadInt(), reader.ReadInt() });
-                if(users.Contains(Id) == false)
+                if (users.Contains(Id) == false)
                 {
                     Debug.LogError($"[InGameUser_PUN] User ID {Id} not found in the user list for room {roomID}.");
                     Debug.LogError("[InGameUser_PUN] Current User IDs: " + string.Join(", ", users));
                     return;
                 }
+                Debug.Log($"My ID : {Id}");
                 users.Remove(Id); //내건 지움
                 NetworkResponse_Broadcast_StartGame(roomID, users);
                 break;
@@ -192,6 +193,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     byte cardValue3 = reader.ReadByte();
                     NetworkResponse_DistributeCardsFromServer_ThreeCardsMode(cardType1, cardValue1, cardType2, cardValue2, cardType3, cardValue3);
                 }
+
+                //FindObjectOfType<CardDeck>().PlayShuffleAnimation();
 
                 Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SuccessfullyReceivedCards);
                 Writer.WriteInt(Id);
@@ -354,7 +357,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     int thirdPlayerId = reader.ReadInt();
 
                     InGameManager.Instance.SetRPSResult(firstPlayerId, secondPlayerId, thirdPlayerId);
-
+                    Debug.Log($"{firstPlayerId} / {secondPlayerId} / {thirdPlayerId}");
                     Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SuccessfullyReceivedOrders);
                     Writer.WriteInt(Id);
                     Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -827,15 +830,57 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             Debug.LogError($"[InGameUser] Local player does not have the card {card1.Type}-{card1.Value} to exchange.");
                             return;
                         }
-                        InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(localCard);
+                        int originIdx = localCard.CardGameObject.transform.GetSiblingIndex();
+
+                        var opp = InGameManager.Instance.RemotePlayerUIDrawers.First((u) => u.Target.ID == id2);
+                        var p = opp.Target.ThisDeck.GetCard(1);
+                        Vector3 oppOriginPos = p.CardGameObject.GetMoverPosition();
+                        Vector3 oppOriginScl = p.CardGameObject.GetMoverScale();
                         //내가 교환한 카드
+                        Vector3 originPos = localCard.CardGameObject.GetMoverPosition();
+                        Vector3 originScl = localCard.CardGameObject.GetMoverScale();
+
+                        InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(localCard);
                         InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card2);
-                        card2.CardGameObject.SetFace(true);
+                        opp.Target.ThisDeck.RemoveCard(p);
+                        opp.Target.ThisDeck.AddCard(localCard);
+
+                        //순서 바꾸기
+                        card2.CardGameObject.transform.SetSiblingIndex(originIdx);
+                        InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
+                        opp.UpdateCardsLayout();
 
                         Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SuccessfullyExchangedCardWithOpponentInSpecialRule);
                         Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
                         Writer.WriteInt(InGameManager.Instance.RoomID);
                         Writer.SendPacket(ServerPeer);
+
+                        card2.CardGameObject.SetFace(false);
+                        localCard.CardGameObject.SetFace(true);
+                        IEnumerator S()
+                        {
+                            yield return new WaitForEndOfFrame();
+                            card2.CardGameObject.SetMovementTransformPosition(oppOriginPos);
+                            card2.CardGameObject.SetMovementTransformScale(oppOriginScl);
+                            localCard.CardGameObject.SetMovementTransformPosition(originPos);
+                            localCard.CardGameObject.SetMovementTransformScale(originScl);
+
+                            card2.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.75f, ePosition.Local);
+                            card2.CardGameObject.MoveMovementTransformScale(originScl, 0.75f);
+                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            {
+                                card2.CardGameObject.SetFaceAnimated(true, 1.2f, 0.4f);
+                            }, 0.5f);
+
+                            localCard.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.75f, ePosition.Local);
+                            localCard.CardGameObject.MoveMovementTransformScale(oppOriginScl, 0.75f);
+                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            {
+                                localCard.CardGameObject.SetFaceAnimated(false, 1.2f, 0.4f);
+                            }, 0.5f);
+                        }
+                        StartCoroutine(S());
+
 
                         InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
                         InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
@@ -848,15 +893,55 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             Debug.LogError($"[InGameUser] Local player does not have the card {card2.Type}-{card2.Value} to exchange.");
                             return;
                         }
+                        int originIdx = localCard.CardGameObject.transform.GetSiblingIndex();
+                        var opp = InGameManager.Instance.RemotePlayerUIDrawers.First((u) => u.Target.ID == id1);
+                        var p = opp.Target.ThisDeck.GetCard(1);
+                        Vector3 oppOriginPos = p.CardGameObject.GetMoverPosition();
+                        Vector3 oppOriginScl = p.CardGameObject.GetMoverScale();
+                        //내가 교환한 카드
+                        Vector3 originPos = localCard.CardGameObject.GetMoverPosition();
+                        Vector3 originScl = localCard.CardGameObject.GetMoverScale();
                         InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(localCard);
-                        //상대가 교환한 카드
                         InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card1);
-                        card1.CardGameObject.SetFace(true);
+                        opp.Target.ThisDeck.RemoveCard(p);
+                        opp.Target.ThisDeck.AddCard(localCard);
+
+                        //순서 바꾸기
+                        card1.CardGameObject.transform.SetSiblingIndex(originIdx);
+                        InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
+                        opp.UpdateCardsLayout();
 
                         Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SuccessfullyExchangedCardWithOpponentInSpecialRule);
                         Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
                         Writer.WriteInt(InGameManager.Instance.RoomID);
                         Writer.SendPacket(ServerPeer);
+
+
+                        card1.CardGameObject.SetFace(false);
+                        localCard.CardGameObject.SetFace(true);
+                        IEnumerator S()
+                        {
+                            yield return new WaitForEndOfFrame();
+                            card1.CardGameObject.SetMovementTransformPosition(oppOriginPos);
+                            card1.CardGameObject.SetMovementTransformScale(oppOriginScl);
+                            localCard.CardGameObject.SetMovementTransformPosition(originPos);
+                            localCard.CardGameObject.SetMovementTransformScale(originScl);
+
+                            card1.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.75f, ePosition.Local);
+                            card1.CardGameObject.MoveMovementTransformScale(originScl, 0.75f);
+                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            {
+                                card1.CardGameObject.SetFaceAnimated(true, 1.2f, 0.4f);
+                            }, 0.5f);
+
+                            localCard.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.75f, ePosition.Local);
+                            localCard.CardGameObject.MoveMovementTransformScale(oppOriginScl, 0.75f);
+                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            {
+                                localCard.CardGameObject.SetFaceAnimated(false, 1.2f, 0.4f);
+                            }, 0.5f);
+                        }
+                        StartCoroutine(S());
 
                         InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
                         InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
@@ -909,6 +994,10 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             rp.Target.ThisDeck.AddCard(dummy);
                             dummy.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
                             dummy.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.8f, ePosition.Local);
+                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            {
+                                FindObjectOfType<CardDeck>().PlayShuffleAnimation();
+                            }, 1.2f);
                         }, 0.9f);
                         //rp.Target.ThisDeck.RemoveCard(rp.Target.ThisDeck.GetCard(1)); //첫번째 카드 삭제
 
@@ -963,7 +1052,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2명이 먼저 OUT을 골랐습니다.\nIN을 선택합니다.");
             //Task.Delay(2000).ContinueWith((_) =>
-            DelayedFunctionHelper.InvokeDelayed(()=>
+            DelayedFunctionHelper.InvokeDelayed(() =>
             {
                 Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SelectInOut_Third);
                 Writer.WriteInt(Id);
@@ -1062,6 +1151,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 card.CardGameObject.SetFaceAnimated(true, 1.2f, 0.2f);
                 yield return new WaitForSeconds(0.1f);
             }
+            FindObjectOfType<CardDeck>().PlayShuffleAnimation();
         }
         InGameManager.Instance.StartCoroutine(animation(cards2Animated));
     }
@@ -1071,7 +1161,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         Debug.Log("게임이 시작되었습니다!");
         InGameManager.Instance.RoomID = roomID;
         InGameManager.Instance.StartGame();
-        InGameManager.Instance.LocalPlayer.ID = Id;
+        //InGameManager.Instance.LocalPlayer.ID = Id;
         InGameManager.Instance.SetRemotePlayersID(remotePlayers);
     }
 

@@ -15,7 +15,8 @@ public class CardObject : MonoBehaviour
     [SerializeField] Transform SelectionBackground;
 
     [SerializeField] Transform FaceTransform;
-    [SerializeField] Transform MovementTransform;
+    [SerializeField] Transform _MT;
+    [SerializeField] public Transform MovementTransform { get { return _MT; } }
     private void Awake()
     {
         SelectButton.interactable = false;

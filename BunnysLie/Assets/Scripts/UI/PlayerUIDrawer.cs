@@ -243,6 +243,7 @@ public class PlayerUIDrawer : MonoBehaviour
                     i--; // Adjust index after removal
                 }
             }
+            LayoutRebuilder.ForceRebuildLayoutImmediate(CardContainer.GetComponent<RectTransform>());
         }
     }
     void OnCardAdded(Card c)
@@ -258,6 +259,10 @@ public class PlayerUIDrawer : MonoBehaviour
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(CardContainer.GetComponent<RectTransform>());
         }
+    }
+    public void UpdateCardsLayout()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(CardContainer.GetComponent<RectTransform>());
     }
     Vector3 OriginalPosition;
     Vector3 OriginalScale;
@@ -281,6 +286,7 @@ public class PlayerUIDrawer : MonoBehaviour
             lastCard.transform.SetParent(DeletedCardContainer);
             lastCard.transform.localPosition = Vector3.zero; // Reset position to center of DeletedCardContainer
             lastCard.SetFace(false); // Set the card face to back
+            LayoutRebuilder.ForceRebuildLayoutImmediate(CardContainer.GetComponent<RectTransform>());
         }
     }
 

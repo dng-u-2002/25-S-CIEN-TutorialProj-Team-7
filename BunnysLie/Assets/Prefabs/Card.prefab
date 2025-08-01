@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1611112383054007207
 RectTransform:
   m_ObjectHideFlags: 0
@@ -372,13 +372,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f03c73967966797449f196c932d9e8f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsFront: 1
+  IsFront: 0
   FrontSprite: {fileID: 1098300996690995036}
   BackSprite: {fileID: 8951005666924726664}
   SelectButton: {fileID: 5222610323527671186}
   SelectionBackground: {fileID: 2033181547419316440}
   FaceTransform: {fileID: 3250270513946771774}
-  MovementTransform: {fileID: 9134083447616036811}
+  _MT: {fileID: 9134083447616036811}
 --- !u!1 &5037946202598148222
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,7 +601,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d0aa87fe198dd614e9ba7d6791232dab, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a518d2faad738142a9da77e1d34d594, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
