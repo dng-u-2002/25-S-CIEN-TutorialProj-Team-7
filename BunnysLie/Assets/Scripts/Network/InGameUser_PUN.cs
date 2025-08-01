@@ -194,6 +194,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     NetworkResponse_DistributeCardsFromServer_ThreeCardsMode(cardType1, cardValue1, cardType2, cardValue2, cardType3, cardValue3);
                 }
 
+                //FindObjectOfType<CardDeck>().PlayShuffleAnimation();
+
                 Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SuccessfullyReceivedCards);
                 Writer.WriteInt(Id);
                 Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -992,6 +994,10 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             rp.Target.ThisDeck.AddCard(dummy);
                             dummy.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
                             dummy.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.8f, ePosition.Local);
+                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            {
+                                FindObjectOfType<CardDeck>().PlayShuffleAnimation();
+                            }, 1.2f);
                         }, 0.9f);
                         //rp.Target.ThisDeck.RemoveCard(rp.Target.ThisDeck.GetCard(1)); //첫번째 카드 삭제
 
@@ -1145,6 +1151,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 card.CardGameObject.SetFaceAnimated(true, 1.2f, 0.2f);
                 yield return new WaitForSeconds(0.1f);
             }
+            FindObjectOfType<CardDeck>().PlayShuffleAnimation();
         }
         InGameManager.Instance.StartCoroutine(animation(cards2Animated));
     }

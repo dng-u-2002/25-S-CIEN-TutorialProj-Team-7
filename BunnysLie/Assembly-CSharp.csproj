@@ -84,6 +84,7 @@
     <Compile Include="Assets\Helpers\DelayedFunctionHelper.cs" />
     <Compile Include="Assets\Scripts\Network\NetworkDataReaderWriter.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\ChatAppIdCheckerUI.cs" />
+    <Compile Include="Assets\Scripts\Cards\CardDeck.cs" />
     <Compile Include="Assets\Helpers\ExtendedEnumeratorRunner.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\EditorCools\Vector2MinMax\MinMaxSliderAttribute.cs" />
