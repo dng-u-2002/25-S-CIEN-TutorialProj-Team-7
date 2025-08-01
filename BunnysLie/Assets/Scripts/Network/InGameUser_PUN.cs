@@ -151,7 +151,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 break;
 
             case ePacketType_InGameServer.Response_JoinGame:
-                Debug.Log("�ٸ� �÷��̾ ��ٸ��� ��...");
+                Debug.Log("다른 플레이어를 기다리는 중...");
                 break;
 
             case ePacketType_InGameServer.Broadcast_StartGame:
@@ -166,7 +166,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     return;
                 }
                 Debug.Log($"My ID : {Id}");
-                users.Remove(Id); //���� ����
+                users.Remove(Id); //내건 지움
                 NetworkResponse_Broadcast_StartGame(roomID, users);
                 break;
 
@@ -257,7 +257,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         SendMyRPSSelection2Server(rps);
                     });
-                }, 3.0f); //ī�� ���ϸ��̼� ������
+                }, 3.0f); //카드 에니메이션 딜레이
                 break;
 
             case ePacketType_InGameServer.Broadcast_RPSRoundResult:
@@ -321,9 +321,9 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     }
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
-                        if (players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true) // ���� ����ġ
+                        if (players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true)// 내가 리매치
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("�ٽ�!");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("다시!");
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
                             DelayedFunctionHelper.InvokeDelayed(() =>
                             {
@@ -332,16 +332,16 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 {
                                     SendMyRPSSelection2Server(rps);
                                 });
-                            }, 1.3f); //����ġ ���� ������
+                            }, 1.3f); //리매치 시작 딜레이
                         }
                         else
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("����ġ�� �������� �ʽ��ϴ�.\n�ٸ� �÷��̾ ����ġ ���Դϴ�.");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("리매치에 참여하지 않습니다.\n다른 플레이어가 리매치 중입니다.");
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
                             InGameManager.Instance.LocalPlayer.IsOrderDetermined = true;
                             return;
                         }
-                    }, 0.5f); //���������� ��� �����ֱ� ������ <- �̹� ������ �����̰� �ֳ�? ��·�� ª�Ƶ� ��
+                    }, 0.5f); //가위바위보 결과 보여주기 딜레이 <- 이미 서버에 딜레이가 있나? 어쨌든 짧아도 됨
                 }
                 break;
 
@@ -519,19 +519,19 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 {
                     byte reason = reader.ReadByte();
                     Debug.Log(reason);
-                    if (reason == 10)//���� ����� �꿡�� ������ �߻�
+                    if (reason == 10)//이전 스페셜 룰에서 동점자 발생
                     {
-                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("���� ����� �꿡�� �����ڰ� �߻��߽��ϴ�.\n���ο� ����� ���� �����մϴ�.");
+                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("이전 스페셜 룰에서 동점자가 발생했습니다.\n새로운 스페셜 룰을 시작합니다.");
                     }
 
                     int id = reader.ReadInt();
                     int opponentId = reader.ReadInt();
                     if (id != InGameManager.Instance.LocalPlayer.ID)
                     {
-                        //���� ����� ���� �����ϴ°� �ƴ�
-                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("����� ���� ���۵Ǿ����ϴ�.\n��� ��ٷ��ּ���.");
+                        //내가 스페셜 룰을 시작하는게 아님
                         IEnumerator S()
                         {
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("스페셜 룰이 시작되었습니다.\n잠시 기다려주세요.");
                             yield return new WaitForSeconds(2.0f);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
                             List<Card> dummyCards = new List<Card>();
@@ -606,9 +606,10 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             user2Cards.Add(new Card(Card.CardType.Dummy, 100));
                             user2Cards.Add(new Card(Card.CardType.Dummy, 100));
                         }
-                        //ī�� Ÿ��-�� ���
+                        //카드 타입-값 출력
                         IEnumerator S2()
                         {
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("스페셜 룰이 시작되었습니다.\n잠시 기다려주세요.");
                             yield return new WaitForSeconds(2.0f);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
                             InGameManager.Instance.StartSpecialRule(id, opponentId, myCards, user2Cards,
@@ -639,7 +640,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             },
                             () =>
                             {
-                                //��ȯ ��ư�� ����
+                                //교환 버튼을 누름
                                 //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
                                 //Writer.WriteInt(Id);
                                 //Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -694,7 +695,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             },
                             () =>
                             {
-                                //��ȯ ��ư�� ����
+                                //교환 버튼을 누름
                                 //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
                                 //Writer.WriteInt(Id);
                                 //Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -729,12 +730,12 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     if (myId != InGameManager.Instance.LocalPlayer.ID)
                     {
                         //Debug.LogWarning(Equals(asker, InGameManager.Instance.LocalPlayer.ID) + " " + myId + " " + InGameManager.Instance.LocalPlayer.ID);
-                        //���� ��û������ �ƴ�
+                        //내가 요청받은게 아님
                         return;
                     }
 
-                    //���� ��û��������
-                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("��밡 ī�� ��ȯ�� ��û�߽��ϴ�", "����", "����",
+                    //내가 요청받은거임
+                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("상대가 카드 교환을 요청했습니다", "수락", "거절",
                         () =>
                         {
                             Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
@@ -759,7 +760,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
                             Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
                             Writer.WriteInt(InGameManager.Instance.RoomID);
-                            Writer.WriteBool(false); //����
+                            Writer.WriteBool(false); //거절
                             Writer.SendPacket(ServerPeer);
 
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
@@ -777,19 +778,19 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                         if (isAccepted)
                         {
-                            //��ȯ ����
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"��밡 ��ȯ�� �����߽��ϴ�.\nī�� ������ ��ٸ��� ��...");
+                            //교환 수락
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"상대가 교환을 수락했습니다.\n카드 선택을 기다리는 중...");
                             foreach (var rp in InGameManager.Instance.RemotePlayerUIDrawers)
                             {
                                 if (rp.Target.ID == opponentId)
                                 {
-                                    rp.SetIOText("��ȯ ����");
+                                    rp.SetIOText("수락");
                                 }
                             }
                         }
                         else
                         {
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"��밡 ��ȯ�� �����߽��ϴ�.");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"상대가 교환을 거절했습니다.");
                             foreach (var rp in InGameManager.Instance.RemotePlayerUIDrawers)
                             {
                                 if (rp.Target.ID == opponentId)
@@ -804,8 +805,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 }
                             }
                             InGameManager.Instance.LocalPlayerUIDrawer.SetAllCards2DefaultState();
-                            //��ȯ ����
-                            //InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("��밡 ��ȯ�� �����߽��ϴ�.");
+                            //교환 거절
+                            //InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(상대가 교환을 거절했습니다.");
                         }
                     }
                 }
@@ -836,7 +837,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         var p = opp.Target.ThisDeck.GetCard(1);
                         Vector3 oppOriginPos = p.CardGameObject.GetMoverPosition();
                         Vector3 oppOriginScl = p.CardGameObject.GetMoverScale();
-                        //���� ��ȯ�� ī��
+                        //내가 교환한 카드
                         Vector3 originPos = localCard.CardGameObject.GetMoverPosition();
                         Vector3 originScl = localCard.CardGameObject.GetMoverScale();
 
@@ -845,7 +846,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         opp.Target.ThisDeck.RemoveCard(p);
                         opp.Target.ThisDeck.AddCard(localCard);
 
-                        //���� �ٲٱ�
+                        //순서 바꾸기
                         card2.CardGameObject.transform.SetSiblingIndex(originIdx);
                         InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
                         opp.UpdateCardsLayout();
@@ -898,7 +899,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         var p = opp.Target.ThisDeck.GetCard(1);
                         Vector3 oppOriginPos = p.CardGameObject.GetMoverPosition();
                         Vector3 oppOriginScl = p.CardGameObject.GetMoverScale();
-                        //���� ��ȯ�� ī��
+                        //내가 교환한 카드
                         Vector3 originPos = localCard.CardGameObject.GetMoverPosition();
                         Vector3 originScl = localCard.CardGameObject.GetMoverScale();
                         InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(localCard);
@@ -906,7 +907,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         opp.Target.ThisDeck.RemoveCard(p);
                         opp.Target.ThisDeck.AddCard(localCard);
 
-                        //���� �ٲٱ�
+                        //순서 바꾸기
                         card1.CardGameObject.transform.SetSiblingIndex(originIdx);
                         InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
                         opp.UpdateCardsLayout();
@@ -960,10 +961,10 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             int originIdx = InGameManager.Instance.LocalPlayer.Card2Exchange.CardGameObject.transform.GetSiblingIndex();
                             InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(InGameManager.Instance.LocalPlayer.Card2Exchange);
 
-                            //���� ��û�� ��ȯ��
+                            //내가 요청한 교환임
                             InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card);
 
-                            //���� �ٲٱ�
+                            //순서 바꾸기
                             card.CardGameObject.transform.SetSiblingIndex(originIdx);
 
                             //card.CardGameObject.SetFace(true);
@@ -980,7 +981,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     }
                     else
                     {
-                        //���� ��û�Ѱ� �ƴ�
+                        //내가 요청한건 아님
                         var rp = InGameManager.Instance.RemotePlayerUIDrawers.First((u) => u.Target.ID == id);
 
                         var c = rp.Target.ThisDeck.GetCard(1);
@@ -990,7 +991,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         DelayedFunctionHelper.InvokeDelayed(() =>
                         {
                             rp.Target.ThisDeck.RemoveCard(c);
-                            Card dummy = new Card(Card.CardType.Dummy, 100); //���� ī�� ����
+                            Card dummy = new Card(Card.CardType.Dummy, 100); //더미 카드 생성
                             rp.Target.ThisDeck.AddCard(dummy);
                             dummy.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
                             dummy.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.8f, ePosition.Local);
@@ -999,7 +1000,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 FindObjectOfType<CardDeck>().PlayShuffleAnimation();
                             }, 1.2f);
                         }, 0.9f);
-                        //rp.Target.ThisDeck.RemoveCard(rp.Target.ThisDeck.GetCard(1)); //ù��° ī�� ����
+                        //rp.Target.ThisDeck.RemoveCard(rp.Target.ThisDeck.GetCard(1)); //첫번째 카드 삭제
 
                     }
                 }
@@ -1029,7 +1030,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.Broadcast_StartNextRound:
                 {
                     byte reason = reader.ReadByte();
-                    if (reason == 0) //������ 3�� �� �� & ������ ��Ȳ
+                    if (reason == 0)//전판이 3명 다 인 & 동점인 상황
                     {
 
                     }
@@ -1040,7 +1041,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.Broadcast_FinalResult:
                 {
                     int loserID = reader.ReadInt();
-                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\n������ ����Ǿ����ϴ�.");
+                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\n게임이 종료되었습니다.");
                 }
                 break;
         }
@@ -1050,7 +1051,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (InGameManager.Instance.LocalPlayer.Order == 2 && InGameManager.Instance.OutPlayerCount == 2)
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2���� ���� OUT�� ������ϴ�.\nIN�� �����մϴ�.");
+            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2명이 먼저 OUT을 골랐습니다.\nIN을 선택합니다.");
             //Task.Delay(2000).ContinueWith((_) =>
             DelayedFunctionHelper.InvokeDelayed(() =>
             {
@@ -1161,7 +1162,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void NetworkResponse_Broadcast_StartGame(int roomID, List<int> remotePlayers)
     {
-        Debug.Log("������ ���۵Ǿ����ϴ�!");
+        Debug.Log("게임이 시작되었습니다!");
         InGameManager.Instance.RoomID = roomID;
         InGameManager.Instance.StartGame();
         //InGameManager.Instance.LocalPlayer.ID = Id;
