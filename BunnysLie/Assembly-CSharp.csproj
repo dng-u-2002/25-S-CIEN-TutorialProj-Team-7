@@ -60,6 +60,7 @@
     <Analyzer Include="C:\Program Files\Unity 2022.3.57f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\LobbyUI\GameModeSelector.cs" />
     <Compile Include="Assets\Scripts\UI\RuleBook.cs" />
     <Compile Include="Assets\Scripts\UI\RemovePlayerUIDrawer.cs" />
     <Compile Include="Assets\Scripts\InGameManager.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Assets\Photon\PhotonChat\Demos\Common\TextToggleIsOnTransition.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\FriendItem.cs" />
     <Compile Include="Assets\Scripts\User2UserConnection\ChatSender.cs" />
+    <Compile Include="Assets\Scripts\LobbyUI\SettingPanel.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\IgnoreUiRaycastWhenInactive.cs" />
     <Compile Include="Assets\Scripts\Cards\CardImages.cs" />
     <Compile Include="Assets\EditorCools\InspectorButton\ButtonAttribute.cs" />
