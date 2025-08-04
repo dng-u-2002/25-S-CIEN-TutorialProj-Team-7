@@ -2,6 +2,7 @@ using Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
@@ -85,7 +86,7 @@ public class InGameManager : MonoBehaviour
         else if(outPlayers.Count >= 3)
             return new Tuple<int, int>(-1, -1); // No special rule applies
 
-        //outPlayers.Count == 1임이 보장
+        //outPlayers.Count == 1???? ????
         int s1 = CalculateScore(status[inPlayers[0]].Item1);
         int s2 = CalculateScore(status[inPlayers[1]].Item1);
 
@@ -115,7 +116,7 @@ public class InGameManager : MonoBehaviour
     }
     public int CalculateLoser(Dictionary<int, Tuple<List<Card>, eIO>> status)
     {
-        //무조건 Out이 1명이거나 0명
+        //?????? Out?? 1?????? 0??
         int outCount = 0;
         foreach(var stat in status)
         {
@@ -129,7 +130,7 @@ public class InGameManager : MonoBehaviour
 
         if(outCount == 0)
         {
-            //세 명이 전부 In
+            //?? ???? ???? In
             int lowestInScore = 1000;
             int lowerID = 01;
             foreach (var stat in status)
@@ -163,7 +164,7 @@ public class InGameManager : MonoBehaviour
                 }
             }
 
-            //한 명이 Out
+            //?? ???? Out
             int outPlayer = 0;
             foreach (var stat in status)
             {
@@ -225,14 +226,14 @@ public class InGameManager : MonoBehaviour
         }
         else
         {
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("?????? ??...", 0);
             LocalPlayerUIDrawer.SetRPSTextBox(false, eRPS.None); // Reset RPS text box for local player
         }
         LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
         if (LocalPlayer.IsOrderDetermined == true)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("?????? ??...", 0);
             LocalPlayerUIDrawer.SetRPSButtonsActive(false);
         }
     }
@@ -525,7 +526,7 @@ public class InGameManager : MonoBehaviour
         if (LocalPlayer.IsOrderDetermined == true)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("?????? ??...", 0);
             LocalPlayerUIDrawer.SetRPSButtonsActive(false);
             if (isAllPlayerRanked)
                 LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
@@ -596,7 +597,7 @@ public class InGameManager : MonoBehaviour
         {
             if (rp.Target.ID == loserId)
             {
-                LocalPlayerUIDrawer.ShowPanelOnScreenCenter("패배: " + loserId + "번 플레이어", rp.Character + 2);
+                LocalPlayerUIDrawer.ShowPanelOnScreenCenter("?й?: " + loserId + "?? ?÷????", rp.Character + 2);
                 rp.SetOutCount(count);
             }
         }
@@ -661,7 +662,7 @@ public class InGameManager : MonoBehaviour
         }
         else
         {
-            //모드 설정만 먼저(카드 에니메이션을 위함)
+            //??? ?????? ????(??? ?????????? ????)
             foreach (var rp in RemotePlayerUIDrawers)
             {
                 if (rp.Target.ID == user1Id)
@@ -946,7 +947,7 @@ public class InGameManager : MonoBehaviour
             }
         }
     }
-
+    
     internal void RemoveAllCard2Delete()
     {
         LocalPlayerUIDrawer.RemoveCard2Delete();
