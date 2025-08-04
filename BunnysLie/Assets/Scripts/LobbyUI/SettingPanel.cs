@@ -30,10 +30,12 @@ public class SettingPanel : MonoBehaviour
     [SerializeField] Button SoundSettingButton;
     [SerializeField] Button FriendButton;
     [SerializeField] Button HelperButton;
+    [SerializeField] Button QuestButton;
 
     [SerializeField] RectTransform SoundSettingView;
     [SerializeField] RectTransform FriendView;
     [SerializeField] RectTransform HelperView;
+    [SerializeField] RectTransform QuestView;
 
     [Header("Sound Setting Sliders/Buttons")]
     [SerializeField] Slider MasterVolumeSlider;
@@ -64,6 +66,7 @@ public class SettingPanel : MonoBehaviour
         SoundSettingView.gameObject.SetActive(false);
         HelperView.gameObject.SetActive(false);
         FriendView.gameObject.SetActive(false);
+        QuestView.gameObject.SetActive(false);
     }
 
 
@@ -93,7 +96,14 @@ public class SettingPanel : MonoBehaviour
         HelperButton.transform.localScale = OriginalButtonScale * SelectedButtonScaleFactor;
         HelperView.gameObject.SetActive(true);
     }
-
+    public void OnButtonClicked_Quest()
+    {
+        ResetNowButton2NormalScale();
+        DisableAllViews();
+        NowSelectedButton = QuestButton.transform;
+        QuestButton.transform.localScale = OriginalButtonScale * SelectedButtonScaleFactor;
+        QuestView.gameObject.SetActive(true);
+    }
     private void Start()
     {
         IsViewing = false;
@@ -118,7 +128,10 @@ public class SettingPanel : MonoBehaviour
         {
             OnButtonClicked_Helper();
         });
-
+        QuestButton.onClick.AddListener(() =>
+        {
+            OnButtonClicked_Quest();
+        });
         /*
          *     [SerializeField] Button MasterVolumeActiveButton; bool Flag_MVAB;
     [SerializeField] Button BGMVolumeActiveButton; bool Flag_BVAB;

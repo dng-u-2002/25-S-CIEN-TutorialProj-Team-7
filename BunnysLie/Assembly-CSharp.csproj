@@ -67,6 +67,7 @@
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\AppSettingsExtensions.cs" />
     <Compile Include="Assets\Scripts\UI\LocalPlayerUIDrawer.cs" />
     <Compile Include="Assets\Scripts\Network\InGameUser.cs" />
+    <Compile Include="Assets\Scripts\LobbyUI\QuestItem.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\ChannelSelector.cs" />
     <Compile Include="Assets\Scripts\Cards\Card.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\Common\TextToggleIsOnTransition.cs" />
