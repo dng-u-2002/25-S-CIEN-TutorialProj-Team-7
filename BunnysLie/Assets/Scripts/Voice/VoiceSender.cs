@@ -10,7 +10,7 @@ namespace Voice
         public NetPeer peer;
         public string microphoneDevice;
         public AudioClip audioClip;
-        private bool transmitted = false;
+        public bool transmitted = false;
         
         private int lastSample = 0;
         private int sampleRate = 44100;
@@ -66,7 +66,7 @@ namespace Voice
             for (int i = 0; i < samples.Length; i++)
             {
                 byte[] data = System.BitConverter.GetBytes(samples[i]);
-                System.Buffer.BlockCopy(samples, 0, bytes, i*4, 4);
+                System.Buffer.BlockCopy(data, 0, bytes, i*4, 4);
             }
 
             return bytes;
