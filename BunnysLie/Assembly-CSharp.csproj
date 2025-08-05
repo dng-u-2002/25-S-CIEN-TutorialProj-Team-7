@@ -60,17 +60,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Chating.cs" />
+    <Compile Include="Assets\Scripts\LobbyUI\GameModeSelector.cs" />
     <Compile Include="Assets\Scripts\UI\RuleBook.cs" />
     <Compile Include="Assets\Scripts\UI\RemovePlayerUIDrawer.cs" />
     <Compile Include="Assets\Scripts\InGameManager.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\AppSettingsExtensions.cs" />
     <Compile Include="Assets\Scripts\UI\LocalPlayerUIDrawer.cs" />
     <Compile Include="Assets\Scripts\Network\InGameUser.cs" />
+    <Compile Include="Assets\Scripts\LobbyUI\QuestItem.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\ChannelSelector.cs" />
     <Compile Include="Assets\Scripts\Cards\Card.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\Common\TextToggleIsOnTransition.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\FriendItem.cs" />
     <Compile Include="Assets\Scripts\User2UserConnection\ChatSender.cs" />
+    <Compile Include="Assets\Scripts\LobbyUI\SettingPanel.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\IgnoreUiRaycastWhenInactive.cs" />
     <Compile Include="Assets\Scripts\Cards\CardImages.cs" />
     <Compile Include="Assets\EditorCools\InspectorButton\ButtonAttribute.cs" />
