@@ -16,7 +16,7 @@ public class SettingPanel : MonoBehaviour
         }
         set
         {
-            _IsViewing = false;
+            _IsViewing = value;
             Panel.gameObject.SetActive(value);
         }
     }
