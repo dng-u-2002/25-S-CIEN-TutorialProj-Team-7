@@ -2,9 +2,45 @@ using Helpers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RemovePlayerUIDrawer : PlayerUIDrawer
 {
+    [SerializeField] Button MuteButton;
+    [SerializeField] Sprite NormalSpeaker;
+    [SerializeField] Sprite MutedSpeaker;
+
+    bool _NowMuteState = false;
+    bool NowMuteState
+    {
+        get
+        {
+            return _NowMuteState;
+        }
+
+        set
+        {
+            _NowMuteState = value;
+            if(_NowMuteState == false)
+            {
+                MuteButton.image.sprite = NormalSpeaker;
+            }
+            else
+            {
+                MuteButton.image.sprite = MutedSpeaker;
+            }
+        }
+    }
+    protected override void Start()
+    {
+        base.Start();
+        NowMuteState = false;
+
+        MuteButton.onClick.AddListener(() =>
+        {
+            NowMuteState = !NowMuteState;
+        });
+    }
     public override void SetSpecialRuleMode()
     {
         base.SetSpecialRuleMode();
