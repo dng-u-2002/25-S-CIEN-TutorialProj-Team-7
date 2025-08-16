@@ -86,12 +86,19 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             SpecialRuleButton_Go.interactable = true;
         }
     }
+    public void RollBackSpecialRuleExchangeButtons()
+    {
+        SpecialRuleButton_ExchangeWithDeck.interactable = !AlreadyExchangedWithDeck;
+        SpecialRuleButton_ExchangeWithOpponent.interactable = !AlreadyExchangedWithOpponent;
+    }
     public void SetActiveAllSpecialRuleButtons(bool flag)
     {
         SpecialRuleButton_Go.interactable = flag;
         SpecialRuleButton_ExchangeWithDeck.interactable = flag;
         SpecialRuleButton_ExchangeWithOpponent.interactable = flag;
     }
+    bool AlreadyExchangedWithOpponent = false;
+    bool AlreadyExchangedWithDeck = false;
     public void SetSpecialRuleEvents(Action onGo, Action<Card> onExchangeWithDeck, Action onExhangeWithOpponentButtonClicked, Action<Card> onExchangeWithOpponent)
     {
         SpecialRuleButton_Go.onClick.RemoveAllListeners();
@@ -100,6 +107,9 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         SpecialRuleButton_Go.interactable = true;
         SpecialRuleButton_ExchangeWithDeck.interactable = true;
         SpecialRuleButton_ExchangeWithOpponent.interactable = true;
+
+        AlreadyExchangedWithDeck = false;
+        AlreadyExchangedWithOpponent = false;
 
         SpecialRuleButton_Go.onClick.AddListener(() =>
         {
@@ -113,37 +123,46 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
 
         SpecialRuleButton_ExchangeWithDeck.onClick.AddListener(() =>
         {
+            InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
             InGameManager.Instance.PlayButtonClickSound();
-            SpecialRuleButton_Go.interactable = (false);
+            SetActiveAllSpecialRuleButtons(false);
+            AlreadyExchangedWithDeck = true;
+
             SelectCard2Exchange((card) =>
             {
                 ExchangeWithDeck?.Invoke(card);
                 SpecialRuleButton_ExchangeWithDeck.interactable = false;
+                InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, 0.0f, true);
             });
         });
         SpecialRuleButton_ExchangeWithOpponent.onClick.AddListener(() =>
         {
+            InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
             InGameManager.Instance.PlayButtonClickSound();
-            SpecialRuleButton_Go.interactable = (false);
+            SetActiveAllSpecialRuleButtons(false);
+            AlreadyExchangedWithOpponent = true;
+
             onExhangeWithOpponentButtonClicked?.Invoke();
             SelectCard2Exchange((card) =>
             {
                 ExchangeWithOpponent?.Invoke(card);
                 ShowPanelOnScreenCenter("상대의 응답을 기다리는중...", 0);
                 SpecialRuleButton_ExchangeWithOpponent.interactable = false;
+                InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, 0.0f, true);
             });
         });
     }
    // public Card Card2Exchange;
     public void SelectCard2Exchange(System.Action<Card> onSelected)
     {
-        foreach(var c in CardObjects)
+        InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
+        foreach (var c in CardObjects)
         {
             c.ActiveSelection(true, (card) =>
             {
                 //Card2Exchange = card;
-                Vector3 originScale = card.CardGameObject.transform.localScale;
-                ObjectMoveHelper.ScaleObject(card.CardGameObject.transform, originScale * 1.1f, 0.2f);
+                InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, 0.0f, true);
+                card.CardGameObject.MoveMovementTransformScale(Vector3.one * 1.1f, 0.2f);
                 card.CardGameObject.MoveMovementTransformPosition(new Vector3(0, 50, 0), 0.2f, ePosition.Local);
                 DelayedFunctionHelper.InvokeDelayed(() =>
                 {
@@ -159,10 +178,14 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     }
     public void SelectCard2Delete(System.Action<Card> onSelected)
     {
+        SetWordCloudTextBox(true, "어떤 카드를 버릴까?", 43.7f,  true);
         foreach (var c in CardObjects)
         {
             c.ActiveSelection(true, (card) =>
             {
+                //"어떤 카드를 버릴까?" 제거
+                InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, -1, true);
+
                 //Card2Exchange = card;
                 onSelected?.Invoke(card);
                 foreach (var oc in CardObjects)

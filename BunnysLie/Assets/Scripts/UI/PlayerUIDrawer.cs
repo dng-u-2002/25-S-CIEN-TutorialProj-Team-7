@@ -117,10 +117,69 @@ public class PlayerUIDrawer : MonoBehaviour
     }
     string RPSTextBoxAnimationID;
     string RPSTextBoxAlphaAnimationID;
+
+    public void SetWordCloudTextBox(bool active, string text, float fontSize, bool animated = true)
+    {
+        if (active)
+        {
+            RPSTextBox.text = text;
+            RPSTextBox.fontSize = fontSize;
+        }
+        else
+        {
+            RPSTextBox.text = string.Empty;
+        }
+
+        if (animated)
+        {
+            if (active)
+            {
+                ObjectMoveHelper.TryStop(RPSTextBoxAnimationID);
+                ObjectMoveHelper.TryStop(RPSTextBoxAlphaAnimationID);
+                RPSTextBoxBackground.gameObject.SetActive(true);
+
+                Quaternion originalRotation = Quaternion.identity;
+                float diffAngle = 10f;
+                Quaternion startRotation = Quaternion.Euler(0, 0, diffAngle) * originalRotation;
+                RPSTextBoxBackground.localRotation = startRotation;
+
+                var image = RPSTextBoxBackground.GetComponentInChildren<Image>();
+                var originalColor = image.color;
+                originalColor.a = 0.2f;
+                image.color = originalColor;
+
+                RPSTextBoxAnimationID = ObjectMoveHelper.RotatebjectSlerp(RPSTextBoxBackground, originalRotation, 0.12f, Helpers.ePosition.Local);
+                RPSTextBoxAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 1.0f, 0.12f);
+            }
+            else
+            {
+                RPSTextBoxBackground.gameObject.SetActive(true);
+
+                Quaternion originalRotation = RPSTextBoxBackground.localRotation;
+                float diffAngle = -10f;
+                Quaternion targetRotation = Quaternion.Euler(0, 0, diffAngle) * Quaternion.identity;
+
+                var image = RPSTextBoxBackground.GetComponentInChildren<Image>();
+
+
+                RPSTextBoxAnimationID = ObjectMoveHelper.RotatebjectSlerp(RPSTextBoxBackground, targetRotation, 0.12f, Helpers.ePosition.Local);
+                RPSTextBoxAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 0.0f, 0.12f);
+            }
+        }
+        else
+        {
+            RPSTextBoxBackground.gameObject.SetActive(active);
+        }
+    }
+
     public void SetRPSTextBox(bool active, eRPS rps, bool ignoreSame = false, bool animated = true)
     {
         if (rps == eRPS.None)
+        {
             active = false;
+        }
+            RPSTextBox.fontSize = 50.0f;
+
 
         if (active)
         {

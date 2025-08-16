@@ -693,14 +693,14 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             //카드를 추가함
                             InGameManager.Instance.FindDrawerByID(id).Target.ThisDeck.AddCards(myCards.ToArray());
                             InGameManager.Instance.FindDrawerByID(opponentId).Target.ThisDeck.AddCards(user2Cards.ToArray());
-
+                            
                             //글쎄... 암튼 이렇게 하면 에니메이션이 정상적으로 덱 위치에서부터 시작됨
                             foreach (var c in cards2Animated) c.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
                             InGameManager.Instance.FindDrawerByID(id).UpdateCardsLayout();
                             InGameManager.Instance.FindDrawerByID(opponentId).UpdateCardsLayout();
                             foreach (var c in cards2Animated) c.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
 
-
+                            foreach (var c in cards2Animated) c.CardGameObject.MovementTransform.gameObject.SetActive(false);
 
                             if (InGameManager.Instance.Mode == eGameMode.TwoCards)
                                 InGameManager.Instance.StartSpecialRule_TwoCardMode(id, opponentId,
@@ -808,6 +808,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
 
                             yield return new WaitForSeconds(1.1f);
+                            foreach (var c in cards2Animated) c.CardGameObject.MovementTransform.gameObject.SetActive(true);
                             //에니메이션도 실행
                             PlayCardsAnimation_MoveFromDeck2LocalPoisition(cards2Animated, 0, InGameManager.Instance.Mode == eGameMode.TwoCards ? 2 : 3);
 
@@ -904,6 +905,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             {
                                 rp.SetIOText(originText);
                                 InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
+                                InGameManager.Instance.LocalPlayerUIDrawer.RollBackSpecialRuleExchangeButtons();
                                 InGameManager.Instance.LocalPlayerUIDrawer.ActivateGoButton();
                             }, 2.0f);
 
@@ -1058,6 +1060,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         DelayedFunctionHelper.InvokeDelayed(() =>
                         {
                             localOutCard.CardGameObject.SetFaceAnimated(false, faceFlipDur, faceFlipEase);
+                            InGameManager.Instance.LocalPlayerUIDrawer.RollBackSpecialRuleExchangeButtons();
                             InGameManager.Instance.LocalPlayerUIDrawer.ActivateGoButton();
                         }, faceFlipDelay);
                     }
@@ -1102,6 +1105,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             DelayedFunctionHelper.InvokeDelayed(() =>
                             {
                                 card.CardGameObject.SetFaceAnimated(true, 1.2f, 0.4f);
+                                InGameManager.Instance.LocalPlayerUIDrawer.RollBackSpecialRuleExchangeButtons();
                                 InGameManager.Instance.LocalPlayerUIDrawer.ActivateGoButton();
                             }, 0.9f);
                             DelayedFunctionHelper.InvokeDelayed(() =>
