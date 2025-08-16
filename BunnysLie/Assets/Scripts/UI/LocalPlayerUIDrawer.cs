@@ -79,6 +79,19 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             POSCText.text = text;
         }
     }
+    public void ActivateGoButton()
+    {
+        if (SpecialRuleButton_Go != null)
+        {
+            SpecialRuleButton_Go.interactable = true;
+        }
+    }
+    public void SetActiveAllSpecialRuleButtons(bool flag)
+    {
+        SpecialRuleButton_Go.interactable = flag;
+        SpecialRuleButton_ExchangeWithDeck.interactable = flag;
+        SpecialRuleButton_ExchangeWithOpponent.interactable = flag;
+    }
     public void SetSpecialRuleEvents(Action onGo, Action<Card> onExchangeWithDeck, Action onExhangeWithOpponentButtonClicked, Action<Card> onExchangeWithOpponent)
     {
         SpecialRuleButton_Go.onClick.RemoveAllListeners();
@@ -92,12 +105,16 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         {
             onGo?.Invoke();
             SpecialRuleButton_Go.interactable = (false);
+            SpecialRuleButton_ExchangeWithDeck.interactable = false;
+            SpecialRuleButton_ExchangeWithOpponent.interactable = false;
         });
         ExchangeWithDeck = (card => onExchangeWithDeck?.Invoke(card));
         ExchangeWithOpponent = (card => onExchangeWithOpponent?.Invoke(card));
 
         SpecialRuleButton_ExchangeWithDeck.onClick.AddListener(() =>
         {
+            InGameManager.Instance.PlayButtonClickSound();
+            SpecialRuleButton_Go.interactable = (false);
             SelectCard2Exchange((card) =>
             {
                 ExchangeWithDeck?.Invoke(card);
@@ -106,6 +123,8 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         });
         SpecialRuleButton_ExchangeWithOpponent.onClick.AddListener(() =>
         {
+            InGameManager.Instance.PlayButtonClickSound();
+            SpecialRuleButton_Go.interactable = (false);
             onExhangeWithOpponentButtonClicked?.Invoke();
             SelectCard2Exchange((card) =>
             {
@@ -219,7 +238,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
                 break;
             }
         }
-        realCard.CardGameObject.SetFace(true); // Set the card face to back
+        realCard.CardGameObject.SetFaceAnimated(true, 1.2f, 0.2f);
     }
     public override void RemoveCard2Delete()
     {
@@ -231,10 +250,10 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     }
     internal void SelectedCard2Delete(Card card)
     {
-        CardObject c = card.CardGameObject;
-        c.transform.SetParent(DeletedCardContainer);
-        c.transform.localPosition = Vector3.zero; // Reset position to center of DeletedCardContainer
-        c.SetFace(true); // Set the card face to back
+        //CardObject c = card.CardGameObject;
+        //c.transform.SetParent(DeletedCardContainer);
+        //c.transform.localPosition = Vector3.zero; // Reset position to center of DeletedCardContainer
+        //c.SetFace(true); // Set the card face to back
     }
 
     internal void SetAllCards2DefaultState()
@@ -242,6 +261,24 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         foreach(var c in CardObjects)
         {
             c.SetMoverDefaultTransform();
+            c.ActiveSelection(false, null);
         }
+    }
+
+    internal void ChangeCardSibilingIndicesAndKeepMoverPosition(Card c1, Card c2)
+    {
+        int idx1 = c1.CardGameObject.transform.GetSiblingIndex();
+        int idx2 = c2.CardGameObject.transform.GetSiblingIndex();
+
+        Vector3 originPosition1 = c1.CardGameObject.GetMoverPosition();
+        Vector3 originPosition2 = c2.CardGameObject.GetMoverPosition();
+
+        c1.CardGameObject.transform.SetSiblingIndex(idx2);
+        c2.CardGameObject.transform.SetSiblingIndex(idx1);
+        //레이아웃을 업데이트해야 함.
+        UpdateLayout();
+
+        c1.CardGameObject.SetMovementTransformPosition(originPosition1);
+        c2.CardGameObject.SetMovementTransformPosition(originPosition2);
     }
 }

@@ -15,6 +15,31 @@ public class PlayerUIDrawer : MonoBehaviour
     [SerializeField] Transform Character_DownRabbit;
     [SerializeField] Transform Character_BlackRabbit;
 
+    public void MoveCardPosition2DeletedCardContainerPosition(int idx, float duration)
+    {
+        Target.ThisDeck.GetCard(idx).CardGameObject.MoveMovementTransformPosition(DeletedCardContainer.position, duration, ePosition.World);
+    }
+    public void MoveCardPosition_FromDeckPosition2LocalPosition(Card c, float duration)
+    {
+        if(c == null || c.CardGameObject == null)
+        {
+            Debug.LogError("Card or CardGameObject is null.");
+            return;
+        }
+        if(Target.ThisDeck.GetCardsAsList().Contains(c) == false)
+        {
+            Debug.LogError("Card is not in the deck.");
+            return;
+        }
+        c.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+        c.CardGameObject.MoveMovementTransformPosition(Vector3.zero, duration, ePosition.Local);
+    }
+    public void MoveCardPosition_FromDeckPosition2LocalPosition(int idx, float duration)
+    {
+        Target.ThisDeck.GetCard(idx).CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+        Target.ThisDeck.GetCard(idx).CardGameObject.MoveMovementTransformPosition(Vector3.zero, duration, ePosition.Local);
+    }
+
     public int Character { get; private set; }
     public void SetChatacter(int idx)
     {
@@ -183,7 +208,7 @@ public class PlayerUIDrawer : MonoBehaviour
     [SerializeField] TMP_Text InOutText;
 
     [SerializeField] protected List<CardObject> CardObjects;
-    [SerializeField] HorizontalLayoutGroup CardContainer;
+    [SerializeField] protected HorizontalLayoutGroup CardContainer;
 
     [SerializeField] CardObject CardPrefab;
 
@@ -248,6 +273,10 @@ public class PlayerUIDrawer : MonoBehaviour
             LayoutRebuilder.ForceRebuildLayoutImmediate(CardContainer.GetComponent<RectTransform>());
         }
     }
+    public void UpdateLayout()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(CardContainer.GetComponent<RectTransform>());
+    }
     void OnCardAdded(Card c)
     {
         if (CardContainer != null)
@@ -278,7 +307,7 @@ public class PlayerUIDrawer : MonoBehaviour
 
     }
 
-    [SerializeField] protected RectTransform DeletedCardContainer;
+    [SerializeField] public RectTransform DeletedCardContainer;
 
     internal void DeleteAnycard()
     {

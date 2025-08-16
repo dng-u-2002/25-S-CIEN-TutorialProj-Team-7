@@ -78,12 +78,29 @@ public class Deck
         }
     }
 
+    public void RemoveCard(int idx)
+    {
+        if (0 <= idx && idx < CardCount)
+        {
+            OnCardRemoved?.Invoke(Cards[idx]);
+            Cards.RemoveAt(idx);
+        }
+        else
+        {
+            Debug.LogWarning("Attempted to remove a null card or a card not in the deck.");
+        }
+    }
     public void RemoveCard(Card card)
     {
         if (card != null && Cards.Contains(card))
         {
             OnCardRemoved?.Invoke(card);
             Cards.Remove(card);
+        }
+        else if(Cards.Find((c) => c.Value == card.Value && c.Type == card.Type) is Card foundCard)
+        {
+            OnCardRemoved?.Invoke(foundCard);
+            Cards.Remove(foundCard);
         }
         else
         {

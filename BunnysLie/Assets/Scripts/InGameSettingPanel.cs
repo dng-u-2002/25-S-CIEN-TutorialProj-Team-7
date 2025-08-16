@@ -144,10 +144,12 @@ public class InGameSettingPanel : MonoBehaviour
         SettingButton.onClick.AddListener(() =>
         {
             IsOn = !IsOn;
+            InGameManager.Instance.PlayButtonClickSound();
         });
         SettingXButton.onClick.AddListener(() =>
         {
             IsOn = false;
+            InGameManager.Instance.PlayButtonClickSound();
         });
 
         MasterVolumeSlider.onValueChanged.AddListener((value01) =>
@@ -215,6 +217,8 @@ public class InGameSettingPanel : MonoBehaviour
                 MasterVolumeSlider.value = 0.0f;
             else
                 MasterVolumeSlider.value = 0.1f;
+
+            InGameManager.Instance.PlayButtonClickSound();
         });
         BGMVolumeActiveButton.onClick.AddListener(() =>
         {
@@ -222,6 +226,7 @@ public class InGameSettingPanel : MonoBehaviour
                 BGMVolumeSlider.value = 0.0f;
             else
                 BGMVolumeSlider.value = 0.1f;
+            InGameManager.Instance.PlayButtonClickSound();
         });
         SFXVolumeActiveButton.onClick.AddListener(() =>
         {
@@ -229,14 +234,17 @@ public class InGameSettingPanel : MonoBehaviour
                 SFXVolumeSlider.value = 0.0f;
             else
                 SFXVolumeSlider.value = 0.1f;
+            InGameManager.Instance.PlayButtonClickSound();
         });
         VoiceChatActiveButton.onClick.AddListener(() =>
         {
             IsActive_VoiceChat = !IsActive_VoiceChat;
+            InGameManager.Instance.PlayButtonClickSound();
         });
         TextChatActiveButton.onClick.AddListener(() =>
         {
             IsActive_TextChat = !IsActive_TextChat;
+            InGameManager.Instance.PlayButtonClickSound();
         });
 
 

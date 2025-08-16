@@ -38,8 +38,12 @@ public class RemovePlayerUIDrawer : PlayerUIDrawer
 
         MuteButton.onClick.AddListener(() =>
         {
+            InGameManager.Instance.PlayButtonClickSound();
             NowMuteState = !NowMuteState;
         });
+
+        CardContainer.transform.localScale = Vector3.one * 1.12f;
+        CardContainer.transform.localPosition += new Vector3(40, 0, 0);
     }
     public override void SetSpecialRuleMode()
     {
