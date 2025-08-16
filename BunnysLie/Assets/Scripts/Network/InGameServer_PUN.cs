@@ -958,16 +958,16 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         {
                             room.Cards[id].Remove(new Tuple<byte, byte>(cardType, cardValue)); //카드 삭제
                             Debug.Log($"[Special Rule] User {user.Id} exchanged card with deck. Removed card: {cardType}:{cardValue}.");
-                            var newCard = CreateRandomCards(1); // 카드 1장 생성
-                            room.Cards[id].Add(newCard[0]); // 새 카드 추가
-                            Debug.Log($"[Special Rule] User {user.Id} exchanged card with deck. New card: {newCard[0].Item1}:{newCard[0].Item2}.");
+                            var newCard = GetRandomCard(new List<Tuple<byte, byte>>(new[] { new Tuple<byte, byte>(cardType, cardValue) })); // 카드 1장 생성
+                            room.Cards[id].Add(new Tuple<byte, byte>(newCard.Item1, newCard.Item2)); // 새 카드 추가
+                            Debug.Log($"[Special Rule] User {user.Id} exchanged card with deck. New card: {newCard.Item1}:{newCard.Item2}.");
 
                             foreach (var rp in room.Players)
                             {
                                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_ExhangeCardWithDeckInSpecialRule);
                                 PacketWriter.WriteInt(id);
-                                PacketWriter.WriteByte(newCard[0].Item1); // 새 카드 타입
-                                PacketWriter.WriteByte(newCard[0].Item2); // 새 카드 값
+                                PacketWriter.WriteByte(newCard.Item1); // 새 카드 타입
+                                PacketWriter.WriteByte(newCard.Item2); // 새 카드 값
                                 SendPacket(rp);
                             }
                         }
