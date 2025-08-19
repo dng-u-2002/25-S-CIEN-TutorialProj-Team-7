@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\LobbyUI\SettingPanel.cs" />
     <Compile Include="Assets\Scripts\ExtendedEnumeratorRunner.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\IgnoreUiRaycastWhenInactive.cs" />
+    <Compile Include="Assets\Scripts\UI\Emoticon.cs" />
     <Compile Include="Assets\Scripts\Cards\CardImages.cs" />
     <Compile Include="Assets\EditorCools\InspectorButton\ButtonAttribute.cs" />
     <Compile Include="Assets\Scripts\Chating.cs" />
@@ -487,18 +488,6 @@
     </Reference>
     <Reference Include="Photon3Unity3D">
       <HintPath>Assets\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Android.Types">
-      <HintPath>C:\Program Files\Unity 2022.3.57f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Android.Gradle">
-      <HintPath>C:\Program Files\Unity 2022.3.57f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Android.GradleProject">
-      <HintPath>C:\Program Files\Unity 2022.3.57f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.GradleProject.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">

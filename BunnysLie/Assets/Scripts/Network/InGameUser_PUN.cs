@@ -7,8 +7,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.Collections.LowLevel.Unsafe;
+#if UNITY_EDITOR
 using UnityEditor.VersionControl;
+#endif
 using UnityEngine;
 using VOYAGER_Server;
 using static InGameServer_PUN;
@@ -21,28 +24,46 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         Photon.Pun.PhotonNetwork.NickName = ParrelSync.ClonesManager.GetArgument();
         Debug.Log("NickName: " + Photon.Pun.PhotonNetwork.NickName);
 #endif
+        PhotonNetwork.GameVersion = "0.1.0";
+        PhotonNetwork.AutomaticallySyncScene = false;
+
+        // 고정 리전 지정 (둘 다 같은 값으로!)
+        var app = PhotonNetwork.PhotonServerSettings.AppSettings;
+        app.FixedRegion = "asia";      // 필요 시 "kr" 등 팀이 쓰는 실제 코드로 통일
+                                       // UDP가 막힌 환경 회피 (선택)
+        app.Protocol = ExitGames.Client.Photon.ConnectionProtocol.WebSocketSecure;
+
+        Debugger.text += ($"[PHOTON] AppId prefix: {app.AppIdRealtime?.Substring(0, 6)}");
+        Debugger.text += ($"[PHOTON] GameVersion: {PhotonNetwork.GameVersion}");
+        Debugger.text += ($"[PHOTON] FixedRegion: {app.FixedRegion}");
+        Debugger.text += ($"[PHOTON] CloudRegion(connected): {PhotonNetwork.CloudRegion}");
+        Debugger.text += ($"[PHOTON] State: {PhotonNetwork.NetworkClientState}");
+
+
         Photon.Pun.PhotonNetwork.ConnectUsingSettings();
 
         Writer = new NetworkDataWriter_PUN();
     }
-
+    [SerializeField] TMP_Text Debugger;
     public override void OnConnectedToMaster()
     {
         base.OnConnectedToMaster();
         Debug.Log("Connected to Master Server");
-
+        Debugger.text += "Connected to Master Server\n";
         Debug.Log($"Is Master Client: {Photon.Pun.PhotonNetwork.IsMasterClient}");
+        Debugger.text += $"Is Master Client: {Photon.Pun.PhotonNetwork.IsMasterClient}\n";
         DelayedFunctionHelper.InvokeDelayed(() =>
         {
             Photon.Pun.PhotonNetwork.JoinOrCreateRoom("Bunny", new Photon.Realtime.RoomOptions { MaxPlayers = 3 }, null);
         }, 0.1f);
     }
-    public override void OnJoinRandomFailed(short returnCode, string message)
-    {
-        Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
+    //public override void OnJoinRandomFailed(short returnCode, string message)
+    //{
+    //    Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
+    //    Debugger.text += "OnJoinRandomFailed: No random room available, creating a new room.\n";
 
-        PhotonNetwork.CreateRoom("Bunny", new RoomOptions());
-    }
+    //    PhotonNetwork.CreateRoom("Bunny", new RoomOptions());
+    //}
 
     int RoundCounter;
     [SerializeField] AudioSource CardDistributionSound;
@@ -50,8 +71,9 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnJoinedLobby()
     {
         base.OnJoinedLobby();
-        Debug.Log("Joined Lobby");
-        Photon.Pun.PhotonNetwork.JoinOrCreateRoom("Bunny", new Photon.Realtime.RoomOptions { MaxPlayers = 3 }, null);
+        //Debug.Log("Joined Lobby");
+        //Photon.Pun.PhotonNetwork.JoinOrCreateRoom("Bunny", new Photon.Realtime.RoomOptions { MaxPlayers = 3 }, null);
+        //Debugger.text += "Joined Lobby and trying to join or create room 'Bunny'.\n";
     }
 
     public override void OnJoinedRoom()
@@ -59,10 +81,12 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         base.OnJoinedRoom();
         Debug.Log("Joined Room: " + Photon.Pun.PhotonNetwork.CurrentRoom.Name);
         Debug.Log($"Is Master Client: {Photon.Pun.PhotonNetwork.IsMasterClient}");
+        Debugger.text += "Joined Room: " + Photon.Pun.PhotonNetwork.CurrentRoom.Name + "\n";
 
         foreach (var p in Photon.Pun.PhotonNetwork.CurrentRoom.Players)
         {
             Debug.Log(p.Value.NickName);
+            Debugger.text += $"Nickname: {p.Value.NickName}, ID: {p.Value.ActorNumber}\n";
         }
 
 
@@ -85,6 +109,17 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
+    public void SendLocalEmoticonData2Server(int index)
+    {
+        Writer.CreateNewPacket((byte)ePacketType_InGameServer.SelfEmoticon);
+        Writer.WriteInt(Id);
+        Writer.WriteInt(InGameManager.Instance.RoomID);
+        //선택한 카드를 패킷에 포함
+        Writer.WriteByte((byte)index);
+        Writer.SendPacket(ServerPeer);
+    }
+
+
     //protected override void OnReceivePacketFromServer(NetworkDataReader reader, byte channelNumber, DeliveryMethod deliveryMethod)
     public void OnEvent(EventData photonEvent)
     {
@@ -96,6 +131,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
         ePacketType_InGameServer packetType = (ePacketType_InGameServer)pac;
         Debug.Log($"[Server Connection] Received packet type: {packetType}");
+        Debugger.text += $"Received packet type: {packetType}\n";
 
         switch (packetType)
         {
@@ -120,6 +156,23 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     int id = reader.ReadInt();
                     string message = reader.ReadString();
                     NetworkResponse_Chat_Receive(id, message);
+                }
+                break;
+
+            case ePacketType_InGameServer.Broadcast_Emoticon:
+                {
+                    int id = reader.ReadInt();
+                    byte index = reader.ReadByte();
+
+                    if(id == Id) //내가 보낸 이모티콘
+                    {
+                        Debug.Log($"[InGameUser_PUN] Received my own emoticon: {index}");
+                    }
+                    else //다른 사람이 보낸 이모티콘
+                    {
+                        Debug.Log($"[InGameUser_PUN] Received emoticon from player {id}: {index}");
+                        InGameManager.Instance.FindDrawerByIDExceptLocal(id).PlayEmoticon(index);
+                    }
                 }
                 break;
 

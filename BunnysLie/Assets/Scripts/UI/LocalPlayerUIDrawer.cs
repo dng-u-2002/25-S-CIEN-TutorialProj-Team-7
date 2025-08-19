@@ -32,6 +32,47 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     [SerializeField] public AudioSource IOSelectSound;
     [SerializeField] public AudioSource POSCSelectSound;
 
+
+
+    [SerializeField] RectTransform EmotionPanel;
+
+    [SerializeField] RectTransform EmoticonPanel0;
+    [SerializeField] RectTransform EmoticonPanel1;
+    public void SetEmoticonPanelRange(int range)
+    {
+        if(range == 0)
+        {
+            EmoticonPanel0.gameObject.SetActive(true);
+            EmoticonPanel1.gameObject.SetActive(false);
+        }
+        else if(range == 1)
+        {
+            EmoticonPanel0.gameObject.SetActive(false);
+            EmoticonPanel1.gameObject.SetActive(true);
+        }
+        else
+        {
+            EmoticonPanel0.gameObject.SetActive(false);
+            EmoticonPanel1.gameObject.SetActive(false);
+        }
+    }
+    public override void PlayEmoticon(int index)
+    {
+        base.PlayEmoticon(index);
+        SetActiveEmoticonPanel(false);
+        FindObjectOfType<InGameUser_PUN>().SendLocalEmoticonData2Server(index);
+    }
+    public void OnEmotioconShowButtonClicked()
+    {
+        EmotionPanel.gameObject.SetActive(!EmotionPanel.gameObject.activeSelf);
+        EmotionPanel.transform.GetChild(0).SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        SetEmoticonPanelRange(0);
+    }
+    public void SetActiveEmoticonPanel(bool flag)
+    {
+        EmotionPanel.gameObject.SetActive(flag);
+    }
+
     public void ShowPanelOnScreenCenterWithButtons(string text, int background, string leftButtonText, string rightButtonText, Action onLeftButtonClick, Action onRightButtonClick)
     {
         if (PanelOnScreenCenterWithButtons != null)
@@ -224,6 +265,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         SpecialRuleButton_ExchangeWithDeck.gameObject.SetActive(false);
         SpecialRuleButton_ExchangeWithOpponent.gameObject.SetActive(false);
         SetActivePanelOnScreenCenterWithButtons(false);
+        SetActiveEmoticonPanel(false);
     }
 
     public void RemoveAllListenersFromRPSButtons()

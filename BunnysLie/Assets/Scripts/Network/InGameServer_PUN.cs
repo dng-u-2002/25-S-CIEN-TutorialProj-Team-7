@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using VOYAGER_Server;
@@ -85,6 +86,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         PacketWriter.Clear();
     }
 
+    [SerializeField] TMP_Text Debugger;
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
@@ -94,7 +96,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             Debug.LogWarning("[Warning] Only Master Client can handle events.");
             return;
         }
-
+        Debugger.text += $"[User Connection] New User connected: {newPlayer.ActorNumber}\n";
         Debug.Log($"[User Connection] New User connected: {newPlayer.ActorNumber}");
 
         PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.HandShake_S2U);
@@ -105,6 +107,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         if (Photon.Pun.PhotonNetwork.IsMasterClient == false)
             return;
         Debug.Log($"Now Player Count : {PhotonNetwork.CurrentRoom.PlayerCount}");
+        Debugger.text += $"[User Connection] Now Player Count : {PhotonNetwork.CurrentRoom.PlayerCount}\n";
         if (PhotonNetwork.CurrentRoom.PlayerCount >= 3)
         {
             var room = new Room();
@@ -502,12 +505,17 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             return;
         }
 
+
         NetworkDataReader_PUN reader = new NetworkDataReader_PUN(photonEvent.CustomData);
 
         User user = ThisRoomData.Players.Find((u) => photonEvent.Sender == u.Id);
         var pac = photonEvent.Code;
         var packet = (ePacketType_InGameServer)pac;
         Debug.Log($"[Packet Received] User {user.Id} sent a packet {packet}.");
+
+
+        Debugger.text += $"[Packet Received] User {user.Id} sent a packet {packet}.\n";
+
         switch (packet)
         {
             case ePacketType_InGameServer.HandShake_U2S:
@@ -523,6 +531,25 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 //    PacketWriter.WriteString(message);
                 //    SendPacket(u.Item1);
                 //}
+                break;
+            case ePacketType_InGameServer.SelfEmoticon:
+                {
+                    int id = reader.ReadInt();
+                    int roomID = reader.ReadInt();
+                    if (Rooms.TryGetValue(roomID, out var room))
+                    {
+                        byte idx = reader.ReadByte();
+
+
+                        foreach(var pl in room.Players)
+                        {
+                            PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_Emoticon);
+                            PacketWriter.WriteInt(id); // 보낸 사람 ID
+                            PacketWriter.WriteByte(idx); // 이모티콘 인덱스
+                            SendPacket(pl);
+                        }
+                    }
+                }
                 break;
             case ePacketType_InGameServer.Request_JoinGame:
                 {
@@ -1528,7 +1555,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     public void StartRPS(Room room)
     {
         bool test = false;
-        test = true;
+        test = false;
         if (test == true)
         {
             room.RPSFirst = room.Players[0].Id;
