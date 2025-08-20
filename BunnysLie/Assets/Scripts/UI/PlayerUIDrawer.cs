@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,68 @@ public class PlayerUIDrawer : MonoBehaviour
     [SerializeField] Transform Character_WhieRabbit;
     [SerializeField] Transform Character_DownRabbit;
     [SerializeField] Transform Character_BlackRabbit;
+
+    [SerializeField] Emoticon EmoticonDatas;
+
+
+    string EmoticonTransformAnimationID;
+    string EmoticonAlphaAnimationID;
+
+    [SerializeField] RectTransform EmoticonSpriteContainer;
+    [SerializeField] Image EmoticonSprite;
+
+    IEnumerator _PlayEmoticon(SingleEmoticon emoticon)
+    {
+        float duration = 1.5f;
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            var sprite = emoticon.GetSpriteWithNormalizedTime(elapsedTime);
+            if (sprite != null)
+            {
+                EmoticonSprite.sprite = sprite;
+            }
+            yield return null;
+        }
+        Quaternion originalRotation = EmoticonSpriteContainer.localRotation;
+        float diffAngle = -10f;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, diffAngle) * Quaternion.identity;
+
+        var image = EmoticonSprite;
+
+
+        EmoticonTransformAnimationID = ObjectMoveHelper.RotatebjectSlerp(EmoticonSpriteContainer, targetRotation, 0.12f, Helpers.ePosition.Local);
+        EmoticonAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 0.0f, 0.12f);
+
+        yield return new WaitForSeconds(0.12f);
+        EmoticonSpriteContainer.gameObject.SetActive(false);
+    }
+    Coroutine EmotionPlayer;
+    public virtual void PlayEmoticon(int index)
+    {
+        var emoticon = EmoticonDatas.Emoticons[index];
+        ObjectMoveHelper.TryStop(EmoticonTransformAnimationID);
+        ObjectMoveHelper.TryStop(EmoticonAlphaAnimationID);
+        EmoticonSpriteContainer.gameObject.SetActive(true);
+
+        Quaternion originalRotation = Quaternion.identity;
+        float diffAngle = 10f;
+        Quaternion startRotation = Quaternion.Euler(0, 0, diffAngle) * originalRotation;
+        EmoticonSpriteContainer.localRotation = startRotation;
+
+        var image = EmoticonSprite.GetComponentInChildren<Image>();
+        var originalColor = image.color;
+        originalColor.a = 0.2f;
+        image.color = originalColor;
+
+        EmoticonTransformAnimationID = ObjectMoveHelper.RotatebjectSlerp(EmoticonSpriteContainer, originalRotation, 0.12f, Helpers.ePosition.Local);
+        EmoticonAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 1.0f, 0.12f);
+
+        if (EmotionPlayer != null)
+            StopCoroutine(EmotionPlayer);
+        EmotionPlayer = StartCoroutine(_PlayEmoticon(emoticon));
+    }
 
     public void MoveCardPosition2DeletedCardContainerPosition(int idx, float duration)
     {
@@ -309,6 +372,8 @@ public class PlayerUIDrawer : MonoBehaviour
         CardObjects = new List<CardObject>();
 
         SetChatacter(UnityEngine.Random.Range(0, 3));
+
+        EmoticonSpriteContainer.gameObject.SetActive(false);
     }
 
     void OnCardRemoved(Card c)

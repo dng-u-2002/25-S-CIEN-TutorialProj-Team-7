@@ -88,7 +88,9 @@ public enum ePacketType_InGameServer : byte
     Broadcast_ExhangeWithOpponentInSpecialRuleResult, //교환 결과
     U2SResponse_SuccessfullyExchangedCardWithOpponentInSpecialRule, //내가 교환한 카드가 덱에 추가됨
 
-    Broadcast_FinalResult
+    Broadcast_FinalResult,
+    SelfEmoticon,
+    Broadcast_Emoticon
 }
 //public class InGameUser : LiteNetLibUser
 //{
