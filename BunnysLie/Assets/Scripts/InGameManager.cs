@@ -117,7 +117,7 @@ public class InGameManager : MonoBehaviour
         else if (outPlayers.Count >= 3)
             return new Tuple<int, int>(-1, -1); // No special rule applies
 
-        //outPlayers.Count == 1ÀÓÀÌ º¸Àå
+        //outPlayers.Count == 1???? ????
         int s1 = CalculateScore(status[inPlayers[0]].Item1);
         int s2 = CalculateScore(status[inPlayers[1]].Item1);
 
@@ -147,7 +147,6 @@ public class InGameManager : MonoBehaviour
     }
     public int CalculateLoser(Dictionary<int, Tuple<List<Card>, eIO>> status)
     {
-        ////¹«Á¶°Ç OutÀÌ 1¸íÀÌ°Å³ª 0¸í
         int outCount = 0;
         foreach (var stat in status)
         {
@@ -161,7 +160,7 @@ public class InGameManager : MonoBehaviour
 
         if (outCount == 0)
         {
-            //¼¼ ¸íÀÌ ÀüºÎ In
+            //?? ???? ???? In
             int lowestInScore = 1000;
             int lowerID = 01;
             foreach (var stat in status)
@@ -195,7 +194,6 @@ public class InGameManager : MonoBehaviour
                 }
             }
 
-            ///ÇÑ ¸íÀÌ Out
             int outPlayer = 0;
             foreach (var stat in status)
             {
@@ -257,14 +255,14 @@ public class InGameManager : MonoBehaviour
         }
         else
         {
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("±â´Ù¸®´Â Áß...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("?????? ??...", 0);
             LocalPlayerUIDrawer.SetRPSTextBox(false, eRPS.None); // Reset RPS text box for local player
         }
         LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
         if (LocalPlayer.IsOrderDetermined == true)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("±â´Ù¸®´Â Áß...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("?????? ??...", 0);
             LocalPlayerUIDrawer.SetRPSButtonsActive(false);
         }
     }
@@ -559,7 +557,7 @@ public class InGameManager : MonoBehaviour
         if (LocalPlayer.IsOrderDetermined == true)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("±â´Ù¸®´Â Áß...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("?????? ??...", 0);
             LocalPlayerUIDrawer.SetRPSButtonsActive(false);
             if (isAllPlayerRanked)
                 LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
@@ -636,13 +634,13 @@ public class InGameManager : MonoBehaviour
         {
             if (rp.Target.ID == loserId)
             {
-                LocalPlayerUIDrawer.ShowPanelOnScreenCenter(round + "¶ó¿îµå ²ÃÁö : " + loserId + "¹ø ÇÃ·¹ÀÌ¾î", rp.Character + 2);
+                LocalPlayerUIDrawer.ShowPanelOnScreenCenter(round + "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ : " + loserId + "ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½", rp.Character + 2);
                 rp.SetOutCount(count);
             }
         }
         if (LocalPlayer.ID == loserId)
         {
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter(round + "¶ó¿îµå ²ÃÁö : " + loserId + "¹ø ÇÃ·¹ÀÌ¾î", LocalPlayerUIDrawer.Character + 2);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter(round + "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ : " + loserId + "ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½", LocalPlayerUIDrawer.Character + 2);
             LocalPlayerUIDrawer.SetOutCount(count);
         }
     }
@@ -661,7 +659,7 @@ public class InGameManager : MonoBehaviour
         }
         else
         {
-            //¸ðµå ¼³Á¤¸¸ ¸ÕÀú(Ä«µå ¿¡´Ï¸ÞÀÌ¼ÇÀ» À§ÇÔ)
+            //??? ?????? ????(??? ?????????? ????)
             foreach (var rp in RemotePlayerUIDrawers)
             {
                 if (rp.Target.ID == user1Id)
@@ -748,7 +746,7 @@ public class InGameManager : MonoBehaviour
                     // Card selected for deletion
                     selectCard2Delete(card);
                 });
-            }, 4.0f); //Ä«µå ºÐ¹è ¿¡´Ï¸ÞÀÌ¼Ç µô·¹ÀÌ
+            }, 4.0f); //Ä«ï¿½ï¿½ ï¿½Ð¹ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
             LocalPlayerUIDrawer.SetSpecialRuleEvents(() =>
             {
@@ -877,7 +875,7 @@ public class InGameManager : MonoBehaviour
 
     internal void ShowCards2Delete(int id1, Card c1, int id2, Card c2, int id3, Card c3)
     {
-        //·ÎÄÃÀÇ °ÍµéÀº ±×³É Ä«µå¸¦ Á÷Á¢ ³Ñ°ÜÁàµµ µÊ(ÀÌ¹Ì Ä«µå µ¥ÀÌÅÍ¸¦ °¡Áö°í ÀÖÀ¸¹Ç·Î)
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Íµï¿½ï¿½ï¿½ ï¿½×³ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ°ï¿½ï¿½àµµ ï¿½ï¿½(ï¿½Ì¹ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½)
         if (id1 == LocalPlayer.ID)
         {
             LocalPlayerUIDrawer.ShowCard2Delete(c1);
@@ -891,9 +889,9 @@ public class InGameManager : MonoBehaviour
             LocalPlayerUIDrawer.ShowCard2Delete(c3);
         }
 
-        //±×·¯³ª ¸®¸ðÆ®´Â ÇöÀç »óÅÂ¿¡¼­ Ä«µå°¡ ´õ¹ÌÀÏ °ÍÀÌ±â¿¡, µ¥ÀÌÅÍ¸¦ ³Ö¾îÁà¾ß ÇÔ.
-        //ÀÌÀü¿¡ Broadcast_SomeoneSelectedCard2Delete ¿¡¼­ 2¹øÂ° ÀÎµ¦½ºÀÇ Ä«µå¸¦ ¹ö¸®´Â ¿¡´Ï¸ÞÀÌ¼ÇÀ» ÇßÀ» °ÍÀÌ¹Ç·Î,
-        //GetCard(2)·Î Á¢±ÙÇÏ¿© °ªÀ» ³Ö¾îÁÖ¸é µÊ.
+        //ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ Ä«ï¿½å°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì±â¿¡, ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½.
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Broadcast_SomeoneSelectedCard2Delete ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½Â° ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¹Ç·ï¿½,
+        //GetCard(2)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½Ö¸ï¿½ ï¿½ï¿½.
         foreach (var rp in RemotePlayerUIDrawers)
         {
             if (rp.Target.ID == id1)
@@ -919,7 +917,7 @@ public class InGameManager : MonoBehaviour
             }
         }
     }
-
+    
     internal void RemoveAllCard2Delete()
     {
         LocalPlayerUIDrawer.RemoveCard2Delete();

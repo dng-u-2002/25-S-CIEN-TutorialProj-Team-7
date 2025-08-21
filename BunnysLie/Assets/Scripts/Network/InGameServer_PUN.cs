@@ -32,7 +32,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     public class User
     {
         public Photon.Realtime.Player Player;
-        public int Id => Player.ActorNumber; //ÀÏ´ÜÀº
+        public int Id => Player.ActorNumber; //ï¿½Ï´ï¿½ï¿½ï¿½
 
         public User(Photon.Realtime.Player player)
         {
@@ -43,34 +43,34 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         public List<User> Players;
         public eRoomState State = eRoomState.None;
-        public eGameMode Mode = eGameMode.TwoCards; //2Àå ¸ðµå / 3Àå ¸ðµå
+        public eGameMode Mode = eGameMode.TwoCards; //2ï¿½ï¿½ ï¿½ï¿½ï¿½ / 3ï¿½ï¿½ ï¿½ï¿½ï¿½
 
-        public Dictionary<int, byte> OutCounts = new Dictionary<int, byte>(); //¾Æ¿ôÄ«¿îÆ®(³²Àº ¸ñ¼û)
+        public Dictionary<int, byte> OutCounts = new Dictionary<int, byte>(); //ï¿½Æ¿ï¿½Ä«ï¿½ï¿½Æ®(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
         /// <summary>
-        /// ÇöÀç º¸À¯ÁßÀÎ Ä«µå. ÀÏ¹Ý °ÔÀÓ / ½ºÆä¼È ·ê ¹«°üÇÏ°Ô »ç¿ëµÊ.
+        /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½. ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ / ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½.
         /// </summary>
         public Dictionary<int, List<Tuple<byte, byte>>> Cards = new Dictionary<int, List<Tuple<byte, byte>>>();
         public Dictionary<int, Tuple<byte, byte>> Cards2Delete = new Dictionary<int, Tuple<byte, byte>>();
 
         public int PlayerCounter_SelectedCard2Delete = 0;
-        public int PlayerCounter_SuccessfullyReceivedCard = 0; //¼º°øÀûÀ¸·Î Ä«µå¸¦ ¹ÞÀº ÇÃ·¹ÀÌ¾î ¼ö. 3¸íÀÌ ¸ðµÎ Ä«µå¸¦ ¹ÞÀ¸¸é RPS ½ÃÀÛ
-        public int? RPSFirst; //°¡À§¹ÙÀ§º¸ 1µî ÇÃ·¹ÀÌ¾î ID
-        public int? RPSSecond; //°¡À§¹ÙÀ§º¸ 2µî ÇÃ·¹ÀÌ¾î ID
-        public int? RPSThird; //°¡À§¹ÙÀ§º¸ 3µî ÇÃ·¹ÀÌ¾î ID
-        public byte NowRPSRoundCounter = 0; //ÇöÀç °¡À§¹ÙÀ§º¸ ¶ó¿îµå
-        public byte PlayerCounter_SuccessfullyReceivedOrders; // °¡À§¹ÙÀ§º¸ ¼øÀ§¸¦ ¼º°øÀûÀ¸·Î ¹ÞÀº ÇÃ·¹ÀÌ¾î ¼ö. 3¸íÀÌ ¸ðµÎ ¹ÞÀ¸¸é In/Out ¼±ÅÃ ½ÃÀÛ
+        public int PlayerCounter_SuccessfullyReceivedCard = 0; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½. 3ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ RPS ï¿½ï¿½ï¿½ï¿½
+        public int? RPSFirst; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID
+        public int? RPSSecond; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID
+        public int? RPSThird; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 3ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID
+        public byte NowRPSRoundCounter = 0; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        public byte PlayerCounter_SuccessfullyReceivedOrders; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½. 3ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ In/Out ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        public List<int> RPSTargetPlayers = new List<int>(); // Áö±Ý °¡À§¹ÙÀ§º¸ ÁßÀÎ ÇÃ·¹ÀÌ¾î ID ¸ñ·Ï
-        public Dictionary<int, eRPS> RPSSelections = new Dictionary<int, eRPS>(); // °¡À§¹ÙÀ§º¸ ¼±ÅÃ °á°ú. Key: ÇÃ·¹ÀÌ¾î ID, Value: ¼±ÅÃÇÑ °¡À§¹ÙÀ§º¸ ¸ð¾ç
+        public List<int> RPSTargetPlayers = new List<int>(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID ï¿½ï¿½ï¿½
+        public Dictionary<int, eRPS> RPSSelections = new Dictionary<int, eRPS>(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½. Key: ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID, Value: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
-        public List<int> NowSpecialRulePlayers = new List<int>(); // ÇöÀç ½ºÆä¼È ·ê¿¡ Âü¿© ÁßÀÎ ÇÃ·¹ÀÌ¾î ID ¸ñ·Ï
-        public Dictionary<int, Tuple<byte, byte>> Cards2ExchangeInSpecialRule = new Dictionary<int, Tuple<byte, byte>>(); // ½ºÆä¼È ·ê¿¡¼­ ±³È¯ÇÒ Ä«µå. Key: ÇÃ·¹ÀÌ¾î ID, Value: (Ä«µå Å¸ÀÔ, Ä«µå °ª)
-        public byte PlayerCountWhoAcceptedExchangeInSpecialRule = 0; // ½ºÆä¼È ·ê¿¡¼­ Ä«µå ±³È¯À» ¼ö¶ôÇÑ ÇÃ·¹ÀÌ¾î ¼ö
+        public List<int> NowSpecialRulePlayers = new List<int>(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ê¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID ï¿½ï¿½ï¿½
+        public Dictionary<int, Tuple<byte, byte>> Cards2ExchangeInSpecialRule = new Dictionary<int, Tuple<byte, byte>>(); // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ê¿¡ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ Ä«ï¿½ï¿½. Key: ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID, Value: (Ä«ï¿½ï¿½ Å¸ï¿½ï¿½, Ä«ï¿½ï¿½ ï¿½ï¿½)
+        public byte PlayerCountWhoAcceptedExchangeInSpecialRule = 0; // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ê¿¡ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½
 
-        public int GoPlayerCountInSpecialRule = 0; // ½ºÆä¼È ·ê¿¡¼­ Go¸¦ ¼±ÅÃÇÑ ÇÃ·¹ÀÌ¾î ¼ö. 2¸íÀÌ µÇ¸é ½ºÆä¼È ·ê ½ÃÀÛ
+        public int GoPlayerCountInSpecialRule = 0; // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ê¿¡ï¿½ï¿½ Goï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½. 2ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        public List<int> InPlayers = new List<int>(); // In ÇÃ·¹ÀÌ¾î ID ¸ñ·Ï
-        public List<int> OutPlayers = new List<int>(); // Out ÇÃ·¹ÀÌ¾î ID ¸ñ·Ï
+        public List<int> InPlayers = new List<int>(); // In ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID ï¿½ï¿½ï¿½
+        public List<int> OutPlayers = new List<int>(); // Out ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID ï¿½ï¿½ï¿½
     }
 
     Room ThisRoomData;
@@ -191,7 +191,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
             if (cards.Contains(new Tuple<byte, byte>((byte)type, (byte)value)) == false)
             {
-                // Ä«µå°¡ Áßº¹µÇÁö ¾ÊÀ¸¸é ¹ÝÈ¯
+                // Ä«ï¿½å°¡ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
                 break;
             }
         }
@@ -213,24 +213,24 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     //    Broadcast_StartGame,
 
 
-    //    DistributeCardsFromServer, //¼­¹ö¿¡¼­ ·ëÀÇ À¯Àúµé¿¡°Ô Ä«µå ºÐ¹è
+    //    DistributeCardsFromServer, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½é¿¡ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½Ð¹ï¿½
     //    U2SResponse_SuccessfullyReceivedCards, //
 
     //    S2URequest_SelectCard2Delete,
-    //    U2SResponse_SelectCard2Delete, //À¯Àú°¡ »èÁ¦ÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ¼­¹ö¿¡ Àü¼ÛÇÏ´Â ÆÐÅ¶
-    //    Broadcast_SomeoneSelectedCard2Delete, //À¯Àú°¡ »èÁ¦ÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ´Ù¸¥ À¯Àúµé¿¡°Ô Àü¼ÛÇÏ´Â ÆÐÅ¶
-    //    Broadcast_ShowCards2Delete, //À¯Àú°¡ »èÁ¦ÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ´Ù¸¥ À¯Àúµé¿¡°Ô Àü¼ÛÇÏ´Â ÆÐÅ¶(»èÁ¦ÇÒ Ä«µå º¸¿©ÁÖ±â)
+    //    U2SResponse_SelectCard2Delete, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Å¶
+    //    Broadcast_SomeoneSelectedCard2Delete, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½é¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Å¶
+    //    Broadcast_ShowCards2Delete, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½é¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Å¶(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½)
 
-    //    S2URequest_RPSSelection, //°¡À§¹ÙÀ§º¸ ¼±ÅÃ ¿äÃ»
-    //    U2SResponse_RPSSelection, //°¡À§¹ÙÀ§º¸ ¼±ÅÃ ÀÀ´ä(À¯Àú°¡ ¼±ÅÃÇÑ °¡À§¹ÙÀ§º¸ ¸ð¾çÀ» ¼­¹ö¿¡ Àü¼Û)
+    //    S2URequest_RPSSelection, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»
+    //    U2SResponse_RPSSelection, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 
     //    //Broadcast_ShowRPSRoundResult_Selection,
     //    //Broadcast_ShowRPSRoundResult_Order,
-    //    //À§ 2°³´Â Broadcast_RPSRoundResult·Î ÅëÇÕ. ³ª¸ÓÁö´Â Å¬¶óÀÌ¾ðÆ®¿¡¼­ Ã³¸®
+    //    //ï¿½ï¿½ 2ï¿½ï¿½ï¿½ï¿½ Broadcast_RPSRoundResultï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
     //    Broadcast_RPSRoundResult,
 
     //    //Ready2RPSRematch,
-    //    //À§ 1°³´Â Broadcast_RPSStartRematch·Î º¯°æ.
+    //    //ï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ Broadcast_RPSStartRematchï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
     //    Broadcast_RPSStartRematch,
 
     //    Broadcast_RPSFinalResult,
@@ -257,9 +257,9 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
     //    Broadcast_StartSpecialRule,
     //    S2URequest_SelectCard2DeleteISR,
-    //    U2SResponse_SelectCard2DeleteISR, //À¯Àú°¡ ½ºÆä¼È ·ê¿¡¼­ Á¦°ÅÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ¼­¹ö¿¡ Àü¼ÛÇÏ´Â ÆÐÅ¶
-    //    Broadcast_SomeoneSelectedCard2RemoveISR, //À¯Àú°¡ ½ºÆä¼È ·ê¿¡¼­ Á¦°ÅÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ´Ù¸¥ À¯Àúµé¿¡°Ô Àü¼ÛÇÏ´Â ÆÐÅ¶
-    //    Broadcast_ShowCards2DeleteISR, //À¯Àú°¡ ½ºÆä¼È ·ê¿¡¼­ Á¦°ÅÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ´Ù¸¥ À¯Àúµé¿¡°Ô Àü¼ÛÇÏ´Â ÆÐÅ¶(Á¦°ÅÇÒ Ä«µå º¸¿©ÁÖ±â)
+    //    U2SResponse_SelectCard2DeleteISR, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ê¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Å¶
+    //    Broadcast_SomeoneSelectedCard2RemoveISR, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ê¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½é¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Å¶
+    //    Broadcast_ShowCards2DeleteISR, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ê¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½é¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Å¶(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½)
     //    GoInSpecialRule,
     //    Broadcast_ShowSpecialRuleCards,
     //    Broadcast_LoserOfSpecialRule,
@@ -270,12 +270,12 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
     //    U2SRequest_ExhangeCardWithOpponentInSpecialRule,
 
-    //    S2UAsk_ExhangeCardWithOpponentInSpecialRule, // »ó´ë¿Í Ä«µå ±³È¯ ¿äÃ»
-    //    S2UResponse_WillAcceptExhangeCardWithOpponentISR, // »ó´ë°¡ Ä«µå ±³È¯ ¿äÃ»¿¡ ÀÀ´ä
+    //    S2UAsk_ExhangeCardWithOpponentInSpecialRule, // ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½Ã»
+    //    S2UResponse_WillAcceptExhangeCardWithOpponentISR, // ï¿½ï¿½ë°¡ Ä«ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     //    Broadcast_IsOpponentAcceptedCardExchangeISR,
 
-    //    U2SRequest_OpponentSelectedCardToExhangeISR, //»ó´ë°¡ Ä«µå¸¦ °ñ¶úÀ½
-    //    Broadcast_ExhangeWithOpponentInSpecialRuleResult, //±³È¯ °á°ú
+    //    U2SRequest_OpponentSelectedCardToExhangeISR, //ï¿½ï¿½ë°¡ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½
+    //    Broadcast_ExhangeWithOpponentInSpecialRuleResult, //ï¿½ï¿½È¯ ï¿½ï¿½ï¿½
     //    U2SResponse_SuccessfullyExchangedCardWithOpponentInSpecialRule,
 
     //    Broadcast_FinalResult
@@ -290,10 +290,10 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     private eRPS? GetWinningRPSChoice(IEnumerable<eRPS> choices)
     {
         var distinct = choices.Distinct().ToList();
-        // ¸ðµÎ °°Àº ¸ð¾çÀÌ°Å³ª °¡À§¡¤¹ÙÀ§¡¤º¸°¡ ¸ðµÎ ¼¯¿´À¸¸é ¹«½ÂºÎ
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ì°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Âºï¿½
         if (distinct.Count == 1 || distinct.Count == 3)
             return null;
-        // µÎ °¡Áö ¸ð¾ç¸¸ ³²¾ÒÀ» ¶§, ÀÌ±â´Â ÂÊÀ» ¹ÝÈ¯
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ç¸¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, ï¿½Ì±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
         if (distinct.Contains(eRPS.Rock) && distinct.Contains(eRPS.Scissors)) return eRPS.Rock;
         if (distinct.Contains(eRPS.Scissors) && distinct.Contains(eRPS.Paper)) return eRPS.Scissors;
         if (distinct.Contains(eRPS.Paper) && distinct.Contains(eRPS.Rock)) return eRPS.Paper;
@@ -305,7 +305,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         foreach (var p in room.Players)
         {
             PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_RPSRoundResult);
-            //ÇöÀç ¶ó¿îµå : byte
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ : byte
             //id : int
             //byte : selection : default is 4
             //byte : order : default is 3
@@ -319,19 +319,19 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     PacketWriter.WriteByte(4);
 
                 if (room.RPSFirst == rp)
-                    PacketWriter.WriteByte(2); // 1µî
+                    PacketWriter.WriteByte(2); // 1ï¿½ï¿½
                 else if (room.RPSSecond == rp)
-                    PacketWriter.WriteByte(1); // 2µî
+                    PacketWriter.WriteByte(1); // 2ï¿½ï¿½
                 else if (room.RPSThird == rp)
-                    PacketWriter.WriteByte(0); // 3µî
+                    PacketWriter.WriteByte(0); // 3ï¿½ï¿½
                 else
-                    PacketWriter.WriteByte(3); // ¾ÆÁ÷ °áÁ¤ ¾ÈµÊ
+                    PacketWriter.WriteByte(3); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Èµï¿½
             }
             if (room.RPSTargetPlayers.Count == 2)
             {
                 PacketWriter.WriteInt(-1);
                 PacketWriter.WriteByte(4);
-                PacketWriter.WriteByte(4); //±×³É ¾Æ¹« °ª
+                PacketWriter.WriteByte(4); //ï¿½×³ï¿½ ï¿½Æ¹ï¿½ ï¿½ï¿½
             }
             SendPacket(p);
         }
@@ -339,9 +339,9 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void CheckRPSRoundResult(Room room, System.Action<List<int>> onPlayersShouldRematch)
     {
-        // ÇöÀç ¶ó¿îµå ÀÀ´äÀÌ ´Ù ¸ð¿´À¸¸é
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         const float packetDelay_SendRematchAfterDraw = 1.0f;
-        System.Action<List<int>> requstRematch = null; // Àç´ë°á ¿äÃ»À» À§ÇÑ ÄÝ¹é
+        System.Action<List<int>> requstRematch = null; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¹ï¿½
         List<int> playersShouldRematch = new List<int>();
         if (room.RPSSelections.Count == room.RPSTargetPlayers.Count)
         {
@@ -349,12 +349,12 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             var winChoice = GetWinningRPSChoice(room.RPSSelections.Values);
             if (winChoice == null)
             {
-                //¹«½ÂºÎ °°Àº ´ë»ó¿¡°Ô ´Ù½Ã ¿äÃ»
+                //ï¿½ï¿½ï¿½Âºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ó¿¡°ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½Ã»
 
-                //¼±ÅÃ °á°ú Ãâ·Â
+                //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 Debug.Log($"[RPS Round {room.NowRPSRoundCounter}] Draw. Players should rematch: {string.Join(", ", room.RPSTargetPlayers)}");
                 //print rps selections
-                playersShouldRematch = new List<int>(room.RPSTargetPlayers); //vaule typeÀÇ deep copy´Â new List<T>¸¸ ÇØµµ µÊ
+                playersShouldRematch = new List<int>(room.RPSTargetPlayers); //vaule typeï¿½ï¿½ deep copyï¿½ï¿½ new List<T>ï¿½ï¿½ ï¿½Øµï¿½ ï¿½ï¿½
                 requstRematch = onPlayersShouldRematch;
 
                 SendRPSRoundResult(room);
@@ -375,36 +375,36 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                 if (room.RPSTargetPlayers.Count == 3)
                 {
-                    if (winners.Count == 1) //½ÂÀÚ 1¸í, ÆÐÀÚ 2¸í
+                    if (winners.Count == 1) //ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½
                     {
                         int winnerID = winners[0];
-                        room.RPSFirst = winnerID; // ´Üµ¶ ½ÂÀÚ
+                        room.RPSFirst = winnerID; // ï¿½Üµï¿½ ï¿½ï¿½ï¿½ï¿½
 
                         playersShouldRematch = new List<int>(losers);
                         requstRematch = onPlayersShouldRematch;
                     }
-                    else if (winners.Count == 2) //½ÂÀÚ 2¸í, ÆÐÀÚ 1¸í
+                    else if (winners.Count == 2) //ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½
                     {
                         int loserID = losers[0];
-                        room.RPSThird = loserID; // ´Üµ¶ ÆÐÀÚ
+                        room.RPSThird = loserID; // ï¿½Üµï¿½ ï¿½ï¿½ï¿½ï¿½
 
                         playersShouldRematch = new List<int>(winners);
                         requstRematch = onPlayersShouldRematch;
                     }
                 }
-                else if (room.RPSTargetPlayers.Count == 2) //Àç´ë°á
+                else if (room.RPSTargetPlayers.Count == 2) //ï¿½ï¿½ï¿½ï¿½
                 {
-                    //if(winners.Count == 1) // ½ÂÀÚ 1¸í, ÆÐÀÚ 1¸í. ¹Ýµå½Ã ÀÌ °æ¿ì¹Û¿¡ ¾øÀ½.
+                    //if(winners.Count == 1) // ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½. ï¿½Ýµï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½.
                     //{
                     int winnerID = winners[0];
                     int loserID = losers[0];
 
-                    if (room.RPSFirst.HasValue == true) //1µîÀÌ Á¤ÇØÁø Àç´ë°áÀÌ¿´À» °æ¿ì 
+                    if (room.RPSFirst.HasValue == true) //1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 
                     {
                         room.RPSSecond = winnerID;
                         room.RPSThird = loserID;
                     }
-                    else //3µîÀÌ Á¤ÇØÁø Àç´ë°áÀÌ¿´À» °æ¿ì
+                    else //3ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                     {
                         room.RPSFirst = winnerID;
                         room.RPSSecond = loserID;
@@ -414,7 +414,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
 
                 #region
-                //°¡À§¹ÙÀ§º¸ ¼±ÅÃÁö¸¦ º¸¿© ÁÖ°í
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½
                 //foreach (var p in room.Players)
                 //{
                 //    PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ShowRPSRoundResult_Selection);
@@ -434,7 +434,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 //    }
                 //    SendPacket(p);
                 //}
-                ////1ÃÊ ÀÖ´Ù°¡ ¼øÀ§¸¦ º¸¿©ÁÜ
+                ////1ï¿½ï¿½ ï¿½Ö´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 //Task.Delay(Delay_ShowOrderAfterRPS).ContinueWith(_ =>
                 //{
                 //    foreach (var p in room.Players)
@@ -442,16 +442,16 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 //        PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ShowRPSRoundResult_Order);
 
                 //        PacketWriter.WriteByte(room.NowRPSRoundCounter);
-                //        // ¼ø¼­´ë·Î ID ¸®½ºÆ® Àü¼Û
-                //        PacketWriter.WriteInt((int)(room.RPSFirst.HasValue ? room.RPSFirst : -1));  // 1µî
-                //        PacketWriter.WriteInt((int)(room.RPSSecond.HasValue ? room.RPSSecond : -1));  // 2µî
-                //        PacketWriter.WriteInt((int)(room.RPSThird.HasValue ? room.RPSThird : -1));  // 3µî
+                //        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ID ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+                //        PacketWriter.WriteInt((int)(room.RPSFirst.HasValue ? room.RPSFirst : -1));  // 1ï¿½ï¿½
+                //        PacketWriter.WriteInt((int)(room.RPSSecond.HasValue ? room.RPSSecond : -1));  // 2ï¿½ï¿½
+                //        PacketWriter.WriteInt((int)(room.RPSThird.HasValue ? room.RPSThird : -1));  // 3ï¿½ï¿½
 
                 //        SendPacket(p);
                 //    }
                 //});
                 #endregion
-                //À§¿¡ 2°³ ÅëÇÕ, µô·¹ÀÌ´Â Å¬¶óÀÌ¾ðÆ®¿¡¼­ Ã³¸®
+                //ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
                 SendRPSRoundResult(room);
 
                 if ((room.RPSFirst.HasValue && room.RPSSecond.HasValue && room.RPSThird.HasValue) == false)
@@ -474,10 +474,10 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_RPSFinalResult);
 
                             PacketWriter.WriteByte(room.NowRPSRoundCounter);
-                            // ¼ø¼­´ë·Î ID ¸®½ºÆ® Àü¼Û
-                            PacketWriter.WriteInt((int)(room.RPSFirst));  // 1µî
-                            PacketWriter.WriteInt((int)(room.RPSSecond));  // 2µî
-                            PacketWriter.WriteInt((int)(room.RPSThird));  // 3µî
+                            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ID ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+                            PacketWriter.WriteInt((int)(room.RPSFirst));  // 1ï¿½ï¿½
+                            PacketWriter.WriteInt((int)(room.RPSSecond));  // 2ï¿½ï¿½
+                            PacketWriter.WriteInt((int)(room.RPSThird));  // 3ï¿½ï¿½
 
                             SendPacket(p);
                         }
@@ -544,8 +544,8 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         foreach(var pl in room.Players)
                         {
                             PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_Emoticon);
-                            PacketWriter.WriteInt(id); // º¸³½ »ç¶÷ ID
-                            PacketWriter.WriteByte(idx); // ÀÌ¸ðÆ¼ÄÜ ÀÎµ¦½º
+                            PacketWriter.WriteInt(id); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ID
+                            PacketWriter.WriteByte(idx); // ï¿½Ì¸ï¿½Æ¼ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½
                             SendPacket(pl);
                         }
                     }
@@ -581,7 +581,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         if (room.State != eRoomState.WaitingForSuccessfulCardReception)
                         {
-                            //ÀÌ°Ç ¿¡·¯ÀÓ
+                            //ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                             Debug.Log($"[Warning] User {user.Id} tried to receive cards in an invalid state: {room.State}.");
                             return;
                         }
@@ -625,8 +625,8 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             Debug.Log($"[Warning] User {user.Id} tried to select card to delete in an invalid state: {room.State}.");
                             return;
                         }
-                        byte cardType = reader.ReadByte(); // Ä«µå Å¸ÀÔ
-                        byte cardValue = reader.ReadByte(); // Ä«µå °ª
+                        byte cardType = reader.ReadByte(); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                        byte cardValue = reader.ReadByte(); // Ä«ï¿½ï¿½ ï¿½ï¿½
                         if (room.Cards[id].Contains(new Tuple<byte, byte>(cardType, cardValue)) == false)
                         {
                             Debug.Log($"[Warning] User {user.Id} tried to select card that does not exist in their hand: {cardType}:{cardValue}.");
@@ -635,14 +635,14 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         else
                         {
                             room.Cards[id].Remove(new Tuple<byte, byte>(cardType, cardValue));
-                            room.Cards2Delete[id] = new Tuple<byte, byte>(cardType, cardValue); // ¼±ÅÃÇÑ Ä«µå ÀúÀå
+                            room.Cards2Delete[id] = new Tuple<byte, byte>(cardType, cardValue); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                             room.PlayerCounter_SelectedCard2Delete += 1;
                             Debug.Log($"[Card Selection] User {user.Id} selected card {cardType}:{cardValue} to delete in Room {roomID}.");
 
                             foreach (var pl in room.Players)
                             {
                                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_SomeoneSelectedCard2Delete);
-                                PacketWriter.WriteInt(id); // ¼±ÅÃÇÑ ÇÃ·¹ÀÌ¾î ID
+                                PacketWriter.WriteInt(id); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID
                                 SendPacket(pl);
                             }
 
@@ -653,16 +653,16 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                     PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ShowCards2Delete);
                                     foreach (var op in room.Cards2Delete)
                                     {
-                                        PacketWriter.WriteInt(op.Key); // ¼±ÅÃÇÑ ÇÃ·¹ÀÌ¾î ID
+                                        PacketWriter.WriteInt(op.Key); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID
                                         var card2Delete = op.Value;
-                                        PacketWriter.WriteByte(card2Delete.Item1); // Ä«µå Å¸ÀÔ
-                                        PacketWriter.WriteByte(card2Delete.Item2); // Ä«µå °ª
+                                        PacketWriter.WriteByte(card2Delete.Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                                        PacketWriter.WriteByte(card2Delete.Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
                                     }
                                     SendPacket(pl);
                                 }
 
                                 room.Cards2Delete.Clear();
-                                //Ä«µå°¡ 2ÀåÀÌ µÇµµ·Ï º¸Àå
+                                //Ä«ï¿½å°¡ 2ï¿½ï¿½ï¿½ï¿½ ï¿½Çµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                                 foreach(var pc in room.Cards)
                                 {
                                     if (pc.Value.Count == 3)
@@ -799,7 +799,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         }
                         else if (packet == ePacketType_InGameServer.U2SResponse_SelectInOut_Third)
                         {
-                            // ¼¼ ¹øÂ° ¼±ÅÃ ÈÄ ÃÖÁ¾ °á°ú Àü¼Û
+                            // ï¿½ï¿½ ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                             SendIOResultAllPlayers(room, true);
 
                             const float packetDelay_FromAllPlayerSelectedIOToSendAllPlayersCardData = 1.0f;
@@ -814,8 +814,8 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                         PacketWriter.WriteInt(cards.Key);
                                         foreach (var c in cards.Value)
                                         {
-                                            PacketWriter.WriteByte(c.Item1); // Ä«µå Å¸ÀÔ
-                                            PacketWriter.WriteByte(c.Item2); // Ä«µå °ª
+                                            PacketWriter.WriteByte(c.Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                                            PacketWriter.WriteByte(c.Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
                                         }
                                     }
                                     SendPacket(pl);
@@ -865,11 +865,11 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ShowSpecialRuleCards);
                                 foreach (var sp in room.NowSpecialRulePlayers)
                                 {
-                                    PacketWriter.WriteInt(sp); // ÇÃ·¹ÀÌ¾î ID
+                                    PacketWriter.WriteInt(sp); // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID
                                     foreach (var c in room.Cards[sp])
                                     {
-                                        PacketWriter.WriteByte(c.Item1); // Ä«µå Å¸ÀÔ
-                                        PacketWriter.WriteByte(c.Item2); // Ä«µå °ª
+                                        PacketWriter.WriteByte(c.Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                                        PacketWriter.WriteByte(c.Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
                                     }
                                 }
                                 SendPacket(pl);
@@ -880,9 +880,9 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             {
                                 int loser = CalculateSpecialRuleLoser(room);
 
-                                if (loser == -1) //µ¿Á¡
+                                if (loser == -1) //ï¿½ï¿½ï¿½ï¿½
                                 {
-                                    SendStartSpecialRule(room, room.NowSpecialRulePlayers[0], room.NowSpecialRulePlayers[1], reason: 10); //µ¿Á¡ÀÚ ¹ß»ý
+                                    SendStartSpecialRule(room, room.NowSpecialRulePlayers[0], room.NowSpecialRulePlayers[1], reason: 10); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
                                     return;
                                 }
 
@@ -893,7 +893,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                     PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_LoserOfSpecialRule);
                                     PacketWriter.WriteInt(loser);
                                     if (loser == -1)
-                                        PacketWriter.WriteByte(0); // ¹«½ÂºÎ
+                                        PacketWriter.WriteByte(0); // ï¿½ï¿½ï¿½Âºï¿½
                                     else
                                         PacketWriter.WriteByte(room.OutCounts[loser]);
                                     SendPacket(pl);
@@ -921,8 +921,8 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             Debug.Log($"[Warning] User {user.Id} tried to select card to remove in an invalid state: {room.State}.");
                             return;
                         }
-                        byte cardType = reader.ReadByte(); // Ä«µå Å¸ÀÔ
-                        byte cardValue = reader.ReadByte(); // Ä«µå °ª
+                        byte cardType = reader.ReadByte(); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                        byte cardValue = reader.ReadByte(); // Ä«ï¿½ï¿½ ï¿½ï¿½
                         if (room.Cards[id].Contains(new Tuple<byte, byte>(cardType, cardValue)) == false)
                         {
                             Debug.Log($"[Warning] User {user.Id} tried to select card that does not exist in their hand: {cardType}:{cardValue}.");
@@ -931,13 +931,13 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         else
                         {
                             room.Cards[id].Remove(new Tuple<byte, byte>(cardType, cardValue));
-                            room.Cards2Delete[id] = new Tuple<byte, byte>(cardType, cardValue); // ¼±ÅÃÇÑ Ä«µå ÀúÀå
+                            room.Cards2Delete[id] = new Tuple<byte, byte>(cardType, cardValue); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                             room.PlayerCounter_SelectedCard2Delete += 1;
                             Debug.Log($"[Card Selection] User {user.Id} selected card {cardType}:{cardValue} to remove in Room {roomID}.");
                             foreach (var pl in room.Players)
                             {
                                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_SomeoneSelectedCard2RemoveISR);
-                                PacketWriter.WriteInt(id); // ¼±ÅÃÇÑ ÇÃ·¹ÀÌ¾î ID
+                                PacketWriter.WriteInt(id); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID
                                 SendPacket(pl);
                             }
                             if (room.PlayerCounter_SelectedCard2Delete == 2)
@@ -947,10 +947,10 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                     PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ShowCards2DeleteISR);
                                     foreach (var op in room.Cards2Delete)
                                     {
-                                        PacketWriter.WriteInt(op.Key); // ¼±ÅÃÇÑ ÇÃ·¹ÀÌ¾î ID
+                                        PacketWriter.WriteInt(op.Key); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ID
                                         var card2Remove = op.Value;
-                                        PacketWriter.WriteByte(card2Remove.Item1); // Ä«µå Å¸ÀÔ
-                                        PacketWriter.WriteByte(card2Remove.Item2); // Ä«µå °ª
+                                        PacketWriter.WriteByte(card2Remove.Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                                        PacketWriter.WriteByte(card2Remove.Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
                                     }
                                     SendPacket(pl);
                                 }
@@ -973,8 +973,8 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             return;
                         }
 
-                        byte cardType = reader.ReadByte(); // Ä«µå Å¸ÀÔ
-                        byte cardValue = reader.ReadByte(); // Ä«µå °ª
+                        byte cardType = reader.ReadByte(); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                        byte cardValue = reader.ReadByte(); // Ä«ï¿½ï¿½ ï¿½ï¿½
 
                         if (room.Cards[id].Contains(new Tuple<byte, byte>(cardType, cardValue)) == false)
                         {
@@ -983,18 +983,18 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         }
                         else
                         {
-                            room.Cards[id].Remove(new Tuple<byte, byte>(cardType, cardValue)); //Ä«µå »èÁ¦
+                            room.Cards[id].Remove(new Tuple<byte, byte>(cardType, cardValue)); //Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                             Debug.Log($"[Special Rule] User {user.Id} exchanged card with deck. Removed card: {cardType}:{cardValue}.");
-                            var newCard = GetRandomCard(new List<Tuple<byte, byte>>(new[] { new Tuple<byte, byte>(cardType, cardValue) })); // Ä«µå 1Àå »ý¼º
-                            room.Cards[id].Add(new Tuple<byte, byte>(newCard.Item1, newCard.Item2)); // »õ Ä«µå Ãß°¡
+                            var newCard = GetRandomCard(new List<Tuple<byte, byte>>(new[] { new Tuple<byte, byte>(cardType, cardValue) })); // Ä«ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                            room.Cards[id].Add(new Tuple<byte, byte>(newCard.Item1, newCard.Item2)); // ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ß°ï¿½
                             Debug.Log($"[Special Rule] User {user.Id} exchanged card with deck. New card: {newCard.Item1}:{newCard.Item2}.");
 
                             foreach (var rp in room.Players)
                             {
                                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_ExhangeCardWithDeckInSpecialRule);
                                 PacketWriter.WriteInt(id);
-                                PacketWriter.WriteByte(newCard.Item1); // »õ Ä«µå Å¸ÀÔ
-                                PacketWriter.WriteByte(newCard.Item2); // »õ Ä«µå °ª
+                                PacketWriter.WriteByte(newCard.Item1); // ï¿½ï¿½ Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                                PacketWriter.WriteByte(newCard.Item2); // ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½
                                 SendPacket(rp);
                             }
                         }
@@ -1006,8 +1006,8 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 {
                     int id = reader.ReadInt();
                     int roomID = reader.ReadInt();
-                    byte cardType = reader.ReadByte(); // Ä«µå Å¸ÀÔ
-                    byte cardValue = reader.ReadByte(); // Ä«µå °ª
+                    byte cardType = reader.ReadByte(); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                    byte cardValue = reader.ReadByte(); // Ä«ï¿½ï¿½ ï¿½ï¿½
 
                     if (Rooms.TryGetValue(roomID, out var room))
                     {
@@ -1017,7 +1017,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             return;
                         }
 
-                        room.Cards2ExchangeInSpecialRule[id] = new Tuple<byte, byte>(cardType, cardValue); // ±³È¯ÇÒ Ä«µå ÀúÀå
+                        room.Cards2ExchangeInSpecialRule[id] = new Tuple<byte, byte>(cardType, cardValue); // ï¿½ï¿½È¯ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                         int opponentID = -1;
                         if (room.NowSpecialRulePlayers[0] == id)
                             opponentID = room.NowSpecialRulePlayers[1];
@@ -1032,8 +1032,8 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         foreach (var pl in room.Players)
                         {
                             PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2UAsk_ExhangeCardWithOpponentInSpecialRule);
-                            PacketWriter.WriteInt(id); // ¿äÃ»ÇÑ À¯Àú ID
-                            PacketWriter.WriteInt(opponentID); // »ó´ë À¯Àú ID
+                            PacketWriter.WriteInt(id); // ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ID
+                            PacketWriter.WriteInt(opponentID); // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ID
                             SendPacket(pl);
                         }
                     }
@@ -1043,7 +1043,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 {
                     int id = reader.ReadInt();
                     int roomID = reader.ReadInt();
-                    bool accept = reader.ReadBool(); // »ó´ë°¡ Ä«µå ±³È¯ ¿äÃ»À» ¼ö¶ôÇß´ÂÁö ¿©ºÎ
+                    bool accept = reader.ReadBool(); // ï¿½ï¿½ë°¡ Ä«ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
                     if (Rooms.TryGetValue(roomID, out var room))
                     {
@@ -1062,9 +1062,9 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             foreach (var pl in room.Players)
                             {
                                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_IsOpponentAcceptedCardExchangeISR);
-                                PacketWriter.WriteInt(requester); // ¿äÃ»ÇÑ À¯Àú ID
-                                PacketWriter.WriteInt(id); // ¿äÃ»ÇÑ À¯Àú ID
-                                PacketWriter.WriteBool(true); // Ä«µå ±³È¯ ¼ö¶ô
+                                PacketWriter.WriteInt(requester); // ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ID
+                                PacketWriter.WriteInt(id); // ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ID
+                                PacketWriter.WriteBool(true); // Ä«ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½
                                 SendPacket(pl);
                             }
                         }
@@ -1073,9 +1073,9 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             foreach (var pl in room.Players)
                             {
                                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_IsOpponentAcceptedCardExchangeISR);
-                                PacketWriter.WriteInt(requester); // ¿äÃ»ÇÑ À¯Àú ID
-                                PacketWriter.WriteInt(id); // ¿äÃ»ÇÑ À¯Àú ID
-                                PacketWriter.WriteBool(false); // Ä«µå ±³È¯ °ÅÀý
+                                PacketWriter.WriteInt(requester); // ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ID
+                                PacketWriter.WriteInt(id); // ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ID
+                                PacketWriter.WriteBool(false); // Ä«ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½
                                 SendPacket(pl);
                             }
                             Debug.Log($"[Special Rule] User {user.Id} rejected the card exchange request.");
@@ -1087,8 +1087,8 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 {
                     int id = reader.ReadInt();
                     int roomID = reader.ReadInt();
-                    byte cardType = reader.ReadByte(); // Ä«µå Å¸ÀÔ
-                    byte cardValue = reader.ReadByte(); // Ä«µå °ª
+                    byte cardType = reader.ReadByte(); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                    byte cardValue = reader.ReadByte(); // Ä«ï¿½ï¿½ ï¿½ï¿½
                     if (Rooms.TryGetValue(roomID, out var room))
                     {
                         if (room.NowSpecialRulePlayers.Contains(id) == false)
@@ -1096,7 +1096,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             Debug.Log($"[Warning] User {user.Id} tried to exchange card with opponent in an invalid state: {room.State}.");
                             return;
                         }
-                        room.Cards2ExchangeInSpecialRule[id] = new Tuple<byte, byte>(cardType, cardValue); // »ó´ë°¡ ±³È¯ÇÒ Ä«µå ÀúÀå
+                        room.Cards2ExchangeInSpecialRule[id] = new Tuple<byte, byte>(cardType, cardValue); // ï¿½ï¿½ë°¡ ï¿½ï¿½È¯ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
                         int opponentID = -1;
                         if (room.NowSpecialRulePlayers[0] == id)
@@ -1113,30 +1113,30 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         foreach (var pl in room.Players)
                         {
                             PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ExhangeWithOpponentInSpecialRuleResult);
-                            PacketWriter.WriteInt(id); // ¿äÃ»ÇÑ À¯Àú ID
+                            PacketWriter.WriteInt(id); // ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ID
                             if (room.Cards2ExchangeInSpecialRule.TryGetValue(id, out var card))
                             {
-                                PacketWriter.WriteByte(card.Item1); // ±³È¯ÇÒ Ä«µå Å¸ÀÔ
-                                PacketWriter.WriteByte(card.Item2); // ±³È¯ÇÒ Ä«µå °ª
+                                PacketWriter.WriteByte(card.Item1); // ï¿½ï¿½È¯ï¿½ï¿½ Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                                PacketWriter.WriteByte(card.Item2); // ï¿½ï¿½È¯ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½
                             }
                             else
                             {
-                                PacketWriter.WriteByte(0); // ±âº»°ª
-                                PacketWriter.WriteByte(0); // ±âº»°ª
-                                                           //¿¡·¯ Ãâ·Â
+                                PacketWriter.WriteByte(0); // ï¿½âº»ï¿½ï¿½
+                                PacketWriter.WriteByte(0); // ï¿½âº»ï¿½ï¿½
+                                                           //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                                 Debug.LogError($"[Warning] User {user.Id} tried to exchange card with opponent in an invalid state: {room.State}. User's card not found.");
                             }
-                            PacketWriter.WriteInt(opponentID); // »ó´ë À¯Àú ID
+                            PacketWriter.WriteInt(opponentID); // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ID
                             if (room.Cards2ExchangeInSpecialRule.TryGetValue(opponentID, out var opponentCard))
                             {
-                                PacketWriter.WriteByte(opponentCard.Item1); // »ó´ë°¡ ±³È¯ÇÒ Ä«µå Å¸ÀÔ
-                                PacketWriter.WriteByte(opponentCard.Item2); // »ó´ë°¡ ±³È¯ÇÒ Ä«µå °ª
+                                PacketWriter.WriteByte(opponentCard.Item1); // ï¿½ï¿½ë°¡ ï¿½ï¿½È¯ï¿½ï¿½ Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                                PacketWriter.WriteByte(opponentCard.Item2); // ï¿½ï¿½ë°¡ ï¿½ï¿½È¯ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½
                             }
                             else
                             {
-                                PacketWriter.WriteByte(0); // ±âº»°ª
-                                PacketWriter.WriteByte(0); // ±âº»°ª
-                                                           //¿¡·¯ Ãâ·Â
+                                PacketWriter.WriteByte(0); // ï¿½âº»ï¿½ï¿½
+                                PacketWriter.WriteByte(0); // ï¿½âº»ï¿½ï¿½
+                                                           //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                                 Debug.LogError($"[Warning] User {user.Id} tried to exchange card with opponent in an invalid state: {room.State}. Opponent's card not found.");
                             }
                             SendPacket(pl);
@@ -1159,11 +1159,11 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                         if (room.PlayerCountWhoAcceptedExchangeInSpecialRule == 2)
                         {
-                            //¸ðµç À¯Àú°¡ Ä«µå ±³È¯À» ¿Ï·áÇßÀ½
+                            //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½
                             Debug.Log($"[Special Rule] All players have successfully exchanged cards with their opponents.");
 
 
-                            //½ÇÁ¦·Î Ä«µå º¯°æ
+                            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                             int player1 = room.NowSpecialRulePlayers[0];
                             int player2 = room.NowSpecialRulePlayers[1];
 
@@ -1171,10 +1171,10 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             var player2Card = room.Cards2ExchangeInSpecialRule[player2];
 
                             room.Cards[player1].Remove(player1Card);
-                            room.Cards[player1].Add(player2Card); // ÇÃ·¹ÀÌ¾î 1ÀÇ Ä«µå¿¡ ÇÃ·¹ÀÌ¾î 2ÀÇ Ä«µå¸¦ Ãß°¡
+                            room.Cards[player1].Add(player2Card); // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ 1ï¿½ï¿½ Ä«ï¿½å¿¡ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ 2ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ß°ï¿½
 
                             room.Cards[player2].Remove(player2Card);
-                            room.Cards[player2].Add(player1Card); // ÇÃ·¹ÀÌ¾î 2ÀÇ Ä«µå¿¡ ÇÃ·¹ÀÌ¾î 1ÀÇ Ä«µå¸¦ Ãß°¡
+                            room.Cards[player2].Add(player1Card); // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ 2ï¿½ï¿½ Ä«ï¿½å¿¡ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ 1ï¿½ï¿½ Ä«ï¿½å¸¦ ï¿½ß°ï¿½
                             room.PlayerCountWhoAcceptedExchangeInSpecialRule = 0;
                         }
                     }
@@ -1189,7 +1189,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         int s1 = CalculateScore(room.Cards[room.NowSpecialRulePlayers[0]]);
         int s2 = CalculateScore(room.Cards[room.NowSpecialRulePlayers[1]]);
-        //°¡Áö°í ÀÖ´Â Ä«µå¸¦ ¸ÕÀú Ãâ·Â
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         Debug.Log($"[Special Rule] Player {room.NowSpecialRulePlayers[0]} cards: {string.Join(", ", room.Cards[room.NowSpecialRulePlayers[0]].Select(c => $"{c.Item1}:{c.Item2}"))}");
         Debug.Log($"[Special Rule] Player {room.NowSpecialRulePlayers[1]} cards: {string.Join(", ", room.Cards[room.NowSpecialRulePlayers[1]].Select(c => $"{c.Item1}:{c.Item2}"))}");
         Debug.Log($"[Special Rule] Player {room.NowSpecialRulePlayers[0]} score: {s1}, Player {room.NowSpecialRulePlayers[1]} score: {s2}.");
@@ -1198,7 +1198,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         else if (s1 > s2)
             return room.NowSpecialRulePlayers[1];
         else
-            return -1; // ¹«½ÂºÎ
+            return -1; // ï¿½ï¿½ï¿½Âºï¿½
     }
     void SendStartSpecialRule(Room room, int p1, int p2, byte reason)
     {
@@ -1219,10 +1219,10 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             room.Cards.Add(p1, new List<Tuple<byte, byte>> { cards[0], cards[1], cards[2] });
             room.Cards.Add(p2, new List<Tuple<byte, byte>> { cards[3], cards[4], cards[5] });
         }
-        //Ä«µå °ª Ãâ·Â
+        //Ä«ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
         Debug.Log($"[Special Rule] Player {p1} cards: {string.Join(", ", room.Cards[p1].Select(c => $"{c.Item1}:{c.Item2}"))}");
         Debug.Log($"[Special Rule] Player {p2} cards: {string.Join(", ", room.Cards[p2].Select(c => $"{c.Item1}:{c.Item2}"))}");
-        //½ºÆä¼È ·ê
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
         //foreach (var pl in room.Players)
         if (room.Mode == eGameMode.ThreeCards)
@@ -1234,19 +1234,19 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             PacketWriter.WriteInt(p2);
             if (room.Mode == eGameMode.TwoCards)
             {
-                PacketWriter.WriteByte(cards[0].Item1); // Ä«µå Å¸ÀÔ
-                PacketWriter.WriteByte(cards[0].Item2); // Ä«µå °ª
-                PacketWriter.WriteByte(cards[1].Item1); // Ä«µå Å¸ÀÔ
-                PacketWriter.WriteByte(cards[1].Item2); // Ä«µå °ª
+                PacketWriter.WriteByte(cards[0].Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                PacketWriter.WriteByte(cards[0].Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
+                PacketWriter.WriteByte(cards[1].Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                PacketWriter.WriteByte(cards[1].Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
             }
             else
             {
-                PacketWriter.WriteByte(cards[0].Item1); // Ä«µå Å¸ÀÔ
-                PacketWriter.WriteByte(cards[0].Item2); // Ä«µå °ª
-                PacketWriter.WriteByte(cards[1].Item1); // Ä«µå Å¸ÀÔ
-                PacketWriter.WriteByte(cards[1].Item2); // Ä«µå °ª
-                PacketWriter.WriteByte(cards[2].Item1); // Ä«µå Å¸ÀÔ
-                PacketWriter.WriteByte(cards[2].Item2); // Ä«µå °ª
+                PacketWriter.WriteByte(cards[0].Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                PacketWriter.WriteByte(cards[0].Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
+                PacketWriter.WriteByte(cards[1].Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                PacketWriter.WriteByte(cards[1].Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
+                PacketWriter.WriteByte(cards[2].Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                PacketWriter.WriteByte(cards[2].Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
             }
             SendPacket(room.Players.Find((u) => u.Id == p1));
 
@@ -1256,19 +1256,19 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             PacketWriter.WriteInt(p1);
             if (room.Mode == eGameMode.TwoCards)
             {
-                PacketWriter.WriteByte(cards[2].Item1); // Ä«µå Å¸ÀÔ
-                PacketWriter.WriteByte(cards[2].Item2); // Ä«µå °ª
-                PacketWriter.WriteByte(cards[3].Item1); // Ä«µå Å¸ÀÔ
-                PacketWriter.WriteByte(cards[3].Item2); // Ä«µå °ª
+                PacketWriter.WriteByte(cards[2].Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                PacketWriter.WriteByte(cards[2].Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
+                PacketWriter.WriteByte(cards[3].Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                PacketWriter.WriteByte(cards[3].Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
             }
             else
             {
-                PacketWriter.WriteByte(cards[3].Item1); // Ä«µå Å¸ÀÔ
-                PacketWriter.WriteByte(cards[3].Item2); // Ä«µå °ª
-                PacketWriter.WriteByte(cards[4].Item1); // Ä«µå Å¸ÀÔ
-                PacketWriter.WriteByte(cards[4].Item2); // Ä«µå °ª
-                PacketWriter.WriteByte(cards[5].Item1); // Ä«µå Å¸ÀÔ
-                PacketWriter.WriteByte(cards[5].Item2); // Ä«µå °ª
+                PacketWriter.WriteByte(cards[3].Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                PacketWriter.WriteByte(cards[3].Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
+                PacketWriter.WriteByte(cards[4].Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                PacketWriter.WriteByte(cards[4].Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
+                PacketWriter.WriteByte(cards[5].Item1); // Ä«ï¿½ï¿½ Å¸ï¿½ï¿½
+                PacketWriter.WriteByte(cards[5].Item2); // Ä«ï¿½ï¿½ ï¿½ï¿½
             }
             SendPacket(room.Players.Find((u) => u.Id == p2));
 
@@ -1319,7 +1319,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         foreach (var pl in room.Players)
         {
             PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_StartNextRound);
-            PacketWriter.WriteByte(reason); //0Àº 3¸í ´Ù ÀÎ & µ¿Á¡ÀÎ °æ¿ì
+            PacketWriter.WriteByte(reason); //0ï¿½ï¿½ 3ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ & ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             SendPacket(pl);
         }
         //Task.Delay(2000).ContinueWith((_) =>
@@ -1351,13 +1351,13 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if (outPlayerCount == 2)
         {
-            SendStartSpecialRule(room, room.OutPlayers[0], room.OutPlayers[1], reason: 1); //¾Æ¿ôÀÌ 2¸íÀÎ °æ¿ì
+            SendStartSpecialRule(room, room.OutPlayers[0], room.OutPlayers[1], reason: 1); //ï¿½Æ¿ï¿½ï¿½ï¿½ 2ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             return false;
         }
 
         else if (outPlayerCount == 0)
         {
-            //¼¼¸í ÀüºÎ ´Ù In
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ In
             int lowestScore = 1000;
             int lowerID = -1;
             List<int> playersWithLowersScore = new List<int>();
@@ -1382,9 +1382,9 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             }
 
 
-            if (playersWithLowersScore.Count == 1) //²ÃÁö°¡ 1¸í
+            if (playersWithLowersScore.Count == 1) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½
             {
-                //1¸í¸¸ ÆÐ¹è
+                //1ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¹ï¿½
                 lowerID = playersWithLowersScore[0];
                 room.OutCounts[lowerID]--;
                 foreach (var pl in room.Players)
@@ -1395,25 +1395,25 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     SendPacket(pl);
                 }
 
-                StartNextRound(room, 5); //5´Â 3¸í ´Ù ÀÎ & ²ÃÁö 1¸íÀÎ °æ¿ì
+                StartNextRound(room, 5); //5ï¿½ï¿½ 3ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ & ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 return false;
             }
-            else if (playersWithLowersScore.Count == 2) //²ÃÁö°¡ 2¸í
+            else if (playersWithLowersScore.Count == 2) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½
             {
-                //½ºÆä¼È ·ê
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
-                SendStartSpecialRule(room, playersWithLowersScore[0], playersWithLowersScore[1], reason: 2); //µ¿Á¡ÀÚ ¹ß»ý
+                SendStartSpecialRule(room, playersWithLowersScore[0], playersWithLowersScore[1], reason: 2); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
                 return false;
             }
-            else if (playersWithLowersScore.Count == 3) //²ÃÁö°¡ 3¸í
+            else if (playersWithLowersScore.Count == 3) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 3ï¿½ï¿½
             {
-                StartNextRound(room, 4); //4´Â 3¸í ´Ù ÀÎ & µ¿Á¡ÀÎ °æ¿ì
+                StartNextRound(room, 4); //4ï¿½ï¿½ 3ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ & ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 return false;
             }
         }
         else
         {
-            //1¸í¸¸ Out
+            //1ï¿½ï¿½ï¿½ï¿½ Out
             int lowestScoreOfInPlayers = 1000;
             int lowerID = -1;
             List<int> playersInWithLowestScore = new List<int>();
@@ -1441,7 +1441,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
             if (outScore > lowestScoreOfInPlayers)
             {
-                //outPlayer°¡ ÆÐ¹è
+                //outPlayerï¿½ï¿½ ï¿½Ð¹ï¿½
                 room.OutCounts[room.OutPlayers[0]]--;
                 foreach (var pl in room.Players)
                 {
@@ -1454,15 +1454,15 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             else if (outScore == lowerID)
             {
-                //½ºÆä¼È ·ê
-                if (playersInWithLowestScore.Count == 2) //ÃÖÀú Á·º¸°¡ 2¸í
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+                if (playersInWithLowestScore.Count == 2) //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½
                 {
-                    SendStartSpecialRule(room, playersInWithLowestScore[0], playersInWithLowestScore[1], reason: 3); //µ¿Á¡ÀÚ ¹ß»ý
+                    SendStartSpecialRule(room, playersInWithLowestScore[0], playersInWithLowestScore[1], reason: 3); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
                     return false;
                 }
-                else if (playersInWithLowestScore.Count == 1) //ÃÖÀú Á·º¸°¡ 1¸í
+                else if (playersInWithLowestScore.Count == 1) //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½
                 {
-                    //ÃÖÀú Á·º¸°¡ ÆÐ¹è
+                    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¹ï¿½
                     room.OutCounts[playersInWithLowestScore[0]]--;
                     foreach (var pl in room.Players)
                     {
@@ -1478,7 +1478,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 if (playersInWithLowestScore.Count == 1)
                 {
-                    //ÃÖÀú Á·º¸°¡ ÆÐ¹è
+                    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¹ï¿½
                     room.OutCounts[playersInWithLowestScore[0]]--;
                     foreach (var pl in room.Players)
                     {
@@ -1491,7 +1491,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
                 else if (playersInWithLowestScore.Count == 2)
                 {
-                    SendStartSpecialRule(room, playersInWithLowestScore[0], playersInWithLowestScore[1], reason: 4); // µ¿Á¡ÀÚ ¹ß»ý
+                    SendStartSpecialRule(room, playersInWithLowestScore[0], playersInWithLowestScore[1], reason: 4); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
                     return false;
                 }
                 else
@@ -1510,7 +1510,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         var card1 = cards[0];
         var card2 = cards[1];
-        if (card1.Item2 == card2.Item2) //°°Àº ¼ýÀÚ
+        if (card1.Item2 == card2.Item2) //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
             Debug.Log($"[Special Rule] Pair found: {card1.Item1}:{card1.Item2} and {card2.Item1}:{card2.Item2}.");
             return 100 + card1.Item2; // Special case for pairs
@@ -1567,10 +1567,10 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_RPSFinalResult);
 
                 PacketWriter.WriteByte(room.NowRPSRoundCounter);
-                // ¼ø¼­´ë·Î ID ¸®½ºÆ® Àü¼Û
-                PacketWriter.WriteInt((int)(room.RPSFirst));  // 1µî
-                PacketWriter.WriteInt((int)(room.RPSSecond));  // 2µî
-                PacketWriter.WriteInt((int)(room.RPSThird));  // 3µî
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ID ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+                PacketWriter.WriteInt((int)(room.RPSFirst));  // 1ï¿½ï¿½
+                PacketWriter.WriteInt((int)(room.RPSSecond));  // 2ï¿½ï¿½
+                PacketWriter.WriteInt((int)(room.RPSThird));  // 3ï¿½ï¿½
 
                 SendPacket(p);
             }
