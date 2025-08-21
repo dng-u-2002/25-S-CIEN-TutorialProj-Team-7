@@ -196,7 +196,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         
         if (InGameManager.Instance != null)
         {
-            InGameManager.Instance.Mode = (InGameManager.eGameMode)selectedGameType;
+            InGameManager.Instance.Mode = (eGameMode)selectedGameType;
         }
     }
     

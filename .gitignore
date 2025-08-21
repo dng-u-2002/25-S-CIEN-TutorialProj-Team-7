@@ -47,3 +47,5 @@ Server/BunnysLie_Server/ssh-key-private.key
 /BunnysLie/Logs
 /BunnysLie/Logs
 /BunnysLie/Logs
+/BunnysLie/.vs
+/BunnysLie/obj

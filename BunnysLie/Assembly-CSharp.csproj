@@ -63,11 +63,13 @@
     <Compile Include="Assets\Scripts\LobbyUI\GameModeSelector.cs" />
     <Compile Include="Assets\Scripts\UI\RuleBook.cs" />
     <Compile Include="Assets\Scripts\UI\RemovePlayerUIDrawer.cs" />
+    <Compile Include="Assets\Scripts\Network\GameLobbyManeger.cs" />
     <Compile Include="Assets\Scripts\InGameManager.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\AppSettingsExtensions.cs" />
     <Compile Include="Assets\Scripts\UI\LocalPlayerUIDrawer.cs" />
     <Compile Include="Assets\Scripts\Network\InGameUser.cs" />
     <Compile Include="Assets\Scripts\InGameSettingPanel.cs" />
+    <Compile Include="Assets\Scripts\Network\FriendItem.cs" />
     <Compile Include="Assets\Scripts\LobbyUI\QuestItem.cs" />
     <Compile Include="Assets\Scripts\ObjectMoveHelper.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\ChannelSelector.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="Assets\Scripts\Network\InGameServer_PUN.cs" />
     <Compile Include="Assets\EditorCools\DropdownStringAttribute\DropdownAttribute.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\Common\EventSystemSpawner.cs" />
+    <Compile Include="Assets\Scripts\Network\HTTPloginManeger.cs" />
     <Compile Include="Assets\EditorCools\Samples\Test.cs" />
     <Compile Include="Assets\Scripts\Voice\VoiceSetting.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\NamePickGui.cs" />

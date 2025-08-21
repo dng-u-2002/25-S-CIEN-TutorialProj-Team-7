@@ -3,7 +3,11 @@
   "WorkspaceRootPath": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|e:\\25-s-cien-tutorialproj-team-7\\bunnyslie\\assets\\scripts\\network\\gamelobbymaneger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\network\\gamelobbymaneger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|e:\\25-s-cien-tutorialproj-team-7\\bunnyslie\\assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -15,7 +19,7 @@
       "RelativeMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\network\\ingameuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|e:\\25-s-cien-tutorialproj-team-7\\bunnyslie\\assets\\scripts\\network\\ingameserver_pun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\assets\\scripts\\network\\ingameserver_pun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\network\\ingameserver_pun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -27,7 +31,7 @@
       "RelativeMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui\\playeruidrawer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|e:\\25-s-cien-tutorialproj-team-7\\bunnyslie\\assets\\scripts\\ui\\emoticon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\assets\\scripts\\ui\\emoticon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui\\emoticon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -122,7 +126,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -130,7 +134,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
+              "Title": "GameLobbyManeger.cs",
+              "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Network\\GameLobbyManeger.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Network\\GameLobbyManeger.cs",
+              "ToolTip": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Network\\GameLobbyManeger.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Network\\GameLobbyManeger.cs",
+              "ViewState": "AgIAAK4AAAAAAAAAAAAtwMUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-21T14:23:00.688Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Emoticon.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\UI\\Emoticon.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI\\Emoticon.cs",
@@ -138,12 +155,11 @@
               "RelativeToolTip": "Assets\\Scripts\\UI\\Emoticon.cs",
               "ViewState": "AgIAAA0AAAAAAAAAAAAAwAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T04:17:23.79Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-19T04:17:23.79Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "InGameUser_PUN.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Network\\InGameUser_PUN.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Network\\InGameUser_PUN.cs",
@@ -151,12 +167,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Network\\InGameUser_PUN.cs",
               "ViewState": "AgIAADEAAAAAAAAAAAAAAEcAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-16T05:17:59.874Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-16T05:17:59.874Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "PlayerUIDrawer.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\UI\\PlayerUIDrawer.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI\\PlayerUIDrawer.cs",
@@ -164,12 +179,11 @@
               "RelativeToolTip": "Assets\\Scripts\\UI\\PlayerUIDrawer.cs",
               "ViewState": "AgIAAE0BAAAAAAAAAAAgwHcBAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-16T14:27:12.02Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-16T14:27:12.02Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "InGameSettingPanel.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\InGameSettingPanel.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\InGameSettingPanel.cs",
@@ -181,7 +195,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "InGameServer_PUN.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Network\\InGameServer_PUN.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Network\\InGameServer_PUN.cs",
@@ -189,12 +203,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Network\\InGameServer_PUN.cs",
               "ViewState": "AgIAAA0CAAAAAAAAAAAgwBsCAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T04:16:48.321Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-15T04:16:48.321Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "ObjectMoveHelper.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\ObjectMoveHelper.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ObjectMoveHelper.cs",
@@ -206,7 +219,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "RuleBook.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\UI\\RuleBook.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI\\RuleBook.cs",
@@ -218,7 +231,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "LocalPlayerUIDrawer.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\UI\\LocalPlayerUIDrawer.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI\\LocalPlayerUIDrawer.cs",
@@ -226,12 +239,11 @@
               "RelativeToolTip": "Assets\\Scripts\\UI\\LocalPlayerUIDrawer.cs",
               "ViewState": "AgIAAC4AAAAAAAAAAAAcwD4AAABHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-16T14:26:35.413Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-16T14:26:35.413Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "InGameUser.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Network\\InGameUser.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Network\\InGameUser.cs",
@@ -239,12 +251,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Network\\InGameUser.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAAB0AAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T15:07:02.967Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-15T15:07:02.967Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Player.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Player.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Player.cs",
@@ -257,7 +268,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "CardObject.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Cards\\CardObject.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Cards\\CardObject.cs",
@@ -269,7 +280,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "Card.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Cards\\Card.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Cards\\Card.cs",
@@ -281,7 +292,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "InGameManager.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\InGameManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\InGameManager.cs",
@@ -293,7 +304,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "NetworkDataReaderWriter.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Network\\NetworkDataReaderWriter.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Network\\NetworkDataReaderWriter.cs",
@@ -305,7 +316,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "CardDeck.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Cards\\CardDeck.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Cards\\CardDeck.cs",
@@ -317,7 +328,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "RemovePlayerUIDrawer.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\UI\\RemovePlayerUIDrawer.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI\\RemovePlayerUIDrawer.cs",
@@ -329,7 +340,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "NetworkDataReaderWriter_PUN.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Network\\NetworkDataReaderWriter_PUN.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Network\\NetworkDataReaderWriter_PUN.cs",
@@ -341,7 +352,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "ExtendedEnumeratorRunner.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\ExtendedEnumeratorRunner.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ExtendedEnumeratorRunner.cs",
@@ -353,7 +364,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "Deck.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Cards\\Deck.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Cards\\Deck.cs",
@@ -365,7 +376,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "DelayedFunctionHelper.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Helpers\\DelayedFunctionHelper.cs",
               "RelativeDocumentMoniker": "Assets\\Helpers\\DelayedFunctionHelper.cs",
@@ -377,7 +388,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "GameModeSelector.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\LobbyUI\\GameModeSelector.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\LobbyUI\\GameModeSelector.cs",
@@ -389,7 +400,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "QuestItem.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\LobbyUI\\QuestItem.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\LobbyUI\\QuestItem.cs",
@@ -401,7 +412,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 27,
               "Title": "NetDataReader.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Plugins\\LiteNetLib-1.3.1\\LiteNetLib\\Utils\\NetDataReader.cs",
               "RelativeDocumentMoniker": "Assets\\Plugins\\LiteNetLib-1.3.1\\LiteNetLib\\Utils\\NetDataReader.cs",
@@ -413,7 +424,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 28,
               "Title": "NetManager.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Plugins\\LiteNetLib-1.3.1\\LiteNetLib\\NetManager.cs",
               "RelativeDocumentMoniker": "Assets\\Plugins\\LiteNetLib-1.3.1\\LiteNetLib\\NetManager.cs",
@@ -425,7 +436,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "LiteNetLibUser.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\Network\\LiteNetLibUser.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Network\\LiteNetLibUser.cs",
@@ -437,7 +448,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "PhotonHandler.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Photon\\PhotonUnityNetworking\\Code\\PhotonHandler.cs",
               "RelativeDocumentMoniker": "Assets\\Photon\\PhotonUnityNetworking\\Code\\PhotonHandler.cs",
@@ -449,7 +460,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "ChatSender.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\User2UserConnection\\ChatSender.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\User2UserConnection\\ChatSender.cs",
@@ -461,7 +472,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "NetworkClientManager.cs",
               "DocumentMoniker": "E:\\25-S-CIEN-TutorialProj-Team-7\\BunnysLie\\Assets\\Scripts\\NetworkClientManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\NetworkClientManager.cs",
