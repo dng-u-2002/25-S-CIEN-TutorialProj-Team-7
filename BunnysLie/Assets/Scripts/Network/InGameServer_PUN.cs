@@ -87,29 +87,48 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [SerializeField] TMP_Text Debugger;
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    bool IsGameStarted = false;
+    //public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    void Update()
     {
-        base.OnPlayerEnteredRoom(newPlayer);
-
         if (Photon.Pun.PhotonNetwork.IsMasterClient == false)
         {
             Debug.LogWarning("[Warning] Only Master Client can handle events.");
             return;
         }
-        Debugger.text += $"[User Connection] New User connected: {newPlayer.ActorNumber}\n";
-        Debug.Log($"[User Connection] New User connected: {newPlayer.ActorNumber}");
+        //Debugger.text += $"[User Connection] New User connected: {newPlayer.ActorNumber}\n";
+        //Debug.Log($"[User Connection] New User connected: {newPlayer.ActorNumber}");
 
-        PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.HandShake_S2U);
-        PacketWriter.WriteInt(newPlayer.ActorNumber);
-        SendPacket(new User(newPlayer));
-        Debug.Log($"[HandShake] Server sent Handshake to User {newPlayer.ActorNumber}");
+        //PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.HandShake_S2U);
+        //PacketWriter.WriteInt(newPlayer.ActorNumber);
+        //SendPacket(new User(newPlayer));
+        //Debug.Log($"[HandShake] Server sent Handshake to User {newPlayer.ActorNumber}");
+
+        //if(PhotonNetwork.LevelLoadingProgress < 1.0f)
+        //{
+        //    Debugger.text = $"[Loading] {PhotonNetwork.LevelLoadingProgress * 100}%";
+        //    return;
+        //}
+
+        foreach(var pl in PhotonNetwork.CurrentRoom.Players)
+        {
+            if (pl.Value.CustomProperties.TryGetValue("IsReady", out var isReady) && (bool)isReady == false)
+            {
+                Debugger.text = $"[Waiting] User {pl.Value.ActorNumber} is not ready.";
+                return;
+            }
+        }
 
         if (Photon.Pun.PhotonNetwork.IsMasterClient == false)
             return;
-        Debug.Log($"Now Player Count : {PhotonNetwork.CurrentRoom.PlayerCount}");
-        Debugger.text += $"[User Connection] Now Player Count : {PhotonNetwork.CurrentRoom.PlayerCount}\n";
-        if (PhotonNetwork.CurrentRoom.PlayerCount >= 3)
+        if(IsGameStarted == false)
         {
+            Debug.Log($"Now Player Count : {PhotonNetwork.CurrentRoom.PlayerCount}");
+            Debugger.text += $"[User Connection] Now Player Count : {PhotonNetwork.CurrentRoom.PlayerCount}\n";
+        }
+        if (PhotonNetwork.CurrentRoom.PlayerCount >= 3 && IsGameStarted == false)
+        {
+            IsGameStarted = true;
             var room = new Room();
             room.Players = new List<User>();
             foreach (var p in PhotonNetwork.CurrentRoom.Players)
@@ -120,6 +139,9 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     break;
                 }
             }
+            PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameMode", out var mode);
+            Debug.Log("Mode : " + mode);
+            InGameManager.Instance.Mode = mode != null ? (eGameMode)(int)mode : eGameMode.TwoCards;
             room.Mode = InGameManager.Instance.Mode;
             //Rooms.Add(room.GetHashCode(), room);
             ThisRoomData = room;
@@ -153,12 +175,16 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             Debug.Log($"[Game Start] A new 2-player game has started with Users: {string.Join(", ", room.Players.Select(u => u.Id))}.");
 
 
-            room.State = eRoomState.ShouldDistributeCards;
-            if (room.Mode == eGameMode.TwoCards)
-                DistributeRandom2CardsForUsers(room);
-            if (room.Mode == eGameMode.ThreeCards)
-                DistributeRandom3CardsForUsers(room);
-            room.State = eRoomState.WaitingForSuccessfulCardReception;
+            DelayedFunctionHelper.InvokeDelayed(() =>
+            {
+                room.State = eRoomState.ShouldDistributeCards;
+                if (room.Mode == eGameMode.TwoCards)
+                    DistributeRandom2CardsForUsers(room);
+                if (room.Mode == eGameMode.ThreeCards)
+                    DistributeRandom3CardsForUsers(room);
+                room.State = eRoomState.WaitingForSuccessfulCardReception;
+            }, 1.0f);
+            
         }
     }
 

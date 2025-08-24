@@ -1,14 +1,18 @@
 using Helpers;
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerUIDrawer : MonoBehaviour
 {
+    [SerializeField] TMP_Text NickNameTextBox;
     [SerializeField] Transform RPSTextBoxBackground;
     [SerializeField] TMP_Text RPSTextBox;
 
@@ -320,6 +324,11 @@ public class PlayerUIDrawer : MonoBehaviour
         Target = target;
         Target.ThisDeck.OnCardAdded += OnCardAdded;
         Target.ThisDeck.OnCardRemoved += OnCardRemoved;
+    }
+    public void SetNickName()
+    {
+        Debug.Log($"Setting nickname for player {Target.ID} to {PhotonNetwork.CurrentRoom.Players.First((p) => p.Value.ActorNumber == Target.ID).Value.NickName}");
+        NickNameTextBox.text = PhotonNetwork.CurrentRoom.Players.First((p) => p.Value.ActorNumber == Target.ID).Value.NickName;
     }
 
     [SerializeField] public Player Target;

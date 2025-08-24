@@ -22,16 +22,16 @@ public class GameModeSelector : MonoBehaviour
         ModeSelectButtons_FromOnlineMatching.gameObject.SetActive(false);
     }
 
-    public void OnClickMatchingButton_Fast()
-    {
-        OffAllModeSelectButtons();
-        ModeSelectButtons_FromFastMatching.gameObject.SetActive(true);
-    }
-    public void OnClickMatchingButton_Online()
-    {
-        OffAllModeSelectButtons();
-        ModeSelectButtons_FromOnlineMatching.gameObject.SetActive(true);
-    }
+    //public void OnClickMatchingButton_Fast()
+    //{
+    //    OffAllModeSelectButtons();
+    //    ModeSelectButtons_FromFastMatching.gameObject.SetActive(true);
+    //}
+    //public void OnClickMatchingButton_Online()
+    //{
+    //    OffAllModeSelectButtons();
+    //    ModeSelectButtons_FromOnlineMatching.gameObject.SetActive(true);
+    //}
 
     public void OnClickSelectMode_TwoCardInFastMatching()
     {
