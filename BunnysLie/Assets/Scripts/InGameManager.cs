@@ -117,7 +117,7 @@ public class InGameManager : MonoBehaviour
         else if (outPlayers.Count >= 3)
             return new Tuple<int, int>(-1, -1); // No special rule applies
 
-        //outPlayers.Count == 1???? ????
+        //outPlayers.Count가 1인 경우(한 명만 Out인 상황)
         int s1 = CalculateScore(status[inPlayers[0]].Item1);
         int s2 = CalculateScore(status[inPlayers[1]].Item1);
 
@@ -160,7 +160,7 @@ public class InGameManager : MonoBehaviour
 
         if (outCount == 0)
         {
-            //?? ???? ???? In
+            //아무도 Out이 아닌 경우(전원 In)
             int lowestInScore = 1000;
             int lowerID = 01;
             foreach (var stat in status)
@@ -255,14 +255,14 @@ public class InGameManager : MonoBehaviour
         }
         else
         {
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("?????? ??...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
             LocalPlayerUIDrawer.SetRPSTextBox(false, eRPS.None); // Reset RPS text box for local player
         }
         LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
         if (LocalPlayer.IsOrderDetermined == true)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("?????? ??...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
             LocalPlayerUIDrawer.SetRPSButtonsActive(false);
         }
     }
@@ -557,7 +557,7 @@ public class InGameManager : MonoBehaviour
         if (LocalPlayer.IsOrderDetermined == true)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("?????? ??...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
             LocalPlayerUIDrawer.SetRPSButtonsActive(false);
             if (isAllPlayerRanked)
                 LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
@@ -634,13 +634,13 @@ public class InGameManager : MonoBehaviour
         {
             if (rp.Target.ID == loserId)
             {
-                LocalPlayerUIDrawer.ShowPanelOnScreenCenter(round + "���� ���� : " + loserId + "�� �÷��̾�", rp.Character + 2);
+                LocalPlayerUIDrawer.ShowPanelOnScreenCenter(round + "라운드 패자 : " + rp.GetNickName(), rp.Character + 2);
                 rp.SetOutCount(count);
             }
         }
         if (LocalPlayer.ID == loserId)
         {
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter(round + "���� ���� : " + loserId + "�� �÷��̾�", LocalPlayerUIDrawer.Character + 2);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter(round + "라운드 패자 : " + LocalPlayerUIDrawer.GetNickName(), LocalPlayerUIDrawer.Character + 2);
             LocalPlayerUIDrawer.SetOutCount(count);
         }
     }

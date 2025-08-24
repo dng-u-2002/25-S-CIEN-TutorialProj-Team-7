@@ -5947,7 +5947,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &682227017
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17371,7 +17371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d0a57c73c6d9054da08eace703c22d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Mode: 3
+  Mode: 2
   DeckTransform: {fileID: 1535529230}
   LocalPlayer: {fileID: 1488587081}
   RemotePlayers:
@@ -19124,5 +19124,5 @@ SceneRoots:
   - {fileID: 1488587082}
   - {fileID: 150157111}
   - {fileID: 270764916}
-  - {fileID: 95929426}
   - {fileID: 2099127997}
+  - {fileID: 95929426}

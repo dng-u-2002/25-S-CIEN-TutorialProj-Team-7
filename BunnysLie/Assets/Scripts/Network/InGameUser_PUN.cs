@@ -18,47 +18,58 @@ using static InGameServer_PUN;
 
 public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 {
+    bool AutoStartGame = true;
+
     private void Start()
     {
 //#if UNITY_EDITOR
-//        Photon.Pun.PhotonNetwork.NickName = ParrelSync.ClonesManager.GetArgument();
-        Debug.Log("NickName: " + Photon.Pun.PhotonNetwork.NickName);
-        //#endif
-        //        PhotonNetwork.GameVersion = "0.1.0";
-        //        PhotonNetwork.AutomaticallySyncScene = false;
 
-        //        // 고정 리전 지정 (둘 다 같은 값으로!)
-        //        var app = PhotonNetwork.PhotonServerSettings.AppSettings;
-        //        app.FixedRegion = "asia";      // 필요 시 "kr" 등 팀이 쓰는 실제 코드로 통일
-        //                                       // UDP가 막힌 환경 회피 (선택)
-        //        app.Protocol = ExitGames.Client.Photon.ConnectionProtocol.WebSocketSecure;
+        if(AutoStartGame)
+        {
+            Photon.Pun.PhotonNetwork.NickName = ParrelSync.ClonesManager.GetArgument();
+            Debug.Log("NickName: " + Photon.Pun.PhotonNetwork.NickName);
+            //#endif
+            PhotonNetwork.GameVersion = "0.1.0";
+            PhotonNetwork.AutomaticallySyncScene = false;
 
-        //Debugger.text += ($"[PHOTON] AppId prefix: {app.AppIdRealtime?.Substring(0, 6)}");
-        //Debugger.text += ($"[PHOTON] GameVersion: {PhotonNetwork.GameVersion}");
-        //Debugger.text += ($"[PHOTON] FixedRegion: {app.FixedRegion}");
-        Debugger.text += ($"[PHOTON] CloudRegion(connected): {PhotonNetwork.CloudRegion}");
-        Debugger.text += ($"[PHOTON] State: {PhotonNetwork.NetworkClientState}");
+            // 고정 리전 지정 (둘 다 같은 값으로!)
+            var app = PhotonNetwork.PhotonServerSettings.AppSettings;
+            app.FixedRegion = "asia";      // 필요 시 "kr" 등 팀이 쓰는 실제 코드로 통일
+                                           // UDP가 막힌 환경 회피 (선택)
+            app.Protocol = ExitGames.Client.Photon.ConnectionProtocol.WebSocketSecure;
+
+            //Debugger.text += ($"[PHOTON] AppId prefix: {app.AppIdRealtime?.Substring(0, 6)}");
+            //Debugger.text += ($"[PHOTON] GameVersion: {PhotonNetwork.GameVersion}");
+            //Debugger.text += ($"[PHOTON] FixedRegion: {app.FixedRegion}");
+            Debugger.text += ($"[PHOTON] CloudRegion(connected): {PhotonNetwork.CloudRegion}");
+            Debugger.text += ($"[PHOTON] State: {PhotonNetwork.NetworkClientState}");
+            PhotonNetwork.ConnectUsingSettings();
+        }
 
 
         //        Photon.Pun.PhotonNetwork.ConnectUsingSettings();
+        else
+        {
+            InGameManager.Instance.Mode = PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameMode", out var mode) ? (eGameMode)(int)mode : eGameMode.TwoCards;
+        }
 
-        InGameManager.Instance.Mode = PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameMode", out var mode) ? (eGameMode)(int)mode : eGameMode.TwoCards;
-        Debug.Log(mode);
         Writer = new NetworkDataWriter_PUN();
     }
     [SerializeField] TMP_Text Debugger;
-    //public override void OnConnectedToMaster()
-    //{
-    //    base.OnConnectedToMaster();
-    //    //Debug.Log("Connected to Master Server");
-    //    //Debugger.text += "Connected to Master Server\n";
-    //    //Debug.Log($"Is Master Client: {Photon.Pun.PhotonNetwork.IsMasterClient}");
-    //    //Debugger.text += $"Is Master Client: {Photon.Pun.PhotonNetwork.IsMasterClient}\n";
-    //    //DelayedFunctionHelper.InvokeDelayed(() =>
-    //    //{
-    //    //    Photon.Pun.PhotonNetwork.JoinOrCreateRoom("Bunny", new Photon.Realtime.RoomOptions { MaxPlayers = 3 }, null);
-    //    //}, 0.1f);
-    //}
+    int RoundCounter;
+    [SerializeField] AudioSource CardDistributionSound;
+
+    public override void OnConnectedToMaster()
+    {
+        base.OnConnectedToMaster();
+        if(AutoStartGame)
+        {
+            DelayedFunctionHelper.InvokeDelayed(() =>
+            {
+                Photon.Pun.PhotonNetwork.JoinOrCreateRoom("Bunny", new Photon.Realtime.RoomOptions { MaxPlayers = 3 }, null);
+            }, 0.1f);
+        }
+    }
     //public override void OnJoinRandomFailed(short returnCode, string message)
     //{
     //    Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
@@ -67,32 +78,27 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     //    PhotonNetwork.CreateRoom("Bunny", new RoomOptions());
     //}
 
-    int RoundCounter;
-    [SerializeField] AudioSource CardDistributionSound;
+    public override void OnJoinedLobby()
+    {
+        base.OnJoinedLobby();
+        //Debug.Log("Joined Lobby");
+        //Photon.Pun.PhotonNetwork.JoinOrCreateRoom("Bunny", new Photon.Realtime.RoomOptions { MaxPlayers = 3 }, null);
+        //Debugger.text += "Joined Lobby and trying to join or create room 'Bunny'.\n";
+    }
 
-    //public override void OnJoinedLobby()
-    //{
-    //    base.OnJoinedLobby();
-    //    //Debug.Log("Joined Lobby");
-    //    //Photon.Pun.PhotonNetwork.JoinOrCreateRoom("Bunny", new Photon.Realtime.RoomOptions { MaxPlayers = 3 }, null);
-    //    //Debugger.text += "Joined Lobby and trying to join or create room 'Bunny'.\n";
-    //}
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+        Debug.Log("Joined Room: " + Photon.Pun.PhotonNetwork.CurrentRoom.Name);
+        Debug.Log($"Is Master Client: {Photon.Pun.PhotonNetwork.IsMasterClient}");
+        Debugger.text += "Joined Room: " + Photon.Pun.PhotonNetwork.CurrentRoom.Name + "\n";
 
-    //public override void OnJoinedRoom()
-    //{
-    //    base.OnJoinedRoom();
-    //    Debug.Log("Joined Room: " + Photon.Pun.PhotonNetwork.CurrentRoom.Name);
-    //    Debug.Log($"Is Master Client: {Photon.Pun.PhotonNetwork.IsMasterClient}");
-    //    Debugger.text += "Joined Room: " + Photon.Pun.PhotonNetwork.CurrentRoom.Name + "\n";
-
-    //    foreach (var p in Photon.Pun.PhotonNetwork.CurrentRoom.Players)
-    //    {
-    //        Debug.Log(p.Value.NickName);
-    //        Debugger.text += $"Nickname: {p.Value.NickName}, ID: {p.Value.ActorNumber}\n";
-    //    }
-
-
-    //}
+        foreach (var p in Photon.Pun.PhotonNetwork.CurrentRoom.Players)
+        {
+            Debug.Log(p.Value.NickName);
+            Debugger.text += $"Nickname: {p.Value.NickName}, ID: {p.Value.ActorNumber}\n";
+        }
+    }
     NetworkDataWriter_PUN Writer = new NetworkDataWriter_PUN();
     public int Id => PhotonNetwork.LocalPlayer.ActorNumber;
 
@@ -123,13 +129,24 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void Update()
     {
-        if(PhotonNetwork.LevelLoadingProgress < 1.0f && IsLoaded == false)
+        if(AutoStartGame == false)
         {
-            Debugger.text = $"Loading: {PhotonNetwork.LevelLoadingProgress * 100}%";
+            if (PhotonNetwork.LevelLoadingProgress < 1.0f && IsLoaded == false)
+            {
+                Debugger.text = $"Loading: {PhotonNetwork.LevelLoadingProgress * 100}%";
+            }
+            if (PhotonNetwork.IsMessageQueueRunning == true && IsLoaded == false)
+            {
+                Debugger.text = "Loading complete.";
+                IsLoaded = true;
+                PhotonNetwork.CurrentRoom.Players[PhotonNetwork.LocalPlayer.ActorNumber].SetCustomProperties(new ExitGames.Client.Photon.Hashtable
+            {
+                { "IsReady", true }
+            });
+            }
         }
-        if(PhotonNetwork.IsMessageQueueRunning == true && IsLoaded == false)
+        else if(PhotonNetwork.IsMessageQueueRunning == true && IsLoaded == false && PhotonNetwork.InRoom)
         {
-            Debugger.text = "Loading complete.";
             IsLoaded = true;
             PhotonNetwork.CurrentRoom.Players[PhotonNetwork.LocalPlayer.ActorNumber].SetCustomProperties(new ExitGames.Client.Photon.Hashtable
             {

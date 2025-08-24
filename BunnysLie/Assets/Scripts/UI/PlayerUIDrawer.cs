@@ -331,6 +331,11 @@ public class PlayerUIDrawer : MonoBehaviour
         NickNameTextBox.text = PhotonNetwork.CurrentRoom.Players.First((p) => p.Value.ActorNumber == Target.ID).Value.NickName;
     }
 
+    public string GetNickName()
+    {
+        return NickNameTextBox.text;
+    }
+
     [SerializeField] public Player Target;
 
     [SerializeField] Image PlayerMainImage;
