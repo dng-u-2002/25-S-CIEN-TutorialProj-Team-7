@@ -189,40 +189,49 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
 
+    // 기존 GetRandomCard(List<Tuple<byte, byte>> excection = null) 대신 교체
     static System.Random Random = new System.Random();
-    public (byte, byte) GetRandomCard(List<Tuple<byte, byte>> excection = null)
-    {
-        List<Tuple<byte, byte>> cards = new List<Tuple<byte, byte>>();
-        foreach(var kv in ThisRoomData.Cards)
-        {
-            foreach(var c in kv.Value)
-                cards.Add(new Tuple<byte, byte>(c.Item1, c.Item2));
-        }
-        foreach (var kv in ThisRoomData.Cards2Delete)
-        {
-            cards.Add(new Tuple<byte, byte>(kv.Value.Item1, kv.Value.Item2));
-        }
-        foreach(var kv in ThisRoomData.Cards2ExchangeInSpecialRule)
-        {
-            cards.Add(new Tuple<byte, byte>(kv.Value.Item1, kv.Value.Item2));
-        }
-        if(excection != null)
-        cards.AddRange(excection);
-        int type = 0;
-        int value = 0;
-        while(true)
-        {
-            type = Random.Next(0, 2); // 0 or 1
-            value = Random.Next(0, 10); // 0 to 9
 
-            if (cards.Contains(new Tuple<byte, byte>((byte)type, (byte)value)) == false)
+    public (byte, byte) GetRandomCard(Room room, List<Tuple<byte, byte>> extraExclusions = null)
+    {
+        // 현재 룸 상태에서 이미 사용 중인 카드들을 수집
+        var used = new HashSet<Tuple<byte, byte>>();
+
+        foreach (var kv in room.Cards)
+            foreach (var c in kv.Value)
+                used.Add(c);
+
+        foreach (var kv in room.Cards2Delete)
+            used.Add(kv.Value);
+
+        foreach (var kv in room.Cards2ExchangeInSpecialRule)
+            used.Add(kv.Value);
+
+        // 이번 호출 과정에서 이미 뽑아둔(아직 room.Cards에 넣기 전) 카드들도 제외
+        if (extraExclusions != null)
+            foreach (var ex in extraExclusions)
+                used.Add(ex);
+
+        // 유일 카드가 나올 때까지 시도
+        int safety = 0;
+        while (true)
+        {
+            int type = Random.Next(0, 2);   // 0 or 1
+            int value = Random.Next(0, 10); // 0..9
+            var cand = new Tuple<byte, byte>((byte)type, (byte)value);
+
+            if (!used.Contains(cand))
+                return ((byte)type, (byte)value);
+
+            if (++safety > 200)
             {
-                // ī�尡 �ߺ����� ������ ��ȯ
-                break;
+                Debug.LogError("[Card] 더 이상 중복 없는 카드를 뽑을 수 없습니다. 덱 소진 가능성을 확인하세요.");
+                // 안전장치: 최후에는 어떤 값이든 반환하지만, 로직상 여기 오면 게임 규칙/덱 설계를 점검 필요
+                return (0, 0);
             }
         }
-        return ((byte)type, (byte)value);
     }
+
     //public enum ePacketType_InGameServer
     //{
     //    None = 0,
@@ -1011,7 +1020,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         {
                             room.Cards[id].Remove(new Tuple<byte, byte>(cardType, cardValue)); //ī�� ����
                             Debug.Log($"[Special Rule] User {user.Id} exchanged card with deck. Removed card: {cardType}:{cardValue}.");
-                            var newCard = GetRandomCard(new List<Tuple<byte, byte>>(new[] { new Tuple<byte, byte>(cardType, cardValue) })); // ī�� 1�� ����
+                            var newCard = GetRandomCard(ThisRoomData, new List<Tuple<byte, byte>>(new[] { new Tuple<byte, byte>(cardType, cardValue) })); // ī�� 1�� ����
                             room.Cards[id].Add(new Tuple<byte, byte>(newCard.Item1, newCard.Item2)); // �� ī�� �߰�
                             Debug.Log($"[Special Rule] User {user.Id} exchanged card with deck. New card: {newCard.Item1}:{newCard.Item2}.");
 
@@ -1228,7 +1237,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     }
     void SendStartSpecialRule(Room room, int p1, int p2, byte reason)
     {
-        var cards = CreateRandomCards(room.Mode == eGameMode.TwoCards ? 4 : 6);
+        var cards = CreateRandomCards(ThisRoomData, room.Mode == eGameMode.TwoCards ? 4 : 6);
         room.GoPlayerCountInSpecialRule = 0;
         room.PlayerCounter_SelectedCard2Delete = 0;
         room.NowSpecialRulePlayers.Clear();
@@ -1631,22 +1640,26 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    public List<Tuple<byte, byte>> CreateRandomCards(int count)
+    // 기존: public List<Tuple<byte, byte>> CreateRandomCards(int count)
+    // 변경: 진행 중 목록을 예외로 넘겨가며 한 장씩 뽑기
+    public List<Tuple<byte, byte>> CreateRandomCards(Room room, int count)
     {
-        List<Tuple<byte, byte>> cards = new List<Tuple<byte, byte>>();
+        var cards = new List<Tuple<byte, byte>>(count);
         for (int i = 0; i < count; i++)
         {
-            cards.Add(GetRandomCard().ToTuple());
+            var picked = GetRandomCard(room, cards).ToTuple(); // 지금까지 뽑은 cards를 제외목록으로 전달
+            cards.Add(picked);
         }
         return cards;
     }
+
     public void DistributeRandom2CardsForUsers(Room room)
     {
         room.Cards.Clear();
         foreach (var player in room.Players)
         {
-            var card1 = GetRandomCard();
-            var card2 = GetRandomCard(new List<Tuple<byte, byte>>(new [] { card1.ToTuple() }));
+            var card1 = GetRandomCard(ThisRoomData);
+            var card2 = GetRandomCard(ThisRoomData, new List<Tuple<byte, byte>>(new [] { card1.ToTuple() }));
 
             room.Cards.Add(player.Id, new List<Tuple<byte, byte>> { card1.ToTuple(), card2.ToTuple() });
             PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.DistributeCardsFromServer);
@@ -1663,9 +1676,9 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         room.Cards.Clear();
         foreach (var player in room.Players)
         {
-            var card1 = GetRandomCard();
-            var card2 = GetRandomCard(new List<Tuple<byte, byte>>(new[] { card1.ToTuple() }));
-            var card3 = GetRandomCard(new List<Tuple<byte, byte>>(new[] { card1.ToTuple(), card2.ToTuple() }));
+            var card1 = GetRandomCard(ThisRoomData);
+            var card2 = GetRandomCard(ThisRoomData,new List<Tuple<byte, byte>>(new[] { card1.ToTuple() }));
+            var card3 = GetRandomCard(ThisRoomData,new List<Tuple<byte, byte>>(new[] { card1.ToTuple(), card2.ToTuple() }));
             room.Cards.Add(player.Id, new List<Tuple<byte, byte>> { card1.ToTuple(), card2.ToTuple(), card3.ToTuple() });
             PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.DistributeCardsFromServer);
             PacketWriter.WriteByte(card1.Item1);
