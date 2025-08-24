@@ -1265,8 +1265,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
 
                     }
-
-                    InGameManager.Instance.StartNextRound(reason);
+                        InGameManager.Instance.StartNextRound(reason);
                 }
                 break;
             case ePacketType_InGameServer.Broadcast_FinalResult:

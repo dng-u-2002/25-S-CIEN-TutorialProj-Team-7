@@ -1421,19 +1421,29 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     SendPacket(pl);
                 }
 
-                StartNextRound(room, 5); //5�� 3�� �� �� & ���� 1���� ���
+                DelayedFunctionHelper.InvokeDelayed(() =>
+                {
+                    StartNextRound(room, 5); //5�� 3�� �� �� & ���� 1���� ���
+                }, 2.0f);
+                
                 return false;
             }
             else if (playersWithLowersScore.Count == 2) //������ 2��
             {
                 //����� ��
 
-                SendStartSpecialRule(room, playersWithLowersScore[0], playersWithLowersScore[1], reason: 2); //������ �߻�
+                DelayedFunctionHelper.InvokeDelayed(() =>
+                {
+                    SendStartSpecialRule(room, playersWithLowersScore[0], playersWithLowersScore[1], reason: 2); //������ �߻�
+                }, 1.0f);
                 return false;
             }
             else if (playersWithLowersScore.Count == 3) //������ 3��
             {
-                StartNextRound(room, 4); //4�� 3�� �� �� & ������ ���
+                DelayedFunctionHelper.InvokeDelayed(() =>
+                {
+                    StartNextRound(room, 4); //4�� 3�� �� �� & ������ ���
+                }, 2.0f);
                 return false;
             }
         }
@@ -1483,7 +1493,10 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 //����� ��
                 if (playersInWithLowestScore.Count == 2) //���� ������ 2��
                 {
-                    SendStartSpecialRule(room, playersInWithLowestScore[0], playersInWithLowestScore[1], reason: 3); //������ �߻�
+                    DelayedFunctionHelper.InvokeDelayed(() =>
+                    {
+                        SendStartSpecialRule(room, playersInWithLowestScore[0], playersInWithLowestScore[1], reason: 3); //������ �߻�
+                    }, 1.0f);
                     return false;
                 }
                 else if (playersInWithLowestScore.Count == 1) //���� ������ 1��
@@ -1517,7 +1530,11 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
                 else if (playersInWithLowestScore.Count == 2)
                 {
-                    SendStartSpecialRule(room, playersInWithLowestScore[0], playersInWithLowestScore[1], reason: 4); // ������ �߻�
+
+                    DelayedFunctionHelper.InvokeDelayed(() =>
+                    {
+                        SendStartSpecialRule(room, playersInWithLowestScore[0], playersInWithLowestScore[1], reason: 4); // ������ �߻�
+                    }, 1.0f);
                     return false;
                 }
                 else

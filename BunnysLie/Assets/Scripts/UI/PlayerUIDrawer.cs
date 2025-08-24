@@ -142,6 +142,7 @@ public class PlayerUIDrawer : MonoBehaviour
     }
     public void SetOutCount(byte length)
     {
+        length = (byte)(3 - length);
         for (int i = 0; i < OutcountImages.Length; i++)
         {
             if (i < length)
