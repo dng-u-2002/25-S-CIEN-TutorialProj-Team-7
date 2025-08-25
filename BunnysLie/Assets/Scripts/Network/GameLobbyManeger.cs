@@ -676,7 +676,11 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
             Debug.Log($"게임 초대: {friend.nickname}");
         }
     }
-    
+
+    private void OnApplicationQuit()
+    {
+        ExitGame();
+    }
     public void ExitGame()
     {
         PlayerPrefs.Save();

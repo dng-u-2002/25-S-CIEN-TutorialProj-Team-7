@@ -1495,6 +1495,10 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     PacketWriter.WriteByte(room.OutCounts[room.OutPlayers[0]]);
                     SendPacket(pl);
                 }
+                DelayedFunctionHelper.InvokeDelayed(() =>
+                {
+                    StartNextRound(room, 10);
+                }, 2.0f);
                 return false;
             }
             else if (outScore == lowerID)
@@ -1519,6 +1523,10 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         PacketWriter.WriteByte(room.OutCounts[playersInWithLowestScore[0]]);
                         SendPacket(pl);
                     }
+                    DelayedFunctionHelper.InvokeDelayed(() =>
+                    {
+                        StartNextRound(room, 10);
+                    }, 2.0f);
                 }
                 return false;
             }
@@ -1535,11 +1543,14 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         PacketWriter.WriteByte(room.OutCounts[playersInWithLowestScore[0]]);
                         SendPacket(pl);
                     }
+                    DelayedFunctionHelper.InvokeDelayed(() =>
+                    {
+                        StartNextRound(room, 10);
+                    }, 2.0f);
                     return false;
                 }
                 else if (playersInWithLowestScore.Count == 2)
                 {
-
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
                         SendStartSpecialRule(room, playersInWithLowestScore[0], playersInWithLowestScore[1], reason: 4); // ������ �߻�

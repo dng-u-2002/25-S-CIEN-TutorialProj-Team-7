@@ -314,12 +314,12 @@ public class InGameManager : MonoBehaviour
             if (ins.Contains(rp.Target.ID))
             {
                 rp.Target.IO = eIO.In; // Set IO for remote player
-                rp.SetIOText("IN");
+                rp.SetIOText("참가");
             }
             else if (outs.Contains(rp.Target.ID))
             {
                 rp.Target.IO = eIO.Out; // Set IO for remote player
-                rp.SetIOText("OUT");
+                rp.SetIOText("퇴청");
             }
             else
             {
@@ -330,12 +330,12 @@ public class InGameManager : MonoBehaviour
         if (ins.Contains(LocalPlayer.ID))
         {
             LocalPlayer.IO = eIO.In; // Set IO for local player
-            LocalPlayerUIDrawer.SetIOText("IN");
+            LocalPlayerUIDrawer.SetIOText("참가");
         }
         else if (outs.Contains(LocalPlayer.ID))
         {
             LocalPlayer.IO = eIO.Out; // Set IO for local player
-            LocalPlayerUIDrawer.SetIOText("OUT");
+            LocalPlayerUIDrawer.SetIOText("퇴청");
         }
         else
         {
@@ -564,9 +564,10 @@ public class InGameManager : MonoBehaviour
         LocalPlayer.IsOrderDetermined = LocalPlayer.IsOrderDetermined | isLocalPlayerRanked;
     }
 
+    public bool IsStarted { get; private set; } = false;
     public void StartGame()
     {
-
+        IsStarted = true;
     }
 
     [SerializeField] AudioSource ButtonClickSound;
@@ -801,7 +802,8 @@ public class InGameManager : MonoBehaviour
             player.Order = -1;
             player.IO = eIO.None; // Reset IO for remote players
         }
-        NormalBGM.Play();
+        if(NormalBGM.isPlaying == false) //Fixed(b5 #2)
+            NormalBGM.Play();
         SpecailBGM.Stop();
     }
 

@@ -138,7 +138,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         SpecialRuleButton_ExchangeWithDeck.interactable = flag;
         SpecialRuleButton_ExchangeWithOpponent.interactable = flag;
     }
-    bool AlreadyExchangedWithOpponent = false;
+    public bool AlreadyExchangedWithOpponent = false;
     bool AlreadyExchangedWithDeck = false;
     public void SetSpecialRuleEvents(Action onGo, Action<Card> onExchangeWithDeck, Action onExhangeWithOpponentButtonClicked, Action<Card> onExchangeWithOpponent)
     {

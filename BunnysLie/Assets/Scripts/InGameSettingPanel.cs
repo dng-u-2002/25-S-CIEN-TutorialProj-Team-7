@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -254,5 +255,12 @@ public class InGameSettingPanel : MonoBehaviour
         SFXVolumeSlider.value = 0.5f;
         Container.localPosition = new Vector3(0, 0);
         IsOn = false;
+
+        LeaveGameButton.onClick.AddListener(() =>
+        {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LoadLevel("Lobby");
+            InGameManager.Instance.PlayButtonClickSound();
+        });
     }
 }

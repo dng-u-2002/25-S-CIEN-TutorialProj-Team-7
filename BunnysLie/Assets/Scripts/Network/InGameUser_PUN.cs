@@ -157,6 +157,16 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 { "IsReady", true }
             });
         }
+
+        if(PhotonNetwork.InRoom == true && InGameManager.Instance.IsStarted == true && PhotonNetwork.CurrentRoom.PlayerCount <= 2)
+        {
+            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("플레이어가 부족하여 게임이 종료됩니다.", 3);
+            PhotonNetwork.LeaveRoom();
+            DelayedFunctionHelper.InvokeDelayed(() =>
+            {
+                PhotonNetwork.LoadLevel("Lobby");
+            }, 2.0f);
+        }
     }
     bool IsLoaded = false;
 
@@ -1163,6 +1173,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         DelayedFunctionHelper.InvokeDelayed(() =>
                         {
                             localOutCard.CardGameObject.SetFaceAnimated(false, faceFlipDur, faceFlipEase);
+                            InGameManager.Instance.LocalPlayerUIDrawer.AlreadyExchangedWithOpponent = true; //Fixed(b5 #4)
                             InGameManager.Instance.LocalPlayerUIDrawer.RollBackSpecialRuleExchangeButtons();
                             InGameManager.Instance.LocalPlayerUIDrawer.ActivateGoButton();
                         }, faceFlipDelay);
@@ -1309,7 +1320,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (InGameManager.Instance.LocalPlayer.Order == 2 && InGameManager.Instance.OutPlayerCount == 2)
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2명이 먼저 OUT을 골랐습니다.\nIN을 선택합니다.", 0);
+            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2명이 먼저 퇴청하였습니다.\nIN을 선택합니다.", 0);
             DelayedFunctionHelper.InvokeDelayed(() =>
             {
                 Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SelectInOut_Third);
