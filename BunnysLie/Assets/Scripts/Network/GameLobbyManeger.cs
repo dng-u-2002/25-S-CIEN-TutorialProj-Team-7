@@ -601,8 +601,11 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     
     public void OnLoginSuccess()
     {
+        Debug.Log("C");
+        gameObject.SetActive(true);
         transform.GetChild(0).gameObject.SetActive(true);
         UpdateAccountInfo();
+        Debug.Log("B");
     }
     
     void LoginWithGoogle()

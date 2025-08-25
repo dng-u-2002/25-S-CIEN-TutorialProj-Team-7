@@ -50,8 +50,17 @@ public class HTTPLoginManager : MonoBehaviour
     
     private void Start()
     {
-        SetupUI();
-        ShowLoginPanel();
+        var id = PlayerPrefs.GetString("LoginId", "NULL");
+        var name = PlayerPrefs.GetString("Nickname", "Guest User");
+        if (id == "NULL")
+        {
+            SetupUI();
+            ShowLoginPanel();
+        }
+        else
+        {
+            OnLoginSuccess(id, name);
+        }
     }
     
     private void SetupUI()
@@ -182,7 +191,12 @@ public class HTTPLoginManager : MonoBehaviour
             return "User";
         }
     }
-    
+
+    System.Random rnd = new();
+    public void SuccessLogin_EDITOR()
+    {
+        OnLoginSuccess("testUser", "Test User" + rnd.Next().ToString());
+    }
     private void OnLoginSuccess(string loginId, string name)
     {
         PlayerPrefs.SetString("LoginId", loginId);
@@ -200,6 +214,7 @@ public class HTTPLoginManager : MonoBehaviour
         
         if (GameLobbyManager.Instance != null)
         {
+            Debug.Log("A");
             GameLobbyManager.Instance.OnLoginSuccess();
         }
         

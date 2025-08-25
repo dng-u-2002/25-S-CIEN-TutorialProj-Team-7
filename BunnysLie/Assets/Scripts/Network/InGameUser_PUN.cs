@@ -18,7 +18,7 @@ using static InGameServer_PUN;
 
 public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 {
-    bool AutoStartGame = true;
+    bool AutoStartGame = false;
 
     private void Start()
     {
@@ -26,7 +26,11 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if(AutoStartGame)
         {
+#if UNITY_EDITOR
             Photon.Pun.PhotonNetwork.NickName = ParrelSync.ClonesManager.GetArgument();
+#else
+            Photon.Pun.PhotonNetwork.NickName = "Player" + UnityEngine.Random.Range(1000, 9999).ToString();
+#endif
             Debug.Log("NickName: " + Photon.Pun.PhotonNetwork.NickName);
             //#endif
             PhotonNetwork.GameVersion = "0.1.0";
@@ -1281,6 +1285,12 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\n게임이 종료되었습니다.", rp.Character + 5); 
                         }
                     }
+
+                    DelayedFunctionHelper.InvokeDelayed(() =>
+                    {
+                        PhotonNetwork.LeaveRoom();
+                        PhotonNetwork.LoadLevel("Lobby");
+                    }, 2.0f);
                 }
                 break;
         }

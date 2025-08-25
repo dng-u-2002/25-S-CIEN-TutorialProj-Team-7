@@ -128,9 +128,9 @@ public class SoundSettingPanel : MonoBehaviour
 
     private void Start()
     {
-        MasterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume");
-        BGMVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume");
-        SFXVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume");
+        MasterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
+        BGMVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
+        SFXVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
         IsActive_TextChat = PlayerPrefs.GetInt("IsActive_TextChat", 1) == 1;
         IsActive_VoiceChat = PlayerPrefs.GetInt("IsActive_VoiceChat", 1) == 1;
 
