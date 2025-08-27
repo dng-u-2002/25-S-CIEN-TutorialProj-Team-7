@@ -878,7 +878,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                     //    StartNextRound(room);
                                     //}, 3.5f);
                                 }
-                            }, 3.5f);
+                            }, 6.5f);
                         }
                     }
                 }
@@ -1377,6 +1377,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             return false;
 
         int outPlayerCount = room.OutPlayers.Count;
+        const float time2StartNextRound = 4.0f;
 
         if (outPlayerCount == 3)
         {
@@ -1433,7 +1434,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 DelayedFunctionHelper.InvokeDelayed(() =>
                 {
                     StartNextRound(room, 5); //5�� 3�� �� �� & ���� 1���� ���
-                }, 2.0f);
+                }, time2StartNextRound);
                 
                 return false;
             }
@@ -1452,7 +1453,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 DelayedFunctionHelper.InvokeDelayed(() =>
                 {
                     StartNextRound(room, 4); //4�� 3�� �� �� & ������ ���
-                }, 2.0f);
+                }, time2StartNextRound);
                 return false;
             }
         }
@@ -1498,7 +1499,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 DelayedFunctionHelper.InvokeDelayed(() =>
                 {
                     StartNextRound(room, 10);
-                }, 2.0f);
+                }, time2StartNextRound);
                 return false;
             }
             else if (outScore == lowerID)
@@ -1526,7 +1527,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
                         StartNextRound(room, 10);
-                    }, 2.0f);
+                    }, time2StartNextRound);
                 }
                 return false;
             }
@@ -1546,7 +1547,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
                         StartNextRound(room, 10);
-                    }, 2.0f);
+                    }, time2StartNextRound);
                     return false;
                 }
                 else if (playersInWithLowestScore.Count == 2)

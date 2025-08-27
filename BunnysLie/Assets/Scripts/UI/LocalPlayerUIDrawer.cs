@@ -239,6 +239,8 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     public override void SetSpecialRuleMode()
     {
         base.SetSpecialRuleMode();
+        RPSButton_P.transform.parent.gameObject.SetActive(false);
+        InOutButton_In.transform.parent.gameObject.SetActive(false);
         SpecialRuleButton_Go.gameObject.SetActive(true);
         SpecialRuleButton_ExchangeWithDeck.gameObject.SetActive(true);
         SpecialRuleButton_ExchangeWithOpponent.gameObject.SetActive(true);

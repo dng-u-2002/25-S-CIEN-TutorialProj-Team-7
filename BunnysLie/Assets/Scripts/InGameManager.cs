@@ -782,6 +782,8 @@ public class InGameManager : MonoBehaviour
             rp.Go2OriginTransform();
             rp.Target.ThisDeck.RemoveAllCards();
         }
+        LocalPlayerUIDrawer.RPSButton_P.transform.parent.gameObject.SetActive(true);
+        LocalPlayerUIDrawer.InOutButton_In.transform.parent.gameObject.SetActive(true);
         LocalPlayerUIDrawer.SetRPSTextBox(false, eRPS.None);
         LocalPlayerUIDrawer.SetOrderText(-1);
         LocalPlayerUIDrawer.SetIOText("");

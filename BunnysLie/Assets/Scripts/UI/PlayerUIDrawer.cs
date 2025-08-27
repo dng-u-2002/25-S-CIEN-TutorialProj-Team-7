@@ -240,26 +240,33 @@ public class PlayerUIDrawer : MonoBehaviour
         }
     }
 
+    [SerializeField] Sprite RockSprite;
+    [SerializeField] Sprite PaperSprite;
+    [SerializeField] Sprite ScissorsSprite;
+    [SerializeField] Image RPSImage;
     public void SetRPSTextBox(bool active, eRPS rps, bool ignoreSame = false, bool animated = true)
     {
         if (rps == eRPS.None)
         {
             active = false;
         }
-            RPSTextBox.fontSize = 50.0f;
-
+            RPSTextBox.fontSize = 0.0f;
+        RPSTextBox.text = "";
 
         if (active)
         {
             switch (rps)
             {
                 case eRPS.Rock:
+                    RPSImage.sprite = RockSprite;
                     RPSTextBox.text = "바위";
                     break;
                 case eRPS.Paper:
+                    RPSImage.sprite = PaperSprite;
                     RPSTextBox.text = "보";
                     break;
                 case eRPS.Scissors:
+                    RPSImage.sprite = ScissorsSprite;
                     RPSTextBox.text = "가위";
                     break;
             }
@@ -299,6 +306,7 @@ public class PlayerUIDrawer : MonoBehaviour
 
                 RPSTextBoxAnimationID = ObjectMoveHelper.RotatebjectSlerp(RPSTextBoxBackground, originalRotation, 0.12f, Helpers.ePosition.Local);
                 RPSTextBoxAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 1.0f, 0.12f);
+                ObjectMoveHelper.ChangeAlpha(RPSImage, 1.0f, 0.12f);
             }
             else
             {
@@ -313,6 +321,7 @@ public class PlayerUIDrawer : MonoBehaviour
 
                 RPSTextBoxAnimationID = ObjectMoveHelper.RotatebjectSlerp(RPSTextBoxBackground, targetRotation, 0.12f, Helpers.ePosition.Local);
                 RPSTextBoxAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 0.0f, 0.12f);
+                ObjectMoveHelper.ChangeAlpha(RPSImage, 0.0f, 0.12f);
             }
         }
         else

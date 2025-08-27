@@ -18,7 +18,7 @@ using static InGameServer_PUN;
 
 public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 {
-    bool AutoStartGame = false;
+    bool AutoStartGame = true;
 
     private void Start()
     {
