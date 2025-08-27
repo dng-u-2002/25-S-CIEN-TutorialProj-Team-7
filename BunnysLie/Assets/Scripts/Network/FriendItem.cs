@@ -5,12 +5,13 @@ using UnityEngine.UI;
 public class FriendItem : MonoBehaviour
 {
     [Header("UI Components")]
-    public Text nicknameText;
-    public Text statusText;
-    public Button inviteButton;
+    public TMPro.TMP_Text nicknameText;
+    public TMPro.TMP_Text statusText;
+    public Button inviteButton3;
+    public Button inviteButton2;
     public Button removeButton;
     public Image statusIndicator;
-    public Text activityText;
+    public TMPro.TMP_Text activityText;
     
     [Header("Status Colors")]
     public Color onlineColor = Color.green;
@@ -33,8 +34,10 @@ public class FriendItem : MonoBehaviour
         if (nicknameText != null) nicknameText.text = friendData.nickname;
         UpdateStatusAndActivity();
         UpdateStatusIndicator();
-        if (inviteButton != null)
-            inviteButton.interactable = friendData.isOnline && friendData.currentActivity != FriendActivity.InGame;
+        if (inviteButton2 != null)
+            inviteButton2.interactable = friendData.isOnline && friendData.currentActivity != FriendActivity.InGame;
+        if (inviteButton3 != null)
+            inviteButton3.interactable = friendData.isOnline && friendData.currentActivity != FriendActivity.InGame;
     }
     
     void UpdateStatusAndActivity()
@@ -114,10 +117,23 @@ public class FriendItem : MonoBehaviour
     
     void SetupButtons()
     {
-        if (inviteButton != null)
+        if (inviteButton2 != null)
         {
-            inviteButton.onClick.RemoveAllListeners();
-            inviteButton.onClick.AddListener(OnInviteButtonClicked);
+            inviteButton2.onClick.RemoveAllListeners();
+            inviteButton2.onClick.AddListener(() =>
+            {
+                GameLobbyManager.Instance.selectedGameType = eGameMode.TwoCards;
+                OnInviteButtonClicked();
+                });
+        }
+        if (inviteButton3 != null)
+        {
+            inviteButton3.onClick.RemoveAllListeners();
+            inviteButton3.onClick.AddListener(() =>
+            {
+                GameLobbyManager.Instance.selectedGameType = eGameMode.ThreeCards;
+                OnInviteButtonClicked();
+            });
         }
         if (removeButton != null)
         {
