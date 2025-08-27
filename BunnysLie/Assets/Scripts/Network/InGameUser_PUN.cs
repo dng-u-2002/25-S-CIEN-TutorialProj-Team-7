@@ -18,13 +18,22 @@ using static InGameServer_PUN;
 
 public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 {
+    public static InGameUser_PUN Instance { get; private set; }
+
     bool AutoStartGame = true;
 
     private void Start()
     {
-//#if UNITY_EDITOR
+        if(Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        Instance = this;
+        Debugger.text = "InGameUser_PUN started.\n";
+        //#if UNITY_EDITOR
 
-        if(AutoStartGame)
+        if (AutoStartGame)
         {
 #if UNITY_EDITOR
             Photon.Pun.PhotonNetwork.NickName = ParrelSync.ClonesManager.GetArgument();
@@ -1449,6 +1458,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     private void NetworkResponse_Chat_Receive(int id, string message)
     {
         OnChatReceived?.Invoke(id, message);
+        FindObjectOfType<Chating>().OnChat(InGameManager.Instance.FindDrawerByID(id).GetNickName(), message);
         Debug.Log($"[Chat] Received message from server: {message}");
     }
 

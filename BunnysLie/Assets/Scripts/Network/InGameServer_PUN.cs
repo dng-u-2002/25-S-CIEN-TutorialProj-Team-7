@@ -559,13 +559,13 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.Chat_Send:
                 int sender = reader.ReadInt();
                 string message = reader.ReadString();
-                //foreach (var u in ConnectedUsers.Values)
-                //{
-                //    PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Chat_Receive);
-                //    PacketWriter.WriteInt(sender);
-                //    PacketWriter.WriteString(message);
-                //    SendPacket(u.Item1);
-                //}
+                foreach (var u in ThisRoomData.Players)
+                {
+                    PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Chat_Receive);
+                    PacketWriter.WriteInt(sender);
+                    PacketWriter.WriteString(message);
+                    SendPacket(u);
+                }
                 break;
             case ePacketType_InGameServer.SelfEmoticon:
                 {

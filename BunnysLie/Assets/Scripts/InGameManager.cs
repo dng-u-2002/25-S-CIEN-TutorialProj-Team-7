@@ -938,4 +938,9 @@ public class InGameManager : MonoBehaviour
             func?.Invoke(rp);
         }
     }
+
+    internal void ClientSendChat(string msg)
+    {
+        InGameUser_PUN.Instance.SendChat2Server(msg);
+    }
 }

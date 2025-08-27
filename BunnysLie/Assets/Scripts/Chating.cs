@@ -3,14 +3,17 @@ using UnityEngine;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Unity.Collections;
+using Unity.VisualScripting;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Chating : MonoBehaviour
 {
-    TMP_InputField input;
-    TMP_Text text;
+    [SerializeField] TMP_InputField input;
+    [SerializeField] TMP_Text text;
 
-    public NetPeer peer { get; set; }
-    public NetDataWriter writer { get; set; } = new NetDataWriter();
+    //public NetPeer peer { get; set; }
+    //public NetDataWriter writer { get; set; } = new NetDataWriter();
     
     void Start()
     {
@@ -19,21 +22,35 @@ public class Chating : MonoBehaviour
         
         if(input==null||text==null)
             Debug.LogError("Fail");
+
+        input.onSubmit.AddListener((string msg) => SendChat());
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Slash))
+        {
+            EventSystem.current.SetSelectedGameObject(input.gameObject, null);
+            input.OnPointerClick(null);
+        }
     }
 
     public void SendChat()
     {
         string msg = input.text.Trim();
-        if (string.IsNullOrEmpty(msg) || peer == null || peer.ConnectionState != ConnectionState.Connected)
+        Debug.Log(msg);
+        if (string.IsNullOrEmpty(msg))
         {
             return;
         }
-        writer.Reset();
-        writer.Put((byte)PacketType.Chat);
-        writer.Put(msg);
-        peer.Send(writer, DeliveryMethod.ReliableOrdered);
+        InGameManager.Instance.ClientSendChat(msg);
+        input.text = "";
+        //writer.Reset();
+        //writer.Put((byte)PacketType.Chat);
+        //writer.Put(msg);
+        //peer.Send(writer, DeliveryMethod.ReliableOrdered);
     }
-    public void OnChat(int sender, string message)
+    public void OnChat(string sender, string message)
     {
         text.text += $"{sender}: {message}\n";
     }
