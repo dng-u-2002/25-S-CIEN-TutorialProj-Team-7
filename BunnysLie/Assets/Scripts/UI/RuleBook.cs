@@ -19,11 +19,13 @@ public class RuleBook : MonoBehaviour
         {
             NowPage--;
             ShowRuleBook(NowPage);
+            InGameManager.Instance.PlayButtonClickSound();
         });
         RightButton.onClick.AddListener(() =>
         {
             NowPage++;
             ShowRuleBook(NowPage);
+            InGameManager.Instance.PlayButtonClickSound();
         });
 
         OffRuleBook();
@@ -32,8 +34,9 @@ public class RuleBook : MonoBehaviour
     public void OnRulebookButtonClicked()
     {
         IsShowing = !IsShowing;
+        InGameManager.Instance.PlayButtonClickSound();
 
-        if(IsShowing)
+        if (IsShowing)
         {
             ShowRuleBook(NowPage);
         }

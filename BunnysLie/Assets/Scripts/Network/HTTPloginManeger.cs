@@ -16,24 +16,24 @@ public class HTTPLoginManager : MonoBehaviour
     [Header("Login UI")]
     public GameObject loginPanel;
     public GameObject registerPanel;
-    public InputField loginIdInput;
-    public InputField loginPasswordInput;
+    public TMPro.TMP_InputField loginIdInput;
+    public TMPro.TMP_InputField loginPasswordInput;
     public Button loginButton;
     public Button showRegisterButton;
-    public Text loginErrorText;
+    public TMPro.TMP_Text loginErrorText;
     
     [Header("Register UI")]
-    public InputField regEmailInput;
-    public InputField regLoginIdInput;
-    public InputField regPasswordInput;
-    public InputField regNameInput;
+    public TMPro.TMP_InputField regEmailInput;
+    public TMPro.TMP_InputField regLoginIdInput;
+    public TMPro.TMP_InputField regPasswordInput;
+    public TMPro.TMP_InputField regNameInput;
     public Button registerButton;
     public Button showLoginButton;
-    public Text registerErrorText;
+    public TMPro.TMP_Text registerErrorText;
     
     [Header("Loading UI")]
     public GameObject loadingPanel;
-    public Text loadingText;
+    public TMPro.TMP_Text loadingText; 
     
     private void Awake()
     {
@@ -50,8 +50,17 @@ public class HTTPLoginManager : MonoBehaviour
     
     private void Start()
     {
-        SetupUI();
-        ShowLoginPanel();
+        var id = PlayerPrefs.GetString("LoginId", "NULL");
+        var name = PlayerPrefs.GetString("Nickname", "Guest User");
+        if (id == "NULL")
+        {
+            SetupUI();
+            ShowLoginPanel();
+        }
+        else
+        {
+            OnLoginSuccess(id, name);
+        }
     }
     
     private void SetupUI()
@@ -182,7 +191,12 @@ public class HTTPLoginManager : MonoBehaviour
             return "User";
         }
     }
-    
+
+    System.Random rnd = new();
+    public void SuccessLogin_EDITOR()
+    {
+        OnLoginSuccess("testUser", "Test User" + rnd.Next().ToString());
+    }
     private void OnLoginSuccess(string loginId, string name)
     {
         PlayerPrefs.SetString("LoginId", loginId);
@@ -192,13 +206,15 @@ public class HTTPLoginManager : MonoBehaviour
         
         if (PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.NickName = name;
+            PhotonNetwork.LocalPlayer.NickName = name;
+            Debug.Log("PhotonNetwork NickName set to: " + PhotonNetwork.NickName);
         }
         
         HideAllPanels();
         
         if (GameLobbyManager.Instance != null)
         {
+            Debug.Log("A");
             GameLobbyManager.Instance.OnLoginSuccess();
         }
         
@@ -248,6 +264,7 @@ public class HTTPLoginManager : MonoBehaviour
     {
         loginPanel.SetActive(true);
         registerPanel.SetActive(false);
+        loginPanel.transform.localPosition = Vector3.zero;
         ClearErrorMessages();
     }
     
@@ -255,6 +272,7 @@ public class HTTPLoginManager : MonoBehaviour
     {
         loginPanel.SetActive(false);
         registerPanel.SetActive(true);
+        registerPanel.transform.localPosition = Vector3.zero;
         ClearErrorMessages();
     }
     
@@ -268,6 +286,7 @@ public class HTTPLoginManager : MonoBehaviour
     {
         loadingPanel.SetActive(true);
         loadingText.text = message;
+        loadingPanel.transform.localPosition = Vector3.zero;
     }
     
     private void HideLoadingPanel()

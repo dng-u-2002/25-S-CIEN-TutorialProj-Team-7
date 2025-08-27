@@ -32,6 +32,47 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     [SerializeField] public AudioSource IOSelectSound;
     [SerializeField] public AudioSource POSCSelectSound;
 
+
+
+    [SerializeField] RectTransform EmotionPanel;
+
+    [SerializeField] RectTransform EmoticonPanel0;
+    [SerializeField] RectTransform EmoticonPanel1;
+    public void SetEmoticonPanelRange(int range)
+    {
+        if(range == 0)
+        {
+            EmoticonPanel0.gameObject.SetActive(true);
+            EmoticonPanel1.gameObject.SetActive(false);
+        }
+        else if(range == 1)
+        {
+            EmoticonPanel0.gameObject.SetActive(false);
+            EmoticonPanel1.gameObject.SetActive(true);
+        }
+        else
+        {
+            EmoticonPanel0.gameObject.SetActive(false);
+            EmoticonPanel1.gameObject.SetActive(false);
+        }
+    }
+    public override void PlayEmoticon(int index)
+    {
+        base.PlayEmoticon(index);
+        SetActiveEmoticonPanel(false);
+        FindObjectOfType<InGameUser_PUN>().SendLocalEmoticonData2Server(index);
+    }
+    public void OnEmotioconShowButtonClicked()
+    {
+        EmotionPanel.gameObject.SetActive(!EmotionPanel.gameObject.activeSelf);
+        EmotionPanel.transform.GetChild(0).SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        SetEmoticonPanelRange(0);
+    }
+    public void SetActiveEmoticonPanel(bool flag)
+    {
+        EmotionPanel.gameObject.SetActive(flag);
+    }
+
     public void ShowPanelOnScreenCenterWithButtons(string text, int background, string leftButtonText, string rightButtonText, Action onLeftButtonClick, Action onRightButtonClick)
     {
         if (PanelOnScreenCenterWithButtons != null)
@@ -79,6 +120,26 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             POSCText.text = text;
         }
     }
+    public void ActivateGoButton()
+    {
+        if (SpecialRuleButton_Go != null)
+        {
+            SpecialRuleButton_Go.interactable = true;
+        }
+    }
+    public void RollBackSpecialRuleExchangeButtons()
+    {
+        SpecialRuleButton_ExchangeWithDeck.interactable = !AlreadyExchangedWithDeck;
+        SpecialRuleButton_ExchangeWithOpponent.interactable = !AlreadyExchangedWithOpponent;
+    }
+    public void SetActiveAllSpecialRuleButtons(bool flag)
+    {
+        SpecialRuleButton_Go.interactable = flag;
+        SpecialRuleButton_ExchangeWithDeck.interactable = flag;
+        SpecialRuleButton_ExchangeWithOpponent.interactable = flag;
+    }
+    public bool AlreadyExchangedWithOpponent = false;
+    bool AlreadyExchangedWithDeck = false;
     public void SetSpecialRuleEvents(Action onGo, Action<Card> onExchangeWithDeck, Action onExhangeWithOpponentButtonClicked, Action<Card> onExchangeWithOpponent)
     {
         SpecialRuleButton_Go.onClick.RemoveAllListeners();
@@ -88,43 +149,61 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         SpecialRuleButton_ExchangeWithDeck.interactable = true;
         SpecialRuleButton_ExchangeWithOpponent.interactable = true;
 
+        AlreadyExchangedWithDeck = false;
+        AlreadyExchangedWithOpponent = false;
+
         SpecialRuleButton_Go.onClick.AddListener(() =>
         {
             onGo?.Invoke();
             SpecialRuleButton_Go.interactable = (false);
+            SpecialRuleButton_ExchangeWithDeck.interactable = false;
+            SpecialRuleButton_ExchangeWithOpponent.interactable = false;
         });
         ExchangeWithDeck = (card => onExchangeWithDeck?.Invoke(card));
         ExchangeWithOpponent = (card => onExchangeWithOpponent?.Invoke(card));
 
         SpecialRuleButton_ExchangeWithDeck.onClick.AddListener(() =>
         {
+            InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
+            InGameManager.Instance.PlayButtonClickSound();
+            SetActiveAllSpecialRuleButtons(false);
+            AlreadyExchangedWithDeck = true;
+
             SelectCard2Exchange((card) =>
             {
                 ExchangeWithDeck?.Invoke(card);
                 SpecialRuleButton_ExchangeWithDeck.interactable = false;
+                InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, 0.0f, true);
             });
         });
         SpecialRuleButton_ExchangeWithOpponent.onClick.AddListener(() =>
         {
+            InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
+            InGameManager.Instance.PlayButtonClickSound();
+            SetActiveAllSpecialRuleButtons(false);
+            AlreadyExchangedWithOpponent = true;
+
             onExhangeWithOpponentButtonClicked?.Invoke();
             SelectCard2Exchange((card) =>
             {
                 ExchangeWithOpponent?.Invoke(card);
                 ShowPanelOnScreenCenter("상대의 응답을 기다리는중...", 0);
                 SpecialRuleButton_ExchangeWithOpponent.interactable = false;
+                InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, 0.0f, true);
             });
         });
     }
    // public Card Card2Exchange;
     public void SelectCard2Exchange(System.Action<Card> onSelected)
     {
-        foreach(var c in CardObjects)
+        InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
+        foreach (var c in CardObjects)
         {
             c.ActiveSelection(true, (card) =>
             {
                 //Card2Exchange = card;
-                Vector3 originScale = card.CardGameObject.transform.localScale;
-                ObjectMoveHelper.ScaleObject(card.CardGameObject.transform, originScale * 1.1f, 0.2f);
+                InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, 0.0f, true);
+                card.CardGameObject.MoveMovementTransformScale(Vector3.one * 1.1f, 0.2f);
                 card.CardGameObject.MoveMovementTransformPosition(new Vector3(0, 50, 0), 0.2f, ePosition.Local);
                 DelayedFunctionHelper.InvokeDelayed(() =>
                 {
@@ -140,10 +219,14 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     }
     public void SelectCard2Delete(System.Action<Card> onSelected)
     {
+        SetWordCloudTextBox(true, "어떤 카드를 버릴까?", 43.7f,  true);
         foreach (var c in CardObjects)
         {
             c.ActiveSelection(true, (card) =>
             {
+                //"어떤 카드를 버릴까?" 제거
+                InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, -1, true);
+
                 //Card2Exchange = card;
                 onSelected?.Invoke(card);
                 foreach (var oc in CardObjects)
@@ -182,6 +265,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         SpecialRuleButton_ExchangeWithDeck.gameObject.SetActive(false);
         SpecialRuleButton_ExchangeWithOpponent.gameObject.SetActive(false);
         SetActivePanelOnScreenCenterWithButtons(false);
+        SetActiveEmoticonPanel(false);
     }
 
     public void RemoveAllListenersFromRPSButtons()
@@ -219,7 +303,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
                 break;
             }
         }
-        realCard.CardGameObject.SetFace(true); // Set the card face to back
+        realCard.CardGameObject.SetFaceAnimated(true, 1.2f, 0.2f);
     }
     public override void RemoveCard2Delete()
     {
@@ -231,10 +315,10 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     }
     internal void SelectedCard2Delete(Card card)
     {
-        CardObject c = card.CardGameObject;
-        c.transform.SetParent(DeletedCardContainer);
-        c.transform.localPosition = Vector3.zero; // Reset position to center of DeletedCardContainer
-        c.SetFace(true); // Set the card face to back
+        //CardObject c = card.CardGameObject;
+        //c.transform.SetParent(DeletedCardContainer);
+        //c.transform.localPosition = Vector3.zero; // Reset position to center of DeletedCardContainer
+        //c.SetFace(true); // Set the card face to back
     }
 
     internal void SetAllCards2DefaultState()
@@ -242,6 +326,24 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         foreach(var c in CardObjects)
         {
             c.SetMoverDefaultTransform();
+            c.ActiveSelection(false, null);
         }
+    }
+
+    internal void ChangeCardSibilingIndicesAndKeepMoverPosition(Card c1, Card c2)
+    {
+        int idx1 = c1.CardGameObject.transform.GetSiblingIndex();
+        int idx2 = c2.CardGameObject.transform.GetSiblingIndex();
+
+        Vector3 originPosition1 = c1.CardGameObject.GetMoverPosition();
+        Vector3 originPosition2 = c2.CardGameObject.GetMoverPosition();
+
+        c1.CardGameObject.transform.SetSiblingIndex(idx2);
+        c2.CardGameObject.transform.SetSiblingIndex(idx1);
+        //레이아웃을 업데이트해야 함.
+        UpdateLayout();
+
+        c1.CardGameObject.SetMovementTransformPosition(originPosition1);
+        c2.CardGameObject.SetMovementTransformPosition(originPosition2);
     }
 }

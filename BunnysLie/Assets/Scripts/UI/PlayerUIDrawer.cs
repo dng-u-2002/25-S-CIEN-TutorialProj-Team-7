@@ -1,19 +1,111 @@
 using Helpers;
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerUIDrawer : MonoBehaviour
 {
+    [SerializeField] TMP_Text NickNameTextBox;
     [SerializeField] Transform RPSTextBoxBackground;
     [SerializeField] TMP_Text RPSTextBox;
 
     [SerializeField] Transform Character_WhieRabbit;
     [SerializeField] Transform Character_DownRabbit;
     [SerializeField] Transform Character_BlackRabbit;
+
+    [SerializeField] Emoticon EmoticonDatas;
+
+
+    string EmoticonTransformAnimationID;
+    string EmoticonAlphaAnimationID;
+
+    [SerializeField] RectTransform EmoticonSpriteContainer;
+    [SerializeField] Image EmoticonSprite;
+
+    IEnumerator _PlayEmoticon(SingleEmoticon emoticon)
+    {
+        float duration = 1.5f;
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            var sprite = emoticon.GetSpriteWithNormalizedTime(elapsedTime);
+            if (sprite != null)
+            {
+                EmoticonSprite.sprite = sprite;
+            }
+            yield return null;
+        }
+        Quaternion originalRotation = EmoticonSpriteContainer.localRotation;
+        float diffAngle = -10f;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, diffAngle) * Quaternion.identity;
+
+        var image = EmoticonSprite;
+
+
+        EmoticonTransformAnimationID = ObjectMoveHelper.RotatebjectSlerp(EmoticonSpriteContainer, targetRotation, 0.12f, Helpers.ePosition.Local);
+        EmoticonAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 0.0f, 0.12f);
+
+        yield return new WaitForSeconds(0.12f);
+        EmoticonSpriteContainer.gameObject.SetActive(false);
+    }
+    Coroutine EmotionPlayer;
+    public virtual void PlayEmoticon(int index)
+    {
+        var emoticon = EmoticonDatas.Emoticons[index];
+        ObjectMoveHelper.TryStop(EmoticonTransformAnimationID);
+        ObjectMoveHelper.TryStop(EmoticonAlphaAnimationID);
+        EmoticonSpriteContainer.gameObject.SetActive(true);
+
+        Quaternion originalRotation = Quaternion.identity;
+        float diffAngle = 10f;
+        Quaternion startRotation = Quaternion.Euler(0, 0, diffAngle) * originalRotation;
+        EmoticonSpriteContainer.localRotation = startRotation;
+
+        var image = EmoticonSprite.GetComponentInChildren<Image>();
+        var originalColor = image.color;
+        originalColor.a = 0.2f;
+        image.color = originalColor;
+
+        EmoticonTransformAnimationID = ObjectMoveHelper.RotatebjectSlerp(EmoticonSpriteContainer, originalRotation, 0.12f, Helpers.ePosition.Local);
+        EmoticonAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 1.0f, 0.12f);
+
+        if (EmotionPlayer != null)
+            StopCoroutine(EmotionPlayer);
+        EmotionPlayer = StartCoroutine(_PlayEmoticon(emoticon));
+    }
+
+    public void MoveCardPosition2DeletedCardContainerPosition(int idx, float duration)
+    {
+        Target.ThisDeck.GetCard(idx).CardGameObject.MoveMovementTransformPosition(DeletedCardContainer.position, duration, ePosition.World);
+    }
+    public void MoveCardPosition_FromDeckPosition2LocalPosition(Card c, float duration)
+    {
+        if(c == null || c.CardGameObject == null)
+        {
+            Debug.LogError("Card or CardGameObject is null.");
+            return;
+        }
+        if(Target.ThisDeck.GetCardsAsList().Contains(c) == false)
+        {
+            Debug.LogError("Card is not in the deck.");
+            return;
+        }
+        c.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+        c.CardGameObject.MoveMovementTransformPosition(Vector3.zero, duration, ePosition.Local);
+    }
+    public void MoveCardPosition_FromDeckPosition2LocalPosition(int idx, float duration)
+    {
+        Target.ThisDeck.GetCard(idx).CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
+        Target.ThisDeck.GetCard(idx).CardGameObject.MoveMovementTransformPosition(Vector3.zero, duration, ePosition.Local);
+    }
 
     public int Character { get; private set; }
     public void SetChatacter(int idx)
@@ -50,6 +142,7 @@ public class PlayerUIDrawer : MonoBehaviour
     }
     public void SetOutCount(byte length)
     {
+        length = (byte)(3 - length);
         for (int i = 0; i < OutcountImages.Length; i++)
         {
             if (i < length)
@@ -92,10 +185,69 @@ public class PlayerUIDrawer : MonoBehaviour
     }
     string RPSTextBoxAnimationID;
     string RPSTextBoxAlphaAnimationID;
+
+    public void SetWordCloudTextBox(bool active, string text, float fontSize, bool animated = true)
+    {
+        if (active)
+        {
+            RPSTextBox.text = text;
+            RPSTextBox.fontSize = fontSize;
+        }
+        else
+        {
+            RPSTextBox.text = string.Empty;
+        }
+
+        if (animated)
+        {
+            if (active)
+            {
+                ObjectMoveHelper.TryStop(RPSTextBoxAnimationID);
+                ObjectMoveHelper.TryStop(RPSTextBoxAlphaAnimationID);
+                RPSTextBoxBackground.gameObject.SetActive(true);
+
+                Quaternion originalRotation = Quaternion.identity;
+                float diffAngle = 10f;
+                Quaternion startRotation = Quaternion.Euler(0, 0, diffAngle) * originalRotation;
+                RPSTextBoxBackground.localRotation = startRotation;
+
+                var image = RPSTextBoxBackground.GetComponentInChildren<Image>();
+                var originalColor = image.color;
+                originalColor.a = 0.2f;
+                image.color = originalColor;
+
+                RPSTextBoxAnimationID = ObjectMoveHelper.RotatebjectSlerp(RPSTextBoxBackground, originalRotation, 0.12f, Helpers.ePosition.Local);
+                RPSTextBoxAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 1.0f, 0.12f);
+            }
+            else
+            {
+                RPSTextBoxBackground.gameObject.SetActive(true);
+
+                Quaternion originalRotation = RPSTextBoxBackground.localRotation;
+                float diffAngle = -10f;
+                Quaternion targetRotation = Quaternion.Euler(0, 0, diffAngle) * Quaternion.identity;
+
+                var image = RPSTextBoxBackground.GetComponentInChildren<Image>();
+
+
+                RPSTextBoxAnimationID = ObjectMoveHelper.RotatebjectSlerp(RPSTextBoxBackground, targetRotation, 0.12f, Helpers.ePosition.Local);
+                RPSTextBoxAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 0.0f, 0.12f);
+            }
+        }
+        else
+        {
+            RPSTextBoxBackground.gameObject.SetActive(active);
+        }
+    }
+
     public void SetRPSTextBox(bool active, eRPS rps, bool ignoreSame = false, bool animated = true)
     {
         if (rps == eRPS.None)
+        {
             active = false;
+        }
+            RPSTextBox.fontSize = 50.0f;
+
 
         if (active)
         {
@@ -174,6 +326,16 @@ public class PlayerUIDrawer : MonoBehaviour
         Target.ThisDeck.OnCardAdded += OnCardAdded;
         Target.ThisDeck.OnCardRemoved += OnCardRemoved;
     }
+    public void SetNickName()
+    {
+        Debug.Log($"Setting nickname for player {Target.ID} to {PhotonNetwork.CurrentRoom.Players.First((p) => p.Value.ActorNumber == Target.ID).Value.NickName}");
+        NickNameTextBox.text = PhotonNetwork.CurrentRoom.Players.First((p) => p.Value.ActorNumber == Target.ID).Value.NickName;
+    }
+
+    public string GetNickName()
+    {
+        return NickNameTextBox.text;
+    }
 
     [SerializeField] public Player Target;
 
@@ -183,7 +345,7 @@ public class PlayerUIDrawer : MonoBehaviour
     [SerializeField] TMP_Text InOutText;
 
     [SerializeField] protected List<CardObject> CardObjects;
-    [SerializeField] HorizontalLayoutGroup CardContainer;
+    [SerializeField] protected HorizontalLayoutGroup CardContainer;
 
     [SerializeField] CardObject CardPrefab;
 
@@ -225,6 +387,8 @@ public class PlayerUIDrawer : MonoBehaviour
         CardObjects = new List<CardObject>();
 
         SetChatacter(UnityEngine.Random.Range(0, 3));
+
+        EmoticonSpriteContainer.gameObject.SetActive(false);
     }
 
     void OnCardRemoved(Card c)
@@ -247,6 +411,10 @@ public class PlayerUIDrawer : MonoBehaviour
             }
             LayoutRebuilder.ForceRebuildLayoutImmediate(CardContainer.GetComponent<RectTransform>());
         }
+    }
+    public void UpdateLayout()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(CardContainer.GetComponent<RectTransform>());
     }
     void OnCardAdded(Card c)
     {
@@ -278,7 +446,7 @@ public class PlayerUIDrawer : MonoBehaviour
 
     }
 
-    [SerializeField] protected RectTransform DeletedCardContainer;
+    [SerializeField] public RectTransform DeletedCardContainer;
 
     internal void DeleteAnycard()
     {

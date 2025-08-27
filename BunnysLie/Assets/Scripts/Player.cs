@@ -53,6 +53,7 @@ public class Player : MonoBehaviour
     public int Order;
     public eIO IO;
 
+
     public void StartSelectIO(Action<eIO> onSelected)
     {
         var u = FindObjectOfType<LocalPlayerUIDrawer>();
