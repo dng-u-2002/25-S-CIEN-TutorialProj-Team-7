@@ -10,10 +10,13 @@ public class FriendItem : MonoBehaviour
     public Button inviteButton;
     public Button removeButton;
     public Image statusIndicator;
+    public Text activityText;
     
     [Header("Status Colors")]
     public Color onlineColor = Color.green;
     public Color offlineColor = Color.gray;
+    public Color busyColor = Color.yellow;
+    public Color inGameColor = Color.red;
     
     private FriendData friendData;
     
@@ -27,50 +30,85 @@ public class FriendItem : MonoBehaviour
     void UpdateFriendDisplay()
     {
         if (friendData == null) return;
-        
-        // 닉네임 설정
-        if (nicknameText != null)
-        {
-            nicknameText.text = friendData.nickname;
-        }
-        
-        // 상태 텍스트 설정
-        if (statusText != null)
-        {
-            if (friendData.isOnline)
-            {
-                statusText.text = "온라인";
-                statusText.color = onlineColor;
-            }
-            else
-            {
-                TimeSpan timeSinceLastSeen = DateTime.Now - friendData.lastSeen;
-                if (timeSinceLastSeen.TotalMinutes < 60)
-                {
-                    statusText.text = $"{(int)timeSinceLastSeen.TotalMinutes}분 전";
-                }
-                else if (timeSinceLastSeen.TotalHours < 24)
-                {
-                    statusText.text = $"{(int)timeSinceLastSeen.TotalHours}시간 전";
-                }
-                else
-                {
-                    statusText.text = $"{(int)timeSinceLastSeen.TotalDays}일 전";
-                }
-                statusText.color = offlineColor;
-            }
-        }
-        
-        // 상태 인디케이터 설정
-        if (statusIndicator != null)
-        {
-            statusIndicator.color = friendData.isOnline ? onlineColor : offlineColor;
-        }
-        
-        // 초대 버튼 상태 설정
+        if (nicknameText != null) nicknameText.text = friendData.nickname;
+        UpdateStatusAndActivity();
+        UpdateStatusIndicator();
         if (inviteButton != null)
+            inviteButton.interactable = friendData.isOnline && friendData.currentActivity != FriendActivity.InGame;
+    }
+    
+    void UpdateStatusAndActivity()
+    {
+        if (statusText == null) return;
+        
+        if (friendData.isOnline)
         {
-            inviteButton.interactable = friendData.isOnline;
+            switch (friendData.currentActivity)
+            {
+                case FriendActivity.Idle:
+                    statusText.text = "온라인";
+                    statusText.color = onlineColor;
+                    break;
+                case FriendActivity.InLobby:
+                    statusText.text = "로비에서 대기중";
+                    statusText.color = onlineColor;
+                    break;
+                case FriendActivity.InGame:
+                    statusText.text = "게임중";
+                    statusText.color = inGameColor;
+                    break;
+                case FriendActivity.Matchmaking:
+                    statusText.text = "매칭중";
+                    statusText.color = busyColor;
+                    break;
+            }
+            if (activityText != null) activityText.text = GetActivityDetail();
+        }
+        else
+        {
+            TimeSpan t = DateTime.Now - friendData.lastSeen;
+            if (t.TotalMinutes < 60) statusText.text = $"{(int)t.TotalMinutes}분 전";
+            else if (t.TotalHours < 24) statusText.text = $"{(int)t.TotalHours}시간 전";
+            else statusText.text = $"{(int)t.TotalDays}일 전";
+            statusText.color = offlineColor;
+            if (activityText != null) activityText.text = "";
+        }
+    }
+    
+    void UpdateStatusIndicator()
+    {
+        if (statusIndicator == null) return;
+        if (friendData.isOnline)
+        {
+            switch (friendData.currentActivity)
+            {
+                case FriendActivity.Idle:
+                case FriendActivity.InLobby:
+                    statusIndicator.color = onlineColor; break;
+                case FriendActivity.InGame:
+                    statusIndicator.color = inGameColor; break;
+                case FriendActivity.Matchmaking:
+                    statusIndicator.color = busyColor; break;
+            }
+        }
+        else
+        {
+            statusIndicator.color = offlineColor;
+        }
+    }
+    
+    string GetActivityDetail()
+    {
+        switch (friendData.currentActivity)
+        {
+            case FriendActivity.InGame:
+                return !string.IsNullOrEmpty(friendData.currentRoomName) ? $"방: {friendData.currentRoomName}" : "";
+            case FriendActivity.Matchmaking:
+                return "상대방을 찾는 중...";
+            case FriendActivity.InLobby:
+                return "게임을 시작할 수 있습니다";
+            default:
+                return "";
         }
     }
     
@@ -81,7 +119,6 @@ public class FriendItem : MonoBehaviour
             inviteButton.onClick.RemoveAllListeners();
             inviteButton.onClick.AddListener(OnInviteButtonClicked);
         }
-        
         if (removeButton != null)
         {
             removeButton.onClick.RemoveAllListeners();
@@ -91,39 +128,50 @@ public class FriendItem : MonoBehaviour
     
     void OnInviteButtonClicked()
     {
-        if (friendData != null && GameLobbyManager.Instance != null)
-        {
-            GameLobbyManager.Instance.InviteFriendToGame(friendData);
-        }
+        if (friendData == null || GameLobbyManager.Instance == null) return;
+        if (!friendData.isOnline) { ShowMessage("친구가 오프라인 상태입니다."); return; }
+        if (friendData.currentActivity == FriendActivity.InGame) { ShowMessage("친구가 게임 중입니다."); return; }
+        if (friendData.currentActivity == FriendActivity.Matchmaking) { ShowMessage("친구가 매칭 중입니다."); return; }
+        GameLobbyManager.Instance.InviteFriendToGame(friendData);
     }
     
     void OnRemoveButtonClicked()
     {
-        if (friendData != null && GameLobbyManager.Instance != null)
-        {
-            // 삭제 확인 다이얼로그를 표시할 수도 있습니다
-            GameLobbyManager.Instance.RemoveFriend(friendData);
-        }
+        if (friendData == null || GameLobbyManager.Instance == null) return;
+        GameLobbyManager.Instance.ShowFriendRemoveConfirmation(friendData);
     }
     
-    // 친구 데이터 업데이트 (온라인 상태 변경 등)
+    void ShowMessage(string message)
+    {
+        if (GameLobbyManager.Instance != null) GameLobbyManager.Instance.SendMessage("ShowMessage", message, SendMessageOptions.DontRequireReceiver);
+        else Debug.Log(message);
+    }
+    
     public void UpdateFriendData(FriendData updatedFriend)
     {
         friendData = updatedFriend;
         UpdateFriendDisplay();
     }
     
-    // 친구가 온라인/오프라인 상태가 변경될 때 호출
-    public void SetOnlineStatus(bool isOnline)
+    public void SetOnlineStatus(bool isOnline, FriendActivity activity = FriendActivity.Idle)
     {
-        if (friendData != null)
+        if (friendData == null) return;
+        friendData.isOnline = isOnline;
+        friendData.currentActivity = activity;
+        if (!isOnline)
         {
-            friendData.isOnline = isOnline;
-            if (!isOnline)
-            {
-                friendData.lastSeen = DateTime.Now;
-            }
-            UpdateFriendDisplay();
+            friendData.lastSeen = DateTime.Now;
+            friendData.currentActivity = FriendActivity.Idle;
+            friendData.currentRoomName = "";
         }
+        UpdateFriendDisplay();
+    }
+    
+    public void UpdateFriendActivity(FriendActivity activity, string roomName = "")
+    {
+        if (friendData == null) return;
+        friendData.currentActivity = activity;
+        friendData.currentRoomName = roomName;
+        UpdateFriendDisplay();
     }
 }
