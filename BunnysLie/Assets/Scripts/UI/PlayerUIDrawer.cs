@@ -1,5 +1,6 @@
 using Helpers;
 using Photon.Pun;
+using Photon.Voice.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -305,7 +306,7 @@ public class PlayerUIDrawer : MonoBehaviour
 
 
                 RPSTextBoxAnimationID = ObjectMoveHelper.RotatebjectSlerp(RPSTextBoxBackground, originalRotation, 0.12f, Helpers.ePosition.Local);
-                RPSTextBoxAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 1.0f, 0.12f);
+                RPSTextBoxAlphaAnimationID = ObjectMoveHelper.ChangeAlpha(image, 0.0f, 0.12f);
                 ObjectMoveHelper.ChangeAlpha(RPSImage, 1.0f, 0.12f);
             }
             else

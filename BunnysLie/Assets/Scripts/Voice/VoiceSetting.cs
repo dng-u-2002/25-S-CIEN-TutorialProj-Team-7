@@ -13,17 +13,17 @@ namespace Voice
         private VoiceSender localSender;
         private Dictionary<int, VoiceReceiver> receivers = new Dictionary<int, VoiceReceiver>();
 
-        public void Initialize(NetPeer localpeer)
+        public void Initialize()
         {
-            localSender = Instantiate(VoiceSender);
-            localSender.peer = localpeer;
+            localSender = Instantiate(VoiceSender.gameObject).GetComponent<VoiceSender>();
         }
 
         public void AddRemotePlayer(int playerId)
         {
             if (!receivers.ContainsKey(playerId))
             {
-                var receiver = Instantiate(VoiceReceiver);
+                GameObject g = new GameObject(playerId + "_Receiver");
+                var receiver = g.AddComponent<VoiceReceiver>();
                 receivers.Add(playerId, receiver);
             }
         }

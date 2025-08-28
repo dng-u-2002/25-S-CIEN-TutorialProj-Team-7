@@ -118,7 +118,16 @@ public class NetworkDataReader_PUN
 	{
 		return (byte)GetNext();
 	}
-	public byte ReadPacketType()
+	public byte[] ReadByteArray(int length)
+    {
+        byte[] data = new byte[length];
+        for (int i = 0; i < length; i++)
+        {
+            data[i] = (byte)GetNext();
+        }
+        return data;
+    }
+    public byte ReadPacketType()
 	{
 		return (byte)GetNext();
 	}

@@ -16,6 +16,9 @@ public enum ePacketType_InGameServer : byte
     Chat_Send,
     Chat_Receive,
 
+    Voice_Send,
+    Voice_Receive,
+
     Request_JoinGame,
     Response_JoinGame,
 

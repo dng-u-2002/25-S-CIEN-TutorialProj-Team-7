@@ -8,7 +8,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using VOYAGER_Server;
 using static InGameServer_PUN;
@@ -557,14 +556,34 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 Debug.Log($"[HandShake] User {user.Id} sent Handshake to Server.");
                 break;
             case ePacketType_InGameServer.Chat_Send:
-                int sender = reader.ReadInt();
-                string message = reader.ReadString();
-                foreach (var u in ThisRoomData.Players)
                 {
-                    PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Chat_Receive);
-                    PacketWriter.WriteInt(sender);
-                    PacketWriter.WriteString(message);
-                    SendPacket(u);
+                    int sender = reader.ReadInt();
+                    string message = reader.ReadString();
+                    foreach (var u in ThisRoomData.Players)
+                    {
+                        PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Chat_Receive);
+                        PacketWriter.WriteInt(sender);
+                        PacketWriter.WriteString(message);
+                        SendPacket(u);
+                    }
+                }
+                break;
+            case ePacketType_InGameServer.Voice_Send:
+                {
+                    int sender = reader.ReadInt();
+                    int length = reader.ReadInt();
+                    byte[] voiceData = reader.ReadByteArray(length);
+
+                    foreach (var u in ThisRoomData.Players)
+                    {
+                        if(u.Id == sender)
+                            continue;
+                        PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Voice_Receive);
+                        PacketWriter.WriteInt(sender);
+                        PacketWriter.WriteInt(length);
+                        PacketWriter.WriteByteArray(voiceData);
+                        SendPacket(u);
+                    }
                 }
                 break;
             case ePacketType_InGameServer.SelfEmoticon:

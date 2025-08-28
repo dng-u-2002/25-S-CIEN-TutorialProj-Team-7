@@ -16,10 +16,10 @@ namespace Voice
 
         void Start()
         {
-            audioSource = GetComponent<AudioSource>();
+            audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.loop = true;
             
-            clip = AudioClip.Create("clip", sampleRate*clipLengthSeconds, channels, 1, false);
+            clip = AudioClip.Create("clip", sampleRate*clipLengthSeconds, channels, 44100, false);
             audioSource.clip = clip;
             audioSource.Play();
             
@@ -39,6 +39,7 @@ namespace Voice
                 //마이크 버퍼는 순환형이래오
             }
             clip.SetData(data, 0);
+            audioSource.Play();
         }
     }
 }

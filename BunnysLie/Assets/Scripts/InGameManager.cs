@@ -943,4 +943,9 @@ public class InGameManager : MonoBehaviour
     {
         InGameUser_PUN.Instance.SendChat2Server(msg);
     }
+
+    internal void ClientSendVoice(byte[] bytes)
+    {
+        InGameUser_PUN.Instance.SendVoice2Server(bytes);
+    }
 }

@@ -7,7 +7,6 @@ namespace Voice
 {
     public class VoiceSender : MonoBehaviour
     {
-        public NetPeer peer;
         public string microphoneDevice;
         public AudioClip audioClip;
         public bool transmitted = false;
@@ -15,7 +14,6 @@ namespace Voice
         private int lastSample = 0;
         private int sampleRate = 44100;
         private int recordLength = 1;
-        private NetDataWriter writer = new  NetDataWriter();
 
         void Start()
         {
@@ -24,31 +22,34 @@ namespace Voice
                 Debug.Log("마이크가 읍습니다");
                 return;
             }
-            
+            transmitted = false; //일단은 꺼둠
+            return;
             microphoneDevice = Microphone.devices[0];
             audioClip = Microphone.Start(microphoneDevice, true, 1, sampleRate);
-            transmitted = true;
         }
 
         void Update()
         {
-            if (peer == null || !transmitted || peer.ConnectionState == ConnectionState.Connected)
+            if (!transmitted)
             {
                 return;
             }
             int currentSample = Microphone.GetPosition(microphoneDevice);
             int sampleCount = currentSample - lastSample;
+            Debug.Log("A");
             if (sampleCount <= 0) return;
-            
+            Debug.Log("B");
             float[] samples = new float[sampleCount*audioClip.channels];
             audioClip.GetData(samples, lastSample);
             byte[] bytes = FloatArrayToByte(samples);
-            
-            writer.Reset();
-            writer.Put((byte)PacketType.Voice);  // 패킷 타입
-            writer.Put(bytes.Length);            // 길이 명시
-            writer.Put(bytes);                   // 음성 데이터
-            peer.Send(writer, DeliveryMethod.ReliableOrdered);
+
+            InGameManager.Instance.ClientSendVoice(bytes);
+
+            //writer.Reset();
+            //writer.Put((byte)PacketType.Voice);  // 패킷 타입
+            //writer.Put(bytes.Length);            // 길이 명시
+            //writer.Put(bytes);                   // 음성 데이터
+            //peer.Send(writer, DeliveryMethod.ReliableOrdered);
 
             lastSample = currentSample;
         }

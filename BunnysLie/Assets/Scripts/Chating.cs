@@ -28,7 +28,7 @@ public class Chating : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Slash))
+        if (Input.GetKeyDown(KeyCode.Slash) && input != null)
         {
             EventSystem.current.SetSelectedGameObject(input.gameObject, null);
             input.OnPointerClick(null);

@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Voice.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -109,10 +110,14 @@ public class InGameSettingPanel : MonoBehaviour
             if (Flag_VCAB == true)
             {
                 VoiceChatActiveButton.image.sprite = NormalHeadset;
+                FindObjectOfType<Recorder>().TransmitEnabled = true;
+                Mixer.SetFloat("VoiceChatVolume", 1.0f);
             }
             else
             {
                 VoiceChatActiveButton.image.sprite = MutedHeadset;
+                FindObjectOfType<Recorder>().TransmitEnabled = false;
+                Mixer.SetFloat("VoiceChatVolume", -80.0f);
             }
         }
     }
@@ -142,6 +147,13 @@ public class InGameSettingPanel : MonoBehaviour
 
     private void Awake()
     {
+        MasterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
+        BGMVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
+        SFXVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
+        IsActive_TextChat = PlayerPrefs.GetInt("IsActive_TextChat", 1) == 1;
+        IsActive_VoiceChat = PlayerPrefs.GetInt("IsActive_VoiceChat", 1) == 1;
+
+
         SettingButton.onClick.AddListener(() =>
         {
             IsOn = !IsOn;
@@ -171,6 +183,8 @@ public class InGameSettingPanel : MonoBehaviour
             }
 
             Mixer.SetFloat("MasterVolume", dB);
+            PlayerPrefs.SetFloat("MasterVolume", value01); // 플레이어 설정 저장
+            PlayerPrefs.Save();
         });
         BGMVolumeSlider.onValueChanged.AddListener((value01) =>
         {
@@ -190,6 +204,8 @@ public class InGameSettingPanel : MonoBehaviour
             }
 
             Mixer.SetFloat("BGMVolume", dB);
+            PlayerPrefs.SetFloat("BGMVolume", value01); // 플레이어 설정 저장
+            PlayerPrefs.Save();
         });
         SFXVolumeSlider.onValueChanged.AddListener((value01) =>
         {
@@ -209,6 +225,8 @@ public class InGameSettingPanel : MonoBehaviour
             }
 
             Mixer.SetFloat("SFXVolume", dB);
+            PlayerPrefs.SetFloat("SFXVolume", value01); // 플레이어 설정 저장
+            PlayerPrefs.Save();
         });
 
 
@@ -240,11 +258,15 @@ public class InGameSettingPanel : MonoBehaviour
         VoiceChatActiveButton.onClick.AddListener(() =>
         {
             IsActive_VoiceChat = !IsActive_VoiceChat;
+            PlayerPrefs.SetInt("IsActive_VoiceChat", IsActive_VoiceChat ? 1 : 0); // 플레이어 설정 저장
+            PlayerPrefs.Save();
             InGameManager.Instance.PlayButtonClickSound();
         });
         TextChatActiveButton.onClick.AddListener(() =>
         {
             IsActive_TextChat = !IsActive_TextChat;
+            PlayerPrefs.SetInt("IsActive_TextChat", IsActive_TextChat ? 1 : 0); // 플레이어 설정 저장
+            PlayerPrefs.Save();
             InGameManager.Instance.PlayButtonClickSound();
         });
 

@@ -1,4 +1,6 @@
 using Helpers;
+using Photon.Voice.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,10 +26,16 @@ public class RemovePlayerUIDrawer : PlayerUIDrawer
             if(_NowMuteState == false)
             {
                 MuteButton.image.sprite = NormalSpeaker;
+                if(ThisSpeaker != null)
+                {
+                    ThisSpeaker.transform.GetComponent<AudioSource>().volume = 1;
+                }
             }
             else
             {
                 MuteButton.image.sprite = MutedSpeaker;
+                if (ThisSpeaker != null)
+                    ThisSpeaker.transform.GetComponent<AudioSource>().volume = 0;
             }
         }
     }
@@ -81,5 +89,12 @@ public class RemovePlayerUIDrawer : PlayerUIDrawer
 
         ObserverModeAnimationIDPosition = ObjectMoveHelper.MoveObject(transform, new Vector3(736, 359, 0), 1.0f, ePosition.Local);
         ObserverModeAnimationIDScale= ObjectMoveHelper.ScaleObject(transform, Vector3.one * 0.7f, 1.0f);
+    }
+
+    Speaker ThisSpeaker;
+    internal void SetSpeaker(Speaker speaker)
+    {
+        ThisSpeaker = speaker;
+        NowMuteState = false;
     }
 }

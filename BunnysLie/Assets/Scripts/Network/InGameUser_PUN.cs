@@ -3,6 +3,8 @@ using Helpers;
 using LiteNetLib;
 using Photon.Pun;
 using Photon.Realtime;
+using Photon.Voice.PUN;
+using Photon.Voice.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using UnityEditor.VersionControl;
 #endif
 using UnityEngine;
+using Voice;
 using VOYAGER_Server;
 using static InGameServer_PUN;
 
@@ -20,7 +23,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public static InGameUser_PUN Instance { get; private set; }
 
-    bool AutoStartGame = true;
+    bool AutoStartGame = false;
 
     private void Start()
     {
@@ -218,7 +221,14 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     NetworkResponse_Chat_Receive(id, message);
                 }
                 break;
-
+            case ePacketType_InGameServer.Voice_Receive:
+                {
+                    int id = reader.ReadInt();
+                    int length = reader.ReadInt();
+                    byte[] voiceData = reader.ReadByteArray(length);
+                    FindObjectOfType<VoiceSetting>().ReceiveVoiceData(id, voiceData);
+                }
+                break;
             case ePacketType_InGameServer.Broadcast_Emoticon:
                 {
                     int id = reader.ReadInt();
@@ -273,6 +283,11 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         d.SetNickName();
                     });
+
+                    FindObjectOfType<PunVoiceClient>().SpeakerLinked += (speaker) =>
+                    {
+                        InGameManager.Instance.FindDrawerByIDExceptLocal(speaker.RemoteVoice.PlayerId).GetComponent<RemovePlayerUIDrawer>().SetSpeaker(speaker);
+                    };
                 }
                 break;
 
@@ -1460,6 +1475,18 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         OnChatReceived?.Invoke(id, message);
         FindObjectOfType<Chating>().OnChat(InGameManager.Instance.FindDrawerByID(id).GetNickName(), message);
         Debug.Log($"[Chat] Received message from server: {message}");
+    }
+
+    internal void SendVoice2Server(byte[] bytes)
+    {
+        if(PhotonNetwork.InRoom == false)
+            return;
+        Writer.CreateNewPacket((byte)ePacketType_InGameServer.Voice_Send);
+        Writer.WriteInt(Id);
+        Debug.Log("Sending voice data, bytes length: " + bytes.Length);
+        Writer.WriteInt(bytes.Length);
+        Writer.WriteByteArray(bytes);
+        Writer.SendPacket(ServerPeer);
     }
 
     public Action<int, string> OnChatReceived;

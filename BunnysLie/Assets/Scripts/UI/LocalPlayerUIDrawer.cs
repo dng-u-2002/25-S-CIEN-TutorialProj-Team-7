@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using Helpers;
+using Photon.Voice.Unity;
 
 public class LocalPlayerUIDrawer : PlayerUIDrawer
 {
@@ -38,6 +39,9 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
 
     [SerializeField] RectTransform EmoticonPanel0;
     [SerializeField] RectTransform EmoticonPanel1;
+
+    [SerializeField] Button MicButton;
+    bool IsMicActive = true;
     public void SetEmoticonPanelRange(int range)
     {
         if(range == 0)
@@ -268,6 +272,28 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         SpecialRuleButton_ExchangeWithOpponent.gameObject.SetActive(false);
         SetActivePanelOnScreenCenterWithButtons(false);
         SetActiveEmoticonPanel(false);
+
+        MicButton.onClick.AddListener(() =>
+        {
+            IsMicActive = !IsMicActive;
+            if (IsMicActive)
+            {
+                FindObjectOfType<Recorder>().TransmitEnabled = true;
+            }
+            else
+            {
+                FindObjectOfType<Recorder>().TransmitEnabled = false;
+            }
+        });
+        IsMicActive = PlayerPrefs.GetInt("IsActive_VoiceChat", 1) == 1;
+        if (IsMicActive)
+        {
+            FindObjectOfType<Recorder>().TransmitEnabled = true;
+        }
+        else
+        {
+            FindObjectOfType<Recorder>().TransmitEnabled = false;
+        }
     }
 
     public void RemoveAllListenersFromRPSButtons()
