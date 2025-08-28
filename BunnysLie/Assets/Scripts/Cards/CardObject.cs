@@ -11,7 +11,7 @@ public class CardObject : MonoBehaviour
 
     [SerializeField] private Image FrontSprite;
     [SerializeField] private Image BackSprite;
-    [SerializeField] Button SelectButton;
+    [SerializeField] public Button SelectButton;
     [SerializeField] Transform SelectionBackground;
 
     [SerializeField] Transform FaceTransform;

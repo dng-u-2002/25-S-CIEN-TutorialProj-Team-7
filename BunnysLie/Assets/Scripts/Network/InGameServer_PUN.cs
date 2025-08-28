@@ -140,7 +140,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameMode", out var mode);
             Debug.Log("Mode : " + mode);
-            InGameManager.Instance.Mode = mode != null ? (eGameMode)(int)mode : eGameMode.TwoCards;
+            InGameManager.Instance.Mode = mode != null ? (eGameMode)(int)mode : eGameMode.ThreeCards;
             room.Mode = InGameManager.Instance.Mode;
             //Rooms.Add(room.GetHashCode(), room);
             ThisRoomData = room;
@@ -374,7 +374,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     void CheckRPSRoundResult(Room room, System.Action<List<int>> onPlayersShouldRematch)
     {
         // ���� ���� ������ �� ������
-        const float packetDelay_SendRematchAfterDraw = 1.0f;
+        const float packetDelay_SendRematchAfterDraw = 2.0f;
         System.Action<List<int>> requstRematch = null; // ���� ��û�� ���� �ݹ�
         List<int> playersShouldRematch = new List<int>();
         if (room.RPSSelections.Count == room.RPSTargetPlayers.Count)

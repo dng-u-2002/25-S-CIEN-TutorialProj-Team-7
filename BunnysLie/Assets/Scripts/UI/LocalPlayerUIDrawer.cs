@@ -42,6 +42,106 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
 
     [SerializeField] Button MicButton;
     bool IsMicActive = true;
+
+
+    [SerializeField] Sprite GreenClock;
+    [SerializeField] Sprite YellowClock;
+    [SerializeField] Sprite RedClock;
+    [SerializeField] Image ClockImage;
+    [SerializeField] TMP_Text ClockSecondCounterText;
+
+    Coroutine ClockRunner;
+
+    public void StopClock()
+    {
+        if (ClockRunner != null)
+        {
+            StopCoroutine(ClockRunner);
+            ClockRunner = null;
+        }
+        ClockImage.gameObject.SetActive(false);
+    }
+    public void StartClock_30s(System.Action onEnd)
+    {
+        if(ClockRunner != null)
+        {
+            StopCoroutine(ClockRunner);
+        }
+        ClockImage.gameObject.SetActive(true);
+        ClockRunner = StartCoroutine(_StartClock_30s(onEnd));
+    }
+
+    public void StartClock_10s(System.Action onEnd)
+    {
+        if (ClockRunner != null)
+        {
+            StopCoroutine(ClockRunner);
+        }
+        ClockImage.gameObject.SetActive(true);
+        ClockRunner = StartCoroutine(_StartClock_10s(onEnd));
+    }
+
+    IEnumerator _StartClock_10s(System.Action onEnd)
+    {
+        float totalTime = 10.0f;
+        float elapsedTime = 0.0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float leftTime = totalTime - elapsedTime;
+            if (leftTime < 2.0f)
+            {
+                ClockImage.sprite = RedClock;
+            }
+            else if (leftTime < 5.0f)
+            {
+                ClockImage.sprite = YellowClock;
+            }
+            else
+            {
+                ClockImage.sprite = GreenClock;
+            }
+            ClockSecondCounterText.text = Mathf.CeilToInt(leftTime).ToString();
+            yield return null;
+        }
+        onEnd?.Invoke();
+        yield return new WaitForSeconds(0.5f);
+        ClockImage.gameObject.SetActive(false);
+    }
+    IEnumerator _StartClock_30s(System.Action onEnd)
+    {
+        float totalTime = 30.0f;
+        float elapsedTime = 0.0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float leftTime = totalTime - elapsedTime;
+            if (leftTime < 5.0f)
+            {
+                ClockImage.sprite = RedClock;
+            }
+            else if (leftTime < 15.0f)
+            {
+                ClockImage.sprite = YellowClock;
+            }
+            else
+            {
+                ClockImage.sprite = GreenClock;
+            }
+            ClockSecondCounterText.text = Mathf.CeilToInt(leftTime).ToString();
+            yield return null;
+        }
+        onEnd?.Invoke();
+        yield return new WaitForSeconds(0.5f);
+        ClockImage.gameObject.SetActive(false);
+    }
+
+
+
+
+
+
+
     public void SetEmoticonPanelRange(int range)
     {
         if(range == 0)
@@ -144,6 +244,14 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     }
     public bool AlreadyExchangedWithOpponent = false;
     bool AlreadyExchangedWithDeck = false;
+    public void ReStart30sClock2GoInSpecialRule()
+    {
+        StopClock();
+        StartClock_30s(() =>
+        {
+            SpecialRuleButton_Go.onClick.Invoke();
+        });
+    }
     public void SetSpecialRuleEvents(Action onGo, Action<Card> onExchangeWithDeck, Action onExhangeWithOpponentButtonClicked, Action<Card> onExchangeWithOpponent)
     {
         SpecialRuleButton_Go.onClick.RemoveAllListeners();
@@ -156,6 +264,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         AlreadyExchangedWithDeck = false;
         AlreadyExchangedWithOpponent = false;
 
+        ReStart30sClock2GoInSpecialRule();
         SpecialRuleButton_Go.onClick.AddListener(() =>
         {
             onGo?.Invoke();
@@ -193,6 +302,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
                 ExchangeWithOpponent?.Invoke(card);
                 ShowPanelOnScreenCenter("상대의 응답을 기다리는중...", 0);
                 SpecialRuleButton_ExchangeWithOpponent.interactable = false;
+                StopClock();
                 InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, 0.0f, true);
             });
         });
@@ -294,6 +404,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         {
             FindObjectOfType<Recorder>().TransmitEnabled = false;
         }
+        StopClock();
     }
 
     public void RemoveAllListenersFromRPSButtons()

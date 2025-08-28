@@ -23,7 +23,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public static InGameUser_PUN Instance { get; private set; }
 
-    bool AutoStartGame = false;
+    [SerializeField] bool AutoStartGame = false;
 
     private void Start()
     {
@@ -45,7 +45,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 #endif
             Debug.Log("NickName: " + Photon.Pun.PhotonNetwork.NickName);
             //#endif
-            PhotonNetwork.GameVersion = "0.1.0";
+            PhotonNetwork.GameVersion = "0.2.0";
             PhotonNetwork.AutomaticallySyncScene = false;
 
             // 고정 리전 지정 (둘 다 같은 값으로!)
@@ -118,6 +118,21 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     NetworkDataWriter_PUN Writer = new NetworkDataWriter_PUN();
     public int Id => PhotonNetwork.LocalPlayer.ActorNumber;
 
+    int TimeLimitCounter = 0;
+    bool CheckMyTimeLimitCounter()
+    {
+        if(TimeLimitCounter >= 4)
+        {
+            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("제한 시간 초과 횟수가 4회를 넘었습니다. 게임에서 퇴장합니다.", 3);
+            PhotonNetwork.LeaveRoom();
+            DelayedFunctionHelper.InvokeDelayed(() =>
+            {
+                PhotonNetwork.LoadLevel("Lobby");
+            }, 2.0f);
+            return true;
+        }
+        return false;
+    }
     User ServerPeer
     {
         get
@@ -279,15 +294,19 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         Debug.Log($"Player ID: {p.Value.ActorNumber}, Nickname: {p.Value.NickName}");
                     }
+                    foreach (var p in users)
+                    {
+                        Debug.Log($"Player ID: {p}");
+                    }
                     InGameManager.Instance.LoopForAllPlayerDrawers((d) =>
                     {
                         d.SetNickName();
                     });
 
-                    FindObjectOfType<PunVoiceClient>().SpeakerLinked += (speaker) =>
-                    {
-                        InGameManager.Instance.FindDrawerByIDExceptLocal(speaker.RemoteVoice.PlayerId).GetComponent<RemovePlayerUIDrawer>().SetSpeaker(speaker);
-                    };
+                    //FindObjectOfType<PunVoiceClient>().SpeakerLinked += (speaker) =>
+                    //{
+                    //    InGameManager.Instance.FindDrawerByID(speaker.RemoteVoice.PlayerId).GetComponent<RemovePlayerUIDrawer>().SetSpeaker(speaker);
+                    //};
                 }
                 break;
 
@@ -335,6 +354,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         InGameManager.Instance.LocalPlayerUIDrawer.SelectCard2Delete((card) =>
                         {
+                            InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                             Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SelectCard2Delete);
                             Writer.WriteInt(Id);
                             Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -360,6 +380,17 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                             //버릴 카드는 버리고자 하는 위치로 이동
                             card.CardGameObject.MoveMovementTransformPosition(InGameManager.Instance.LocalPlayerUIDrawer.DeletedCardContainer.position, 0.5f, ePosition.World);
+                        });
+                        InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
+                        {
+                            TimeLimitCounter++;
+                            if (CheckMyTimeLimitCounter()) return;
+                            InGameManager.Instance.LocalPlayer.ThisDeck.GetCard(0).CardGameObject.SelectButton.onClick.Invoke();
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
+                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            {
+                                InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
+                            }, 2.0f);
                         });
                     }, delayTime_WaitForCardDistubution); //카드 분배 딜레이
                 }
@@ -408,7 +439,30 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         InGameManager.Instance.LocalPlayer.StartSelectRPS((rps) =>
                         {
+                            InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                             SendRPSAsMySelection2Server(rps);
+                        });
+                        InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
+                        {
+                            TimeLimitCounter++;
+                            if (CheckMyTimeLimitCounter()) return;
+                            switch ((eRPS)UnityEngine.Random.Range(0, 3))
+                            {
+                                case eRPS.Rock:
+                                    InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_R.onClick.Invoke();
+                                    break;
+                                case eRPS.Paper:
+                                    InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_P.onClick.Invoke();
+                                    break;
+                                case eRPS.Scissors:
+                                    InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_S.onClick.Invoke();
+                                    break;
+                            }
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
+                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            {
+                                InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
+                            }, 2.0f);
                         });
                     }, animationDelay_ToRPSSelect); //카드 에니메이션 딜레이
                 }
@@ -428,17 +482,20 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     eRPS thirdPlayerRPS = (eRPS)reader.ReadByte();
                     byte thirdPlayerOrder = reader.ReadByte();
 
-                    InGameManager.Instance.ShowRPSRoundResult(round, firstPlayerId, firstPlayerRPS, firstPlayerOrder,
+                    DelayedFunctionHelper.InvokeDelayed(() =>
+                    {
+                        InGameManager.Instance.ShowRPSRoundResult(round, firstPlayerId, firstPlayerRPS, firstPlayerOrder,
                         secondPlayerId, secondPlayerRPS, secondPlayerOrder,
                         thirdPlayerId, thirdPlayerRPS, thirdPlayerOrder);
+                    }, 1.5f);
                 }
                 break;
             case ePacketType_InGameServer.Broadcast_RPSStartRematch:
                 //2/3명의 가위바위보 결과가 다 모인 이후, 가위바위보를 리매치해야 할 때, packetDelay_SendRematchAfterDraw초 후에 이 패킷이 날라옴.
-                const float delay_StartRematch = 1.0f;
+                const float delay_StartRematch = 2.0f;
                 const string message_WhenLocalShouldRematch = "리매치에 참여합니다.\n가위바위보를 다시 선택해주세요.";
                 const string message_WhenLocalShouldNotRematch = "리매치에 참여하지 않습니다.\n다른 플레이어가 리매치 중입니다.";
-                const float panelShowingTime_WhenLocalShouldRematch = 1.0f; //메세지 보여주는 시간
+                const float panelShowingTime_WhenLocalShouldRematch = 2.0f; //메세지 보여주는 시간
                 {
                     int playersCount2Rematch = reader.ReadByte();
                     if(playersCount2Rematch < 2 || playersCount2Rematch > 3)
@@ -467,7 +524,26 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 //가위바위로 고르기 시작
                                 InGameManager.Instance.LocalPlayer.StartSelectRPS((rps) =>
                                 {
+                                    InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                                     SendRPSAsMySelection2Server(rps);
+                                });
+                                InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
+                                {
+                                    TimeLimitCounter++;
+                                    if (CheckMyTimeLimitCounter()) return;
+                                    switch ((eRPS)UnityEngine.Random.Range(0, 3))
+                                    {
+                                        case eRPS.Rock:
+                                            InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_R.onClick.Invoke();
+                                            break;
+                                        case eRPS.Paper:
+                                            InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_P.onClick.Invoke();
+                                            break;
+                                        case eRPS.Scissors:
+                                            InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_S.onClick.Invoke();
+                                            break;
+                                    }
+                                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
                                 });
                             }, panelShowingTime_WhenLocalShouldRematch); //리매치 시작 딜레이
                         }
@@ -492,7 +568,6 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     int thirdPlayerId = reader.ReadInt();
 
                     Debug.Log($"RPSOrder: {firstPlayerId} / {secondPlayerId} / {thirdPlayerId}");
-
                     bool isAllPlayerRanked = InGameManager.Instance.SetRPSResult(firstPlayerId, secondPlayerId, thirdPlayerId);
                     if(isAllPlayerRanked == false)
                     {
@@ -514,6 +589,10 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.S2URequest_SelectInOut_First:
                 //3명의 플레이어 모두 자신이 받은 Order와와 서버의 Order가 동일할 때, 이 패킷이 날라옴.
                 {
+                    InGameManager.Instance.LoopForAllPlayerDrawers((d) =>
+                    {
+                        d.ShowGrayPanel(false);
+                    });
                     if (InGameManager.Instance.LocalPlayer.Order != 0)
                         return;
                     NetworkResponse_SelectIO();
@@ -677,6 +756,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         InGameManager.Instance.RemoveCards(id1, c1, id2, c2, -1, new Card(Card.CardType.Dummy, 100));
                         InGameManager.Instance.LocalPlayerUIDrawer.SetActiveAllSpecialRuleButtons(true);
+                        InGameManager.Instance.LocalPlayerUIDrawer.ReStart30sClock2GoInSpecialRule();
                     }, 2.0f);
                 }
                 break;
@@ -844,6 +924,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             () =>
                             {
                                 //go
+                                InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                                 Writer.CreateNewPacket((byte)ePacketType_InGameServer.GoInSpecialRule);
                                 Writer.WriteInt(Id);
                                 Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -877,9 +958,11 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 Writer.WriteByte(card.Value);
                                 Writer.SendPacket(ServerPeer);
                             });
-                            else if(InGameManager.Instance.Mode == eGameMode.ThreeCards)
+                            else if (InGameManager.Instance.Mode == eGameMode.ThreeCards)
+                            {
                                 InGameManager.Instance.StartSpecialRule_ThreeCardMode((card2Delete) =>
                                 {
+                                    InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                                     Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SelectCard2DeleteISR);
                                     Writer.WriteInt(Id);
                                     Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -903,6 +986,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 () =>
                                 {
                                     //go
+                                    InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                                     Writer.CreateNewPacket((byte)ePacketType_InGameServer.GoInSpecialRule);
                                     Writer.WriteInt(Id);
                                     Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -942,7 +1026,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                     Writer.SendPacket(ServerPeer);
                                     //exchange with opponent
                                 });
-
+                                InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
+                            }
 
                             yield return new WaitForSeconds(1.1f);
                             foreach (var c in cards2Animated) c.CardGameObject.MovementTransform.gameObject.SetActive(true);
@@ -954,6 +1039,21 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             {
                                 yield return new WaitForSeconds(3.0f); //카드 에니메이션이 끝난 이후에 버튼들을 활성화
                                 InGameManager.Instance.LocalPlayerUIDrawer.SetActiveAllSpecialRuleButtons(true);
+                            }
+                            else
+                            {
+                                InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
+                                {
+                                    TimeLimitCounter++;
+                                    if (CheckMyTimeLimitCounter()) return;
+                                    InGameManager.Instance.LocalPlayer.ThisDeck.GetCard(0).CardGameObject.SelectButton.onClick.Invoke();
+                                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
+                                    DelayedFunctionHelper.InvokeDelayed(() =>
+                                    {
+                                        InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
+                                    }, 2.0f);
+                                });
+
                             }
                             //3장 모드의 버튼 활성화는 Broadcast_ShowCards2DeleteISR 패킷을 받고 나서 처리
                         }
@@ -974,10 +1074,23 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         return;
                     }
 
+                    InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
+                    {                            
+                        //거절
+                        Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
+                        Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
+                        Writer.WriteInt(InGameManager.Instance.RoomID);
+                        Writer.WriteBool(false); //거절
+                        Writer.SendPacket(ServerPeer);
+
+                        InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
+                        InGameManager.Instance.LocalPlayerUIDrawer.ReStart30sClock2GoInSpecialRule();
+                    });
                     //내가 요청받은거임
                     InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("상대가 카드 교환을 요청했습니다", 8, "수락", "거절",
                         () =>
                         {
+                            InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                             //수락
                             Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
                             Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
@@ -999,6 +1112,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         },
                         () =>
                         {
+                            InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                             //거절
                             Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
                             Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
@@ -1007,6 +1121,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             Writer.SendPacket(ServerPeer);
 
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
+                            InGameManager.Instance.LocalPlayerUIDrawer.ReStart30sClock2GoInSpecialRule();
                         });
                 }
                 break;
@@ -1031,6 +1146,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         }
                         else
                         {
+                            InGameManager.Instance.LocalPlayerUIDrawer.ReStart30sClock2GoInSpecialRule();
                             //교환 거절
                             InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(message_WhenRejected, 0);
 
@@ -1041,6 +1157,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             DelayedFunctionHelper.InvokeDelayed(() =>
                             {
                                 rp.SetIOText(originText);
+                                InGameManager.Instance.LocalPlayerUIDrawer.AlreadyExchangedWithOpponent = false;
                                 InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
                                 InGameManager.Instance.LocalPlayerUIDrawer.RollBackSpecialRuleExchangeButtons();
                                 InGameManager.Instance.LocalPlayerUIDrawer.ActivateGoButton();
@@ -1060,6 +1177,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     // ─────────────────────────────────────────────────────────────────────────────
                     // 1) 패킷 파싱
                     // ─────────────────────────────────────────────────────────────────────────────
+
                     int id1 = reader.ReadInt();
                     byte type1 = reader.ReadByte();
                     byte value1 = reader.ReadByte();
@@ -1075,6 +1193,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     // 내 교환이 아니면(=관전 등) 원래 코드도 아무것도 안 했으므로 그대로 탈출
                     if (id1 != localId && id2 != localId)
                         break;
+                    InGameManager.Instance.LocalPlayerUIDrawer.ReStart30sClock2GoInSpecialRule();
 
                     // ─────────────────────────────────────────────────────────────────────────────
                     // 2) "내가 상대에게 내준 카드"와 "내가 받는 카드"를 통일된 관점으로 정리
@@ -1360,6 +1479,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             InGameManager.Instance.LocalPlayer.StartSelectIO((io) =>
             {
+                InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                 if (InGameManager.Instance.LocalPlayer.Order == 0)
                     Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SelectInOut_First);
                 else if (InGameManager.Instance.LocalPlayer.Order == 1)
@@ -1372,6 +1492,22 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 Writer.WriteByte((byte)io);
 
                 Writer.SendPacket(ServerPeer);
+            });
+
+            InGameManager.Instance.LocalPlayerUIDrawer.StartClock_30s(() =>
+            {
+                TimeLimitCounter++;
+                if (CheckMyTimeLimitCounter()) return;
+                switch((eIO)UnityEngine.Random.Range(0, 2))
+                {
+                    case eIO.In:
+                        InGameManager.Instance.LocalPlayerUIDrawer.InOutButton_In.onClick.Invoke();
+                        break;
+                    case eIO.Out:
+                        InGameManager.Instance.LocalPlayerUIDrawer.InOutButton_Out.onClick.Invoke();
+                        break;
+                }
+                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
             });
         }
     }

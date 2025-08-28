@@ -111,7 +111,7 @@ public class InGameSettingPanel : MonoBehaviour
             {
                 VoiceChatActiveButton.image.sprite = NormalHeadset;
                 FindObjectOfType<Recorder>().TransmitEnabled = true;
-                Mixer.SetFloat("VoiceChatVolume", 1.0f);
+                Mixer.SetFloat("VoiceChatVolume", 10.0f);
             }
             else
             {

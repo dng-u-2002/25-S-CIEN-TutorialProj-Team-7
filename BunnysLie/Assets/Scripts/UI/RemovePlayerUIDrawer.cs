@@ -26,16 +26,16 @@ public class RemovePlayerUIDrawer : PlayerUIDrawer
             if(_NowMuteState == false)
             {
                 MuteButton.image.sprite = NormalSpeaker;
-                if(ThisSpeaker != null)
-                {
-                    ThisSpeaker.transform.GetComponent<AudioSource>().volume = 1;
-                }
+                //if(ThisSpeaker != null)
+                //{
+                //    ThisSpeaker.transform.GetComponent<AudioSource>().volume = 1;
+                //}
             }
             else
             {
                 MuteButton.image.sprite = MutedSpeaker;
-                if (ThisSpeaker != null)
-                    ThisSpeaker.transform.GetComponent<AudioSource>().volume = 0;
+                //if (ThisSpeaker != null)
+                //    ThisSpeaker.transform.GetComponent<AudioSource>().volume = 0;
             }
         }
     }
@@ -91,10 +91,10 @@ public class RemovePlayerUIDrawer : PlayerUIDrawer
         ObserverModeAnimationIDScale= ObjectMoveHelper.ScaleObject(transform, Vector3.one * 0.7f, 1.0f);
     }
 
-    Speaker ThisSpeaker;
+    //Speaker ThisSpeaker;
     internal void SetSpeaker(Speaker speaker)
     {
-        ThisSpeaker = speaker;
+        //ThisSpeaker = speaker;
         NowMuteState = false;
     }
 }
