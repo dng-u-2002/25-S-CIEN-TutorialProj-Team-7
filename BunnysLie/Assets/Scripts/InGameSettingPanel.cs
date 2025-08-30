@@ -31,6 +31,7 @@ public class InGameSettingPanel : MonoBehaviour
     [SerializeField] Slider MasterVolumeSlider;
     [SerializeField] Slider BGMVolumeSlider;
     [SerializeField] Slider SFXVolumeSlider;
+    [SerializeField] Slider VoiceChatVolumeSlider;
 
     [SerializeField] Button MasterVolumeActiveButton; bool Flag_MVAB;
     bool IsActive_MasterVolume
@@ -110,14 +111,14 @@ public class InGameSettingPanel : MonoBehaviour
             if (Flag_VCAB == true)
             {
                 VoiceChatActiveButton.image.sprite = NormalHeadset;
-                FindObjectOfType<Recorder>().TransmitEnabled = true;
-                Mixer.SetFloat("VoiceChatVolume", 10.0f);
+                //FindObjectOfType<Recorder>().TransmitEnabled = true;
+                //Mixer.SetFloat("VoiceChatVolume", 10.0f);
             }
             else
             {
                 VoiceChatActiveButton.image.sprite = MutedHeadset;
-                FindObjectOfType<Recorder>().TransmitEnabled = false;
-                Mixer.SetFloat("VoiceChatVolume", -80.0f);
+                //FindObjectOfType<Recorder>().TransmitEnabled = false;
+                //Mixer.SetFloat("VoiceChatVolume", -80.0f);
             }
         }
     }
@@ -145,13 +146,15 @@ public class InGameSettingPanel : MonoBehaviour
 
     [SerializeField] Button LeaveGameButton;
 
-    private void Awake()
+    private void Start()
     {
         MasterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
         BGMVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
         SFXVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
+        VoiceChatVolumeSlider.value = PlayerPrefs.GetFloat("VoiceChatVolume", 0.5f);
         IsActive_TextChat = PlayerPrefs.GetInt("IsActive_TextChat", 1) == 1;
-        IsActive_VoiceChat = PlayerPrefs.GetInt("IsActive_VoiceChat", 1) == 1;
+        //IsActive_VoiceChat = PlayerPrefs.GetInt("IsActive_VoiceChat", 1) == 1;
+
 
 
         SettingButton.onClick.AddListener(() =>
@@ -228,6 +231,27 @@ public class InGameSettingPanel : MonoBehaviour
             PlayerPrefs.SetFloat("SFXVolume", value01); // 플레이어 설정 저장
             PlayerPrefs.Save();
         });
+        VoiceChatVolumeSlider.onValueChanged.AddListener((value01) =>
+        {
+            value01 = Mathf.Clamp01(value01); // 범위 제한
+
+            // 0은 -80dB(거의 무음), 1은 0dB(원본 크기)
+            float dB;
+            if (value01 <= 0.0001f) // 0에 가까우면 무음 처리
+            {
+                dB = -80f;
+                IsActive_VoiceChat = false;
+            }
+            else
+            {
+                dB = Mathf.Log10(value01) * 20f + 1; // 선형 dB 변환
+                IsActive_VoiceChat = true;
+            }
+
+            Mixer.SetFloat("VoiceChatVolume", dB);
+            PlayerPrefs.SetFloat("VoiceChatVolume", value01); // 플레이어 설정 저장
+            PlayerPrefs.Save();
+        });
 
 
         MasterVolumeActiveButton.onClick.AddListener(() =>
@@ -257,9 +281,12 @@ public class InGameSettingPanel : MonoBehaviour
         });
         VoiceChatActiveButton.onClick.AddListener(() =>
         {
-            IsActive_VoiceChat = !IsActive_VoiceChat;
-            PlayerPrefs.SetInt("IsActive_VoiceChat", IsActive_VoiceChat ? 1 : 0); // 플레이어 설정 저장
-            PlayerPrefs.Save();
+            if (IsActive_VoiceChat)
+                VoiceChatVolumeSlider.value = 0.0f;
+            else
+                VoiceChatVolumeSlider.value = 0.1f;
+            //PlayerPrefs.SetInt("IsActive_VoiceChat", IsActive_VoiceChat ? 1 : 0); // 플레이어 설정 저장
+            //PlayerPrefs.Save();
             InGameManager.Instance.PlayButtonClickSound();
         });
         TextChatActiveButton.onClick.AddListener(() =>
@@ -270,11 +297,13 @@ public class InGameSettingPanel : MonoBehaviour
             InGameManager.Instance.PlayButtonClickSound();
         });
 
+        MasterVolumeSlider.value = MasterVolumeSlider.value;
+        BGMVolumeSlider.value = BGMVolumeSlider.value;
+        SFXVolumeSlider.value = SFXVolumeSlider.value;
+        VoiceChatVolumeSlider.value = VoiceChatVolumeSlider.value;
+        IsActive_TextChat = IsActive_TextChat;
 
 
-        MasterVolumeSlider.value = 1.0f;
-        BGMVolumeSlider.value = 0.5f;
-        SFXVolumeSlider.value = 0.5f;
         Container.localPosition = new Vector3(0, 0);
         IsOn = false;
 

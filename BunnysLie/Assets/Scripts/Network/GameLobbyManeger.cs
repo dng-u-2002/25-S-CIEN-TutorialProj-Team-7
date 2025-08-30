@@ -1094,6 +1094,9 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         RandomMatchingButtons.gameObject.SetActive(false);
         PrivateMatchingButtons.gameObject.SetActive(false);
 
+        privateRoomButton.gameObject.SetActive(true);
+        quickMatchButton.gameObject.SetActive(true);
+        selectRandomMatchingModeButton.gameObject.SetActive(true);
         ModeSelectButtons.gameObject.SetActive(true);
 
         privateRoomPanel.SetActive(false);

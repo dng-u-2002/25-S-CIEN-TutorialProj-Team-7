@@ -303,9 +303,14 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         d.SetNickName();
                     });
 
+                    FindObjectOfType<Recorder>().StopRecordingWhenPaused = false;
+                    FindObjectOfType<Recorder>().RecordingEnabled = true;
+                    FindObjectOfType<Recorder>().TransmitEnabled = true;
+                    FindObjectOfType<Recorder>().RestartRecording();
                     //FindObjectOfType<PunVoiceClient>().SpeakerLinked += (speaker) =>
                     //{
-                    //    InGameManager.Instance.FindDrawerByID(speaker.RemoteVoice.PlayerId).GetComponent<RemovePlayerUIDrawer>().SetSpeaker(speaker);
+                    //    speaker.record
+                    //    //InGameManager.Instance.FindDrawerByID(speaker.RemoteVoice.PlayerId).GetComponent<RemovePlayerUIDrawer>().SetSpeaker(speaker);
                     //};
                 }
                 break;
@@ -1608,9 +1613,13 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     }
     private void NetworkResponse_Chat_Receive(int id, string message)
     {
+        Debug.Log($"[Chat] Received message from server: {message}");
+        if(!(PlayerPrefs.GetInt("IsActive_TextChat", 0) == 1)) //1이면 작동함
+        {
+            return;
+        }
         OnChatReceived?.Invoke(id, message);
         FindObjectOfType<Chating>().OnChat(InGameManager.Instance.FindDrawerByID(id).GetNickName(), message);
-        Debug.Log($"[Chat] Received message from server: {message}");
     }
 
     internal void SendVoice2Server(byte[] bytes)

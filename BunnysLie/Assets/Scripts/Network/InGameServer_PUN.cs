@@ -524,8 +524,8 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    public void OnEvent(EventData photonEvent)
     //protected override void OnReceivePacketFromUser(User user, NetworkDataReader reader, byte channelNumber, ePacketSafefyLevel safetyLevel)
+    public void OnEvent(EventData photonEvent)
     {
         if(Photon.Pun.PhotonNetwork.IsMasterClient == false)
         {

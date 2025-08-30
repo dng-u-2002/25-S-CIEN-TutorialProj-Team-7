@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\UI\RuleBook.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoiceUI\Scripts\RemoteSpeakerUI.cs" />
     <Compile Include="Assets\Scripts\UI\RemovePlayerUIDrawer.cs" />
+    <Compile Include="Assets\Scripts\FixedAspectLetterbox.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoiceProximityChat\Scripts\PointersController.cs" />
     <Compile Include="Assets\Scripts\Network\GameLobbyManeger.cs" />
     <Compile Include="Assets\Scripts\InGameManager.cs" />
