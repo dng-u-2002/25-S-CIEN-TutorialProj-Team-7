@@ -6,17 +6,21 @@ using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Chating : MonoBehaviour
 {
+    public bool IsFocusing
+    {
+        get { return input.isFocused; }
+    }
     [SerializeField] TMP_InputField input;
     [SerializeField] TMP_Text text;
 
     //public NetPeer peer { get; set; }
     //public NetDataWriter writer { get; set; } = new NetDataWriter();
-    
-    void Start()
-    {
+    void Awake() 
+    { 
         input = GetComponentInChildren<TMP_InputField>();
         text = GetComponentInChildren<TMP_Text>();
         
@@ -28,10 +32,19 @@ public class Chating : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Slash) && input != null)
+        if (Input.GetKeyDown(KeyCode.Return) && input != null)
         {
-            EventSystem.current.SetSelectedGameObject(input.gameObject, null);
-            input.OnPointerClick(null);
+            input.ActivateInputField();
+            input.Select();
+            //EventSystem.current.SetSelectedGameObject(input.gameObject, null);
+            //input.OnPointerClick(new PointerEventData(EventSystem.current));
+        }
+        if (Input.GetKeyDown(KeyCode.Escape) && input != null)
+        {
+            input.DeactivateInputField();
+            EventSystem.current.SetSelectedGameObject(null);
+            //EventSystem.current.SetSelectedGameObject(input.gameObject, null);
+            //input.OnPointerClick(new PointerEventData(EventSystem.current));
         }
     }
 

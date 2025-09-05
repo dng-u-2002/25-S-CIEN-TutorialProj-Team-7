@@ -24,6 +24,7 @@ public class PlayerUIDrawer : MonoBehaviour
     [SerializeField] Emoticon EmoticonDatas;
 
 
+
     string EmoticonTransformAnimationID;
     string EmoticonAlphaAnimationID;
 

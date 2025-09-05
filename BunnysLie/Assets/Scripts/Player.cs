@@ -53,6 +53,13 @@ public class Player : MonoBehaviour
     public int Order;
     public eIO IO;
 
+    private void Update()
+    {
+        if(KeyboardCallback != null)
+        {
+            KeyboardCallback?.Invoke();
+        }
+    }
 
     public void StartSelectIO(Action<eIO> onSelected)
     {
@@ -81,7 +88,29 @@ public class Player : MonoBehaviour
             u.RemoveAllListenersFromIOButtons();
             u.SetIOButtonsActive(false);
         });
+        KeyboardCallback = Callback_SelectIOByKeyboard;
     }
+    void Callback_SelectIOByKeyboard()
+    {
+        var chat = FindObjectOfType<Chating>();
+        if (chat != null)
+        {
+            if (chat.IsFocusing == true)
+                return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            InGameManager.Instance.LocalPlayerUIDrawer.InOutButton_In.onClick.Invoke();
+            KeyboardCallback = null;
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            InGameManager.Instance.LocalPlayerUIDrawer.InOutButton_Out.onClick.Invoke();
+            KeyboardCallback = null;
+        }
+    }
+
     public void StartSelectRPS(Action<eRPS> onSelected)
     {
         foreach(var rp in InGameManager.Instance.RemotePlayerUIDrawers)
@@ -112,6 +141,34 @@ public class Player : MonoBehaviour
         u.RPSButton_R.onClick.AddListener(() => { onSelected?.Invoke(eRPS.Rock);  v(eRPS.Rock); });
         u.RPSButton_P.onClick.AddListener(() => { onSelected?.Invoke(eRPS.Paper); v(eRPS.Paper); });
         u.RPSButton_S.onClick.AddListener(() => { onSelected?.Invoke(eRPS.Scissors); v(eRPS.Scissors); });
+
+        KeyboardCallback = Callback_SelectRPSByKeyboard;
+    }
+    System.Action KeyboardCallback;
+    void Callback_SelectRPSByKeyboard()
+    {
+        var chat = FindObjectOfType<Chating>();
+        if (chat != null)
+        {
+            if (chat.IsFocusing == true)
+                return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_R.onClick.Invoke();
+            KeyboardCallback = null;
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_S.onClick.Invoke();
+            KeyboardCallback = null;
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_P.onClick.Invoke();
+            KeyboardCallback = null;
+        }
     }
 
     public Player()

@@ -322,6 +322,15 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         {
             Destroy(gameObject);
         }
+
+        if(PlayerPrefs.HasKey("MasterVolume") == false)
+        {
+            PlayerPrefs.SetFloat("MasterVolume", 1.0f);
+            PlayerPrefs.SetFloat("BGMVolume", 0.5f);
+            PlayerPrefs.SetFloat("SFXVolume", 0.5f);
+            PlayerPrefs.SetInt("IsActive_TextChat", 1);
+            PlayerPrefs.SetInt("IsActive_VoiceChat", 1);
+        }
     }
     
     void Start()

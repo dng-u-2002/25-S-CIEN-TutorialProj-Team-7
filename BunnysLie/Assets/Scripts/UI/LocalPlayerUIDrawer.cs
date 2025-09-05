@@ -52,6 +52,9 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
 
     Coroutine ClockRunner;
 
+    Action KeyboardCallback;
+    Action KeyboardCallback_SelectCard;
+
     public void StopClock()
     {
         if (ClockRunner != null)
@@ -252,6 +255,36 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             SpecialRuleButton_Go.onClick.Invoke();
         });
     }
+    void Callback_SpecialRuleActionByKeyboard()
+    {
+        var chat = FindObjectOfType<Chating>();
+        if(chat != null)
+        {
+            if (chat.IsFocusing == true)
+                return;
+        }
+        if (SpecialRuleButton_ExchangeWithDeck.interactable && SpecialRuleButton_ExchangeWithDeck.gameObject.activeInHierarchy)
+        {
+            if(Input.GetKeyDown(KeyCode.I))
+            {
+                SpecialRuleButton_ExchangeWithDeck.onClick.Invoke();
+            }
+        }
+        if(SpecialRuleButton_ExchangeWithOpponent.interactable && SpecialRuleButton_ExchangeWithOpponent.gameObject.activeInHierarchy)
+        {
+            if(Input.GetKeyDown(KeyCode.O))
+            {
+                SpecialRuleButton_ExchangeWithOpponent.onClick.Invoke();
+            }
+        }
+        if(SpecialRuleButton_Go.interactable && SpecialRuleButton_Go.gameObject.activeInHierarchy)
+        {
+            if(Input.GetKeyDown(KeyCode.S))
+            {
+                SpecialRuleButton_Go.onClick.Invoke();
+            }
+        }
+    }
     public void SetSpecialRuleEvents(Action onGo, Action<Card> onExchangeWithDeck, Action onExhangeWithOpponentButtonClicked, Action<Card> onExchangeWithOpponent)
     {
         SpecialRuleButton_Go.onClick.RemoveAllListeners();
@@ -275,17 +308,19 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         ExchangeWithDeck = (card => onExchangeWithDeck?.Invoke(card));
         ExchangeWithOpponent = (card => onExchangeWithOpponent?.Invoke(card));
 
+        KeyboardCallback = Callback_SpecialRuleActionByKeyboard;
+
         SpecialRuleButton_ExchangeWithDeck.onClick.AddListener(() =>
         {
             InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
             InGameManager.Instance.PlayButtonClickSound();
             SetActiveAllSpecialRuleButtons(false);
             AlreadyExchangedWithDeck = true;
+            SpecialRuleButton_ExchangeWithDeck.interactable = false;
 
             SelectCard2Exchange((card) =>
             {
                 ExchangeWithDeck?.Invoke(card);
-                SpecialRuleButton_ExchangeWithDeck.interactable = false;
                 InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, 0.0f, true);
             });
         });
@@ -295,19 +330,24 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             InGameManager.Instance.PlayButtonClickSound();
             SetActiveAllSpecialRuleButtons(false);
             AlreadyExchangedWithOpponent = true;
+            SpecialRuleButton_ExchangeWithOpponent.interactable = false;
 
             onExhangeWithOpponentButtonClicked?.Invoke();
             SelectCard2Exchange((card) =>
             {
                 ExchangeWithOpponent?.Invoke(card);
                 ShowPanelOnScreenCenter("상대의 응답을 기다리는중...", 0);
-                SpecialRuleButton_ExchangeWithOpponent.interactable = false;
                 StopClock();
                 InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, 0.0f, true);
             });
         });
     }
-   // public Card Card2Exchange;
+    private void Update()
+    {
+        KeyboardCallback?.Invoke();
+        KeyboardCallback_SelectCard?.Invoke();
+    }
+    // public Card Card2Exchange;
     public void SelectCard2Exchange(System.Action<Card> onSelected)
     {
         InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
@@ -329,6 +369,32 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
                     oc.ActiveSelection(false, null); // Disable selection for all other cards
                 }
             });
+        }
+    }
+    void Callback_SelectCard()
+    {
+        var chat = FindObjectOfType<Chating>();
+        if (chat != null)
+        {
+            if (chat.IsFocusing == true)
+                return;
+        }
+
+        //얘는 직접 가져와야 함(교환을 하거나 하면 CardObjects의 Index와 Child Index가 맞지 않게 됨)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && CardObjects[0].SelectButton.interactable)
+        {
+            CardContainer.transform.GetChild(0).transform.GetComponent<CardObject>().SelectButton.onClick.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2) && CardObjects[1].SelectButton.interactable)
+        {
+            CardContainer.transform.GetChild(1).transform.GetComponent<CardObject>().SelectButton.onClick.Invoke();
+        }
+        if (CardObjects.Count >= 3 && Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if(CardObjects[2].SelectButton.interactable)
+            {
+                CardContainer.transform.GetChild(2).transform.GetComponent<CardObject>().SelectButton.onClick.Invoke();
+            }
         }
     }
     public void SelectCard2Delete(System.Action<Card> onSelected)
@@ -405,6 +471,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             FindObjectOfType<Recorder>().TransmitEnabled = false;
         }
         StopClock();
+        KeyboardCallback_SelectCard = Callback_SelectCard;
     }
 
     public void RemoveAllListenersFromRPSButtons()

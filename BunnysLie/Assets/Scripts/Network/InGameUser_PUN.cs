@@ -15,6 +15,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using UnityEditor.VersionControl;
 #endif
 using UnityEngine;
+using UnityEngine.UI;
 using Voice;
 using VOYAGER_Server;
 using static InGameServer_PUN;
@@ -24,6 +25,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     public static InGameUser_PUN Instance { get; private set; }
 
     [SerializeField] bool AutoStartGame = false;
+    [SerializeField] Image FullscreenBlackImage;
 
     private void Start()
     {
@@ -34,6 +36,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         Instance = this;
         Debugger.text = "InGameUser_PUN started.\n";
+        FullscreenBlackImage.gameObject.SetActive(true);
         //#if UNITY_EDITOR
 
         if (AutoStartGame)
@@ -123,7 +126,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if(TimeLimitCounter >= 4)
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("제한 시간 초과 횟수가 4회를 넘었습니다. 게임에서 퇴장합니다.", 3);
+            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("제한 시간 초과 횟수가 4회를 넘었습니다.\n게임에서 퇴장합니다.", 3);
             PhotonNetwork.LeaveRoom();
             DelayedFunctionHelper.InvokeDelayed(() =>
             {
@@ -312,6 +315,12 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     //    speaker.record
                     //    //InGameManager.Instance.FindDrawerByID(speaker.RemoteVoice.PlayerId).GetComponent<RemovePlayerUIDrawer>().SetSpeaker(speaker);
                     //};
+
+                    Helpers.ObjectMoveHelper.ChangeAlpha(FullscreenBlackImage, 0.0f, 1.0f);
+                    DelayedFunctionHelper.InvokeDelayed(() =>
+                    {
+                        FullscreenBlackImage.gameObject.SetActive(false);
+                    }, 1.0f);
                 }
                 break;
 
@@ -386,17 +395,20 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             //버릴 카드는 버리고자 하는 위치로 이동
                             card.CardGameObject.MoveMovementTransformPosition(InGameManager.Instance.LocalPlayerUIDrawer.DeletedCardContainer.position, 0.5f, ePosition.World);
                         });
-                        InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
+                        if(AutoStartGame == false)
                         {
-                            TimeLimitCounter++;
-                            if (CheckMyTimeLimitCounter()) return;
-                            InGameManager.Instance.LocalPlayer.ThisDeck.GetCard(0).CardGameObject.SelectButton.onClick.Invoke();
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
-                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
                             {
-                                InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
-                            }, 2.0f);
-                        });
+                                TimeLimitCounter++;
+                                if (CheckMyTimeLimitCounter()) return;
+                                InGameManager.Instance.LocalPlayer.ThisDeck.GetCard(0).CardGameObject.SelectButton.onClick.Invoke();
+                                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
+                                DelayedFunctionHelper.InvokeDelayed(() =>
+                                {
+                                    InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
+                                }, 2.0f);
+                            });
+                        }
                     }, delayTime_WaitForCardDistubution); //카드 분배 딜레이
                 }
                 break;
@@ -1162,7 +1174,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             DelayedFunctionHelper.InvokeDelayed(() =>
                             {
                                 rp.SetIOText(originText);
-                                InGameManager.Instance.LocalPlayerUIDrawer.AlreadyExchangedWithOpponent = false;
+                                InGameManager.Instance.LocalPlayerUIDrawer.AlreadyExchangedWithOpponent = true;
                                 InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
                                 InGameManager.Instance.LocalPlayerUIDrawer.RollBackSpecialRuleExchangeButtons();
                                 InGameManager.Instance.LocalPlayerUIDrawer.ActivateGoButton();
@@ -1614,7 +1626,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     private void NetworkResponse_Chat_Receive(int id, string message)
     {
         Debug.Log($"[Chat] Received message from server: {message}");
-        if(!(PlayerPrefs.GetInt("IsActive_TextChat", 0) == 1)) //1이면 작동함
+        if(!(PlayerPrefs.GetInt("IsActive_TextChat", 1) == 1)) //1이면 작동함
         {
             return;
         }

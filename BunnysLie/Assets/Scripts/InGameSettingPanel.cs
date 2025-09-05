@@ -146,7 +146,7 @@ public class InGameSettingPanel : MonoBehaviour
 
     [SerializeField] Button LeaveGameButton;
 
-    private void Start()
+    private void Awake()
     {
         MasterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
         BGMVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
@@ -244,7 +244,7 @@ public class InGameSettingPanel : MonoBehaviour
             }
             else
             {
-                dB = Mathf.Log10(value01) * 20f + 1; // 선형 dB 변환
+                dB = Mathf.Log10(value01) * 20f + 8; // 선형 dB 변환
                 IsActive_VoiceChat = true;
             }
 
@@ -295,13 +295,9 @@ public class InGameSettingPanel : MonoBehaviour
             PlayerPrefs.SetInt("IsActive_TextChat", IsActive_TextChat ? 1 : 0); // 플레이어 설정 저장
             PlayerPrefs.Save();
             InGameManager.Instance.PlayButtonClickSound();
-        });
 
-        MasterVolumeSlider.value = MasterVolumeSlider.value;
-        BGMVolumeSlider.value = BGMVolumeSlider.value;
-        SFXVolumeSlider.value = SFXVolumeSlider.value;
-        VoiceChatVolumeSlider.value = VoiceChatVolumeSlider.value;
-        IsActive_TextChat = IsActive_TextChat;
+            FindObjectOfType<Chating>(true).gameObject.SetActive(IsActive_TextChat);
+        });
 
 
         Container.localPosition = new Vector3(0, 0);
@@ -313,5 +309,14 @@ public class InGameSettingPanel : MonoBehaviour
             PhotonNetwork.LoadLevel("Lobby");
             InGameManager.Instance.PlayButtonClickSound();
         });
+    }
+
+    private void Start()
+    {
+        MasterVolumeSlider.value = MasterVolumeSlider.value;
+        BGMVolumeSlider.value = BGMVolumeSlider.value;
+        SFXVolumeSlider.value = SFXVolumeSlider.value;
+        VoiceChatVolumeSlider.value = VoiceChatVolumeSlider.value;
+        IsActive_TextChat = IsActive_TextChat;
     }
 }
