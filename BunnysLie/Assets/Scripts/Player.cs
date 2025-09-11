@@ -72,7 +72,7 @@ public class Player : MonoBehaviour
             IO = eIO.In;
             onSelected?.Invoke(eIO.In);
             u.SetActivePanelOnScreenCenter(true);
-            u.ShowPanelOnScreenCenter("기다리는 중...", 0);
+            u.ShowPanelOnScreenCenter(ConstStrings.Message_Waiting, 0);
             u.IOSelectSound.Play();
             u.RemoveAllListenersFromIOButtons();
             u.SetIOButtonsActive(false);
@@ -82,7 +82,7 @@ public class Player : MonoBehaviour
             IO = eIO.Out;
             onSelected?.Invoke(eIO.Out);
             u.SetActivePanelOnScreenCenter(true);
-            u.ShowPanelOnScreenCenter("기다리는 중...", 0);
+            u.ShowPanelOnScreenCenter(ConstStrings.Message_Waiting, 0);
             u.IOSelectSound.Play();
 
             u.RemoveAllListenersFromIOButtons();
@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
             u.RemoveAllListenersFromRPSButtons();
             u.SetRPSButtonsActive(false);
             u.SetActivePanelOnScreenCenter(true);
-            u.ShowPanelOnScreenCenter("기다리는 중...", 0);
+            u.ShowPanelOnScreenCenter(ConstStrings.Message_Waiting, 0);
             u.RPSSelectSound.Play();
 
             u.SetRPSTextBox(true, rps);

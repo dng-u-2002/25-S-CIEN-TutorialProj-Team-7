@@ -126,7 +126,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if(TimeLimitCounter >= 4)
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("제한 시간 초과 횟수가 4회를 넘었습니다.\n게임에서 퇴장합니다.", 3);
+            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_TimeOut, 3);
             PhotonNetwork.LeaveRoom();
             DelayedFunctionHelper.InvokeDelayed(() =>
             {
@@ -190,7 +190,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if(PhotonNetwork.InRoom == true && InGameManager.Instance.IsStarted == true && PhotonNetwork.CurrentRoom.PlayerCount <= 2)
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("플레이어가 부족하여 게임이 종료됩니다.", 3);
+            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_NotEnoughPlayer, 3);
             PhotonNetwork.LeaveRoom();
             DelayedFunctionHelper.InvokeDelayed(() =>
             {
@@ -402,7 +402,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 TimeLimitCounter++;
                                 if (CheckMyTimeLimitCounter()) return;
                                 InGameManager.Instance.LocalPlayer.ThisDeck.GetCard(0).CardGameObject.SelectButton.onClick.Invoke();
-                                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
+                                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(string.Format(ConstStrings.Message_TimeOutCount, TimeLimitCounter), 0);
                                 DelayedFunctionHelper.InvokeDelayed(() =>
                                 {
                                     InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
@@ -475,7 +475,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                     InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_S.onClick.Invoke();
                                     break;
                             }
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(string.Format(ConstStrings.Message_TimeOutCount, TimeLimitCounter), 0);
                             DelayedFunctionHelper.InvokeDelayed(() =>
                             {
                                 InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
@@ -510,8 +510,6 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.Broadcast_RPSStartRematch:
                 //2/3명의 가위바위보 결과가 다 모인 이후, 가위바위보를 리매치해야 할 때, packetDelay_SendRematchAfterDraw초 후에 이 패킷이 날라옴.
                 const float delay_StartRematch = 2.0f;
-                const string message_WhenLocalShouldRematch = "리매치에 참여합니다.\n가위바위보를 다시 선택해주세요.";
-                const string message_WhenLocalShouldNotRematch = "리매치에 참여하지 않습니다.\n다른 플레이어가 리매치 중입니다.";
                 const float panelShowingTime_WhenLocalShouldRematch = 2.0f; //메세지 보여주는 시간
                 {
                     int playersCount2Rematch = reader.ReadByte();
@@ -531,7 +529,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         if (players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true)// 내가 리매치
                         {
                             //화면에 메세지 띄우고,
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(message_WhenLocalShouldRematch, 1);
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.message_WhenLocalShouldRematch, 1);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
                             //메세지를 panelShowingTime_WhenLocalShouldRematch초 동안 보여줬다가
                             DelayedFunctionHelper.InvokeDelayed(() =>
@@ -560,14 +558,14 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                             InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_S.onClick.Invoke();
                                             break;
                                     }
-                                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
+                                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(string.Format(ConstStrings.Message_TimeOutCount, TimeLimitCounter), 0);
                                 });
                             }, panelShowingTime_WhenLocalShouldRematch); //리매치 시작 딜레이
                         }
                         else //내가 리매치하지 않음
                         {
                             //화면에 메세지 띄우고 그냥 둠
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(message_WhenLocalShouldNotRematch, 0);
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.message_WhenLocalShouldNotRematch, 0);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
                             InGameManager.Instance.LocalPlayer.IsOrderDetermined = true;
                             return;
@@ -782,14 +780,14 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     byte reason = reader.ReadByte();
                     if (reason == 10)//이전 스페셜 룰에서 동점자 발생
                     {
-                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("이전 스페셜 룰에서 동점자가 발생했습니다.\n새로운 스페셜 룰을 시작합니다.", 1);
+                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_NewSpecialRule, 1);
                     }
 
                     int id = reader.ReadInt();
                     int opponentId = reader.ReadInt();
                     if (id != InGameManager.Instance.LocalPlayer.ID)
                     {
-                        string message = $"{id}와 {opponentId}가 동률입니다.\n1 vs. 1 룰에 관전자로 돌입합니다.";
+                        string message = string.Format(ConstStrings.Message_StartSpecialRuleObserver, InGameManager.Instance.FindDrawerByID(id).GetNickName(), InGameManager.Instance.FindDrawerByID(opponentId).GetNickName());
                         //내가 스페셜 룰을 시작하는게 아님
                         IEnumerator specialRuleObserverEnumerator()
                         {
@@ -913,7 +911,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         }
 
 
-                        string message = $"{id}와 {opponentId}가 동률입니다.\n1 vs. 1 룰로 돌입합니다.";
+                        string message = string.Format(ConstStrings.Message_StartSpecialRulePlayer, InGameManager.Instance.FindDrawerByID(id).GetNickName(), InGameManager.Instance.FindDrawerByID(opponentId).GetNickName());
 
 
                         IEnumerator specialRuneEnumerator()
@@ -1064,7 +1062,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                     TimeLimitCounter++;
                                     if (CheckMyTimeLimitCounter()) return;
                                     InGameManager.Instance.LocalPlayer.ThisDeck.GetCard(0).CardGameObject.SelectButton.onClick.Invoke();
-                                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
+                                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(string.Format(ConstStrings.Message_TimeOutCount, TimeLimitCounter), 0);
                                     DelayedFunctionHelper.InvokeDelayed(() =>
                                     {
                                         InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
@@ -1104,7 +1102,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         InGameManager.Instance.LocalPlayerUIDrawer.ReStart30sClock2GoInSpecialRule();
                     });
                     //내가 요청받은거임
-                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("상대가 카드 교환을 요청했습니다", 8, "수락", "거절",
+                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons(ConstStrings.Message_OpponentAskedExchangeCard, 8, ConstStrings.Message_Accept, ConstStrings.Message_Discard,
                         () =>
                         {
                             InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
@@ -1149,28 +1147,25 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     int opponentId = reader.ReadInt();
                     bool isAccepted = reader.ReadBool();
 
-                    const string message_WhenAccepted = "상대가 교환을 수락했습니다.\n카드 선택을 기다리는 중...";
-                    const string message_WhenRejected = "상대가 교환을 거절했습니다.";
-
                     if (InGameManager.Instance.LocalPlayer.ID == requesterID)
                     {
                         //내가 보낸 요청임
                         if (isAccepted)
                         {
                             //교환 수락
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(message_WhenAccepted, 0);
-                            InGameManager.Instance.FindDrawerByIDExceptLocal(opponentId).SetIOText("수락");
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.message_WhenAccepted, 0);
+                            InGameManager.Instance.FindDrawerByIDExceptLocal(opponentId).SetIOText(ConstStrings.Message_Accept);
                         }
                         else
                         {
                             InGameManager.Instance.LocalPlayerUIDrawer.ReStart30sClock2GoInSpecialRule();
                             //교환 거절
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(message_WhenRejected, 0);
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.message_WhenRejected, 0);
 
                             //상대 Drawer UI 수정
                             var rp = InGameManager.Instance.FindDrawerByIDExceptLocal(opponentId);
                             string originText = rp.GetIOText();
-                            rp.SetIOText("거절");
+                            rp.SetIOText(ConstStrings.Message_Discard);
                             DelayedFunctionHelper.InvokeDelayed(() =>
                             {
                                 rp.SetIOText(originText);
@@ -1446,16 +1441,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.Broadcast_FinalResult:
                 {
                     int loserID = reader.ReadInt();
-                    if(loserID == InGameManager.Instance.LocalPlayerUIDrawer.Target.ID)
-                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\n게임이 종료되었습니다.", InGameManager.Instance.LocalPlayerUIDrawer.Character + 5);
-                    else
-                    {
-                        foreach(var rp in InGameManager.Instance.RemotePlayerUIDrawers)
-                        {
-                            if(rp.Target.ID == loserID) 
-                                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\n게임이 종료되었습니다.", rp.Character + 5); 
-                        }
-                    }
+                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(string.Format(ConstStrings.Message_FinalLoser, InGameManager.Instance.FindDrawerByID(loserID).GetNickName()), InGameManager.Instance.LocalPlayerUIDrawer.Character + 5);
+                   
 
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
@@ -1480,7 +1467,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (InGameManager.Instance.LocalPlayer.Order == 2 && InGameManager.Instance.OutPlayerCount == 2)
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2명이 먼저 퇴청하였습니다.\nIN을 선택합니다.", 0);
+            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_SelectOut, 0);
             DelayedFunctionHelper.InvokeDelayed(() =>
             {
                 Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SelectInOut_Third);
@@ -1524,7 +1511,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         InGameManager.Instance.LocalPlayerUIDrawer.InOutButton_Out.onClick.Invoke();
                         break;
                 }
-                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"제한 시간이 초과되어 랜덤으로 선택됩니다! \n현재 시간 초과 횟수 : {TimeLimitCounter}/4", 0);
+                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(string.Format(ConstStrings.Message_TimeOutCount, TimeLimitCounter), 0);
             });
         }
     }

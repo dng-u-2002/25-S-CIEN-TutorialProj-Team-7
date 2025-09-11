@@ -312,7 +312,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
 
         SpecialRuleButton_ExchangeWithDeck.onClick.AddListener(() =>
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
+            InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, ConstStrings.TextCloud_Card2Exchange, 40.0f, true);
             InGameManager.Instance.PlayButtonClickSound();
             SetActiveAllSpecialRuleButtons(false);
             AlreadyExchangedWithDeck = true;
@@ -326,7 +326,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         });
         SpecialRuleButton_ExchangeWithOpponent.onClick.AddListener(() =>
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
+            InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, ConstStrings.TextCloud_Card2Exchange, 40.0f, true);
             InGameManager.Instance.PlayButtonClickSound();
             SetActiveAllSpecialRuleButtons(false);
             AlreadyExchangedWithOpponent = true;
@@ -336,7 +336,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             SelectCard2Exchange((card) =>
             {
                 ExchangeWithOpponent?.Invoke(card);
-                ShowPanelOnScreenCenter("상대의 응답을 기다리는중...", 0);
+                ShowPanelOnScreenCenter(ConstStrings.Message_WaitingOpponent, 0);
                 StopClock();
                 InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, 0.0f, true);
             });
@@ -350,7 +350,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     // public Card Card2Exchange;
     public void SelectCard2Exchange(System.Action<Card> onSelected)
     {
-        InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, "어떤 카드를\n교환할까?", 40.0f, true);
+        InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(true, ConstStrings.TextCloud_Card2Exchange, 40.0f, true);
         foreach (var c in CardObjects)
         {
             c.ActiveSelection(true, (card) =>
@@ -399,7 +399,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
     }
     public void SelectCard2Delete(System.Action<Card> onSelected)
     {
-        SetWordCloudTextBox(true, "어떤 카드를 버릴까?", 43.7f,  true);
+        SetWordCloudTextBox(true, ConstStrings.TextCloud_Card2Delete, 43.7f,  true);
         foreach (var c in CardObjects)
         {
             c.ActiveSelection(true, (card) =>

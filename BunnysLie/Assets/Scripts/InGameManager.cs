@@ -254,14 +254,14 @@ public class InGameManager : MonoBehaviour
         }
         else
         {
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_Waiting, 0);
             LocalPlayerUIDrawer.SetRPSTextBox(false, eRPS.None); // Reset RPS text box for local player
         }
         LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
         if (LocalPlayer.IsOrderDetermined == true)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_Waiting, 0);
             LocalPlayerUIDrawer.SetRPSButtonsActive(false);
         }
     }
@@ -314,32 +314,32 @@ public class InGameManager : MonoBehaviour
             if (ins.Contains(rp.Target.ID))
             {
                 rp.Target.IO = eIO.In; // Set IO for remote player
-                rp.SetIOText("참가");
+                rp.SetIOText(ConstStrings.Text_In);
             }
             else if (outs.Contains(rp.Target.ID))
             {
                 rp.Target.IO = eIO.Out; // Set IO for remote player
-                rp.SetIOText("퇴청");
+                rp.SetIOText(ConstStrings.Text_Out);
             }
             else
             {
-                rp.SetIOText("");
+                rp.SetIOText(string.Empty);
             }
         }
 
         if (ins.Contains(LocalPlayer.ID))
         {
             LocalPlayer.IO = eIO.In; // Set IO for local player
-            LocalPlayerUIDrawer.SetIOText("참가");
+            LocalPlayerUIDrawer.SetIOText(ConstStrings.Text_In);
         }
         else if (outs.Contains(LocalPlayer.ID))
         {
             LocalPlayer.IO = eIO.Out; // Set IO for local player
-            LocalPlayerUIDrawer.SetIOText("퇴청");
+            LocalPlayerUIDrawer.SetIOText(ConstStrings.Text_Out);
         }
         else
         {
-            LocalPlayerUIDrawer.SetIOText("");
+            LocalPlayerUIDrawer.SetIOText(string.Empty);
         }
         LocalPlayerUIDrawer.SetIOButtonsActive(false); // Disable IO buttons after showing results
         LocalPlayerUIDrawer.SetRPSTextBox(false, eRPS.None); // Reset RPS text box
@@ -556,7 +556,7 @@ public class InGameManager : MonoBehaviour
         if (LocalPlayer.IsOrderDetermined == true)
         {
             LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter("기다리는 중...", 0);
+            LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_Waiting, 0);
             LocalPlayerUIDrawer.SetRPSButtonsActive(false);
             if (isAllPlayerRanked)
                 LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
@@ -630,19 +630,9 @@ public class InGameManager : MonoBehaviour
 
     internal void ShowLoserOfThisRound(int loserId, byte count, int round)
     {
-        foreach (var rp in RemotePlayerUIDrawers)
-        {
-            if (rp.Target.ID == loserId)
-            {
-                LocalPlayerUIDrawer.ShowPanelOnScreenCenter(round + "라운드 패자 : " + rp.GetNickName(), rp.Character + 2);
-                rp.SetOutCount(count);
-            }
-        }
-        if (LocalPlayer.ID == loserId)
-        {
-            LocalPlayerUIDrawer.ShowPanelOnScreenCenter(round + "라운드 패자 : " + LocalPlayerUIDrawer.GetNickName(), LocalPlayerUIDrawer.Character + 2);
-            LocalPlayerUIDrawer.SetOutCount(count);
-        }
+        var loser = FindDrawerByID(loserId);
+        LocalPlayerUIDrawer.ShowPanelOnScreenCenter(string.Format(ConstStrings.Message_LoserOfThisRound, round, loser.GetNickName()), loser.Character + 2);
+        loser.SetOutCount(count);
     }
 
     [SerializeField] AudioSource NormalBGM;

@@ -8791,8 +8791,8 @@ MonoBehaviour:
   encrypt: 0
   transmitEnabled: 1
   samplingRate: 48000
-  frameDuration: 20000
-  bitrate: 368892
+  frameDuration: 60000
+  bitrate: 457445
   sourceType: 0
   microphoneType: 0
   audioClip: {fileID: 0}
@@ -8838,10 +8838,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddec46cf6a4c4addbf21b6be8442124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aec: 1
-  aecHighPass: 1
+  aec: 0
+  aecHighPass: 0
   agc: 1
-  agcCompressionGain: 9
+  agcCompressionGain: 5
   agcTargetLevel: 3
   vad: 1
   highPass: 0
@@ -18079,7 +18079,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1851025399
 Transform:
   m_ObjectHideFlags: 0
