@@ -565,7 +565,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         else //내가 리매치하지 않음
                         {
                             //화면에 메세지 띄우고 그냥 둠
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.message_WhenLocalShouldNotRematch, 0);
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(string.Format(ConstStrings.message_WhenLocalShouldNotRematch, InGameManager.Instance.LocalPlayerUIDrawer.GetOrderText()), 0);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
                             InGameManager.Instance.LocalPlayer.IsOrderDetermined = true;
                             return;

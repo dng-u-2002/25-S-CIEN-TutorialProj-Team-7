@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
             u.RemoveAllListenersFromRPSButtons();
             u.SetRPSButtonsActive(false);
             u.SetActivePanelOnScreenCenter(true);
-            u.ShowPanelOnScreenCenter(ConstStrings.Message_Waiting, 0);
+            u.ShowPanelOnScreenCenter(ConstStrings.Message_WaitingRSP, 0);
             u.RPSSelectSound.Play();
 
             u.SetRPSTextBox(true, rps);

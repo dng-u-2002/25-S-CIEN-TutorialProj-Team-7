@@ -374,6 +374,10 @@ public class PlayerUIDrawer : MonoBehaviour
     {
         OrderText.text = $"{order + 1}";
     }
+    public string GetOrderText()
+    {
+        return OrderText.text;
+    }
 
     public void ShowGrayPanel(bool active)
     {
