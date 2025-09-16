@@ -1446,9 +1446,61 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
-                        PhotonNetwork.LeaveRoom();
-                        PhotonNetwork.LoadLevel("Lobby");
-                    }, 2.0f);
+                        InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
+                        {
+                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2S_DisagreedReGame);
+                            Writer.WriteInt(Id);
+                            Writer.SendPacket(ServerPeer);
+
+                            InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_WaitingReGame, 0);
+                        });
+                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons(ConstStrings.Message_ReGame, 0, ConstStrings.Text_ReGame_Yes, ConstStrings.Text_ReGame_No,
+                            () =>
+                            {
+                                InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
+                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2S_AgreedReGame);
+                                Writer.WriteInt(Id);
+                                Writer.SendPacket(ServerPeer);
+
+                                InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
+                                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_WaitingReGame, 0);
+                            },
+                            () =>
+                            {
+                                InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
+                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2S_DisagreedReGame);
+                                Writer.WriteInt(Id);
+                                Writer.SendPacket(ServerPeer);
+
+                                InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
+                                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_WaitingReGame, 0);
+                            });
+                    }, 3.0f);
+                }
+                break;
+            case ePacketType_InGameServer.Broadcast_ReGameResult:
+                {
+                    int playerCountAgreedReGame = reader.ReadByte();
+                    Debug.Log(playerCountAgreedReGame + "명의 플레이어가 재게임에 동의");
+                    if(playerCountAgreedReGame == 100)
+                    {
+                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_SomeoneDisagreedReGame, 0);
+                        DelayedFunctionHelper.InvokeDelayed(() =>
+                        {
+                            PhotonNetwork.LeaveRoom();
+                            PhotonNetwork.LoadLevel("Lobby");
+                        }, 3.0f);
+                    }
+                    else if(playerCountAgreedReGame == 3)
+                    {
+                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_AllAgreedReGame, 0);
+                        DelayedFunctionHelper.InvokeDelayed(() =>
+                        {
+                            PhotonNetwork.LoadLevel("MainPlayScene");
+                            IsLoaded = false;
+                        }, 3.0f);
+                    }
                 }
                 break;
         }

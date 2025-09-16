@@ -50,6 +50,21 @@ public class HTTPLoginManager : MonoBehaviour
     
     private void Start()
     {
+
+    
+    }
+
+    bool LoginFlag = false;
+    private void Update()
+    {
+        if (PhotonNetwork.IsConnectedAndReady == false)
+        {
+            return;
+        }
+        if(LoginFlag == true)
+        {
+            return;
+        }
         var id = PlayerPrefs.GetString("LoginId", "NULL");
         var name = PlayerPrefs.GetString("Nickname", "Guest User");
         if (id == "NULL")
@@ -61,8 +76,9 @@ public class HTTPLoginManager : MonoBehaviour
         {
             OnLoginSuccess(id, name);
         }
+        LoginFlag = true;
     }
-    
+
     private void SetupUI()
     {
         loginButton.onClick.AddListener(OnLoginButtonClicked);

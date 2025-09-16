@@ -94,6 +94,7 @@
     <Compile Include="Assets\Scripts\User2UserConnection\ChatSender.cs" />
     <Compile Include="Assets\Scripts\Voice\VoiceReceiver.cs" />
     <Compile Include="Assets\Scripts\LobbyUI\SettingPanel.cs" />
+    <Compile Include="Assets\Scripts\Network\SingleVoiceNetwork.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoiceProximityChat\Scripts\ChangeName.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Scripts\OrthographicController.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Standard Assets\CrossPlatformInput\Scripts\PlatformSpecific\StandaloneInput.cs" />

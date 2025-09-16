@@ -93,7 +93,11 @@ public enum ePacketType_InGameServer : byte
 
     Broadcast_FinalResult,
     SelfEmoticon,
-    Broadcast_Emoticon
+    Broadcast_Emoticon,
+
+    U2S_AgreedReGame,
+    U2S_DisagreedReGame,
+    Broadcast_ReGameResult
 }
 //public class InGameUser : LiteNetLibUser
 //{

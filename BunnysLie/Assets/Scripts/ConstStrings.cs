@@ -25,4 +25,11 @@ public static class ConstStrings
     //Text : 참가/퇴청 보여주는 작은 텍스트블록에 나오는 글
     public const string Text_In = "참가";
     public const string Text_Out = "퇴청";
+
+    public const string Message_ReGame = "다시 게임할까요?";
+    public const string Text_ReGame_Yes = "이어하기";
+    public const string Text_ReGame_No = "나가기";
+    public const string Message_WaitingReGame = "다른 플레이어가\n이어하기를 선택하고 있습니다...";
+    public const string Message_SomeoneDisagreedReGame = "다른 플레이어가\n이어하기를 거절했습니다.";
+    public const string Message_AllAgreedReGame = "모든 플레이어가\n이어하기를 선택했습니다!";
 }

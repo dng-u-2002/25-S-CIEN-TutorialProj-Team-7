@@ -70,6 +70,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
         public List<int> InPlayers = new List<int>(); // In �÷��̾� ID ���
         public List<int> OutPlayers = new List<int>(); // Out �÷��̾� ID ���
+        public List<int> PlayersAgreedReGame = new List<int>();
     }
 
     Room ThisRoomData;
@@ -1234,6 +1235,29 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     }
                 }
                 break;
+            case ePacketType_InGameServer.U2S_AgreedReGame:
+                {
+                    int id = reader.ReadInt();
+                    ThisRoomData.PlayersAgreedReGame.Add(id);
+                    foreach(var p in ThisRoomData.Players)
+                    {
+                        PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ReGameResult);
+                        PacketWriter.WriteByte((byte)ThisRoomData.PlayersAgreedReGame.Count);
+                        SendPacket(p);
+                    }
+                }
+                break;
+            case ePacketType_InGameServer.U2S_DisagreedReGame:
+                {
+                    int id = reader.ReadInt();
+                    foreach (var p in ThisRoomData.Players)
+                    {
+                        PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ReGameResult);
+                        PacketWriter.WriteByte(100);
+                        SendPacket(p);
+                    }
+                }
+                break;
             default:
                 Debug.Log($"[Warning] Unknown packet type received from User {user.Id}. PacketByte {pac}");
                 break;
@@ -1352,7 +1376,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         int finalLoser = -1;
         foreach (var pl in room.Players)
         {
-            if (room.OutCounts.TryGetValue(pl.Id, out var count) && count <= 0)
+            if (room.OutCounts.TryGetValue(pl.Id, out var count) && count <= 2)
             {
                 finalLoser = pl.Id;
                 break;
