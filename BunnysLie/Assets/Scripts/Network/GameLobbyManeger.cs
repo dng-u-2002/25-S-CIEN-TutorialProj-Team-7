@@ -227,19 +227,19 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
     [Header("설정 키 UI")]
     public Button settingsButton;
-    public Button soundButton;
-    public Button accountButton;
-    public Button friendButton;
-    public Button helpButton;
+    //public Button soundButton;
+    //public Button accountButton;
+    //public Button friendButton;
+    //public Button helpButton;
     public Button exitButton;
     
     [Header("팝업 패널들")]
     public GameObject privateRoomPanel;
     public GameObject settingsPanel;
-    public GameObject soundPanel;
-    public GameObject accountPanel;
-    public GameObject helpPanel;
-    public GameObject friendPanel;
+    //public GameObject soundPanel;
+    //public GameObject accountPanel;
+    //public GameObject helpPanel;
+    //public GameObject friendPanel;
     public GameObject exitConfirmPanel;
     public GameObject matchmakingPanel;
     public GameObject friendInvitePanel;
@@ -310,6 +310,8 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     public Action<string, Action, Action<string>> ServerRemoveFriend;
     public Action<string, int, Action, Action<string>> ServerInviteFriend;
     public Action<Action<List<FriendData>>, Action<string>> ServerFetchActivities;
+
+    [SerializeField] Button RuleBookButton;
     
     void Awake()
     {
@@ -403,11 +405,11 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         cancelMatchmakingButton.onClick.AddListener(() => CancelMatching());
         cancelMatchmakingButton2.onClick.AddListener(() => CancelMatching());
 
-        settingsButton.onClick.AddListener(() => ShowSoundPanel());
-        soundButton.onClick.AddListener(() => ShowSoundPanel());
-        accountButton.onClick.AddListener(() => ShowAccountPanel());
-        helpButton.onClick.AddListener(() => ShowHelpPanel());
-        friendButton.onClick.AddListener(() => ShowFriendPanel());
+        settingsButton.onClick.AddListener(() => ShowSettingsPanel());
+        //soundButton.onClick.AddListener(() => ShowSoundPanel());
+        //accountButton.onClick.AddListener(() => ShowAccountPanel());
+        //helpButton.onClick.AddListener(() => ShowHelpPanel());
+        //friendButton.onClick.AddListener(() => ShowFriendPanel());
         exitButton.onClick.AddListener(() => ShowExitConfirmation());
         
         soundToggle.onValueChanged.AddListener(SetSoundEnabled);
@@ -479,7 +481,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.GameVersion = "0.1.0";
+            PhotonNetwork.GameVersion = "b21";
             PhotonNetwork.AutomaticallySyncScene = false;
 
             // 고정 리전 지정 (둘 다 같은 값으로!)
@@ -1048,42 +1050,30 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     {
         CloseAllPanels();
         settingsPanel.SetActive(true);
+        settingsPanel.transform.GetComponent<SettingPanel>().OnSettingButtonClicked();
     }
-    
-    void ShowSoundPanel()
-    {
-        CloseAllPanels();
-        settingsPanel.SetActive(true);
-        soundPanel.SetActive(true);
-    }
+   
     
     
-    void ShowAccountPanel()
-    {
-        CloseAllPanels();
-        settingsPanel.SetActive(true);
-        accountPanel.SetActive(true);
-        UpdateAccountInfo();
-    }
+    //void ShowAccountPanel()
+    //{
+    //    CloseAllPanels();
+    //    settingsPanel.SetActive(true);
+    //    accountPanel.SetActive(true);
+    //    UpdateAccountInfo();
+    //}
     
-    void ShowHelpPanel()
-    {
-        CloseAllPanels();
-        settingsPanel.SetActive(true);
-        helpPanel.SetActive(true);
-    }
-    
-    void ShowFriendPanel()
-    {
-        if(friendPanel.activeSelf == true)
-        {
-            CloseAllPanels();
-            return;
-        }
-        CloseAllPanels();
-        friendPanel.SetActive(true);
-        UpdateFriendList();
-    }
+    //void ShowFriendPanel()
+    //{
+    //    if(friendPanel.activeSelf == true)
+    //    {
+    //        CloseAllPanels();
+    //        return;
+    //    }
+    //    CloseAllPanels();
+    //    friendPanel.SetActive(true);
+    //    UpdateFriendList();
+    //}
     
     void ShowExitConfirmation()
     {
@@ -1110,10 +1100,6 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
         privateRoomPanel.SetActive(false);
         settingsPanel.SetActive(false);
-        soundPanel.SetActive(false);
-        accountPanel.SetActive(false);
-        helpPanel.SetActive(false);
-        friendPanel.SetActive(false);
         exitConfirmPanel.SetActive(false);
         matchmakingPanel.SetActive(false);
         
@@ -1125,9 +1111,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     bool AnyPanelOpen()
     {
         return privateRoomPanel.activeSelf || settingsPanel.activeSelf || 
-               soundPanel.activeSelf ||
-               accountPanel.activeSelf || helpPanel.activeSelf ||
-               friendPanel.activeSelf || exitConfirmPanel.activeSelf ||
+               exitConfirmPanel.activeSelf ||
                matchmakingPanel.activeSelf ||
                (friendInvitePanel != null && friendInvitePanel.activeSelf) ||
                (friendRemoveConfirmPanel != null && friendRemoveConfirmPanel.activeSelf) ||
@@ -1178,11 +1162,11 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     
     public void OnLoginSuccess()
     {
-        Debug.Log("C");
         gameObject.SetActive(true);
         transform.GetChild(0).gameObject.SetActive(true);
         UpdateAccountInfo();
-        Debug.Log("B");
+
+        RuleBookButton.onClick.Invoke(); //시작 시 룰북 보여줌
     }
     
     void LoginWithGoogle()

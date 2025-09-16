@@ -5,8 +5,14 @@ using UnityEngine;
 public class ButtonClickSoundPlayer : MonoBehaviour
 {
     AudioSource ClickSound;
-
     public static ButtonClickSoundPlayer Instance { get; private set; }
+    public static void Play()
+    {
+        if (Instance != null)
+        {
+            Instance.ClickSound.Play();
+        }
+    }
 
     private void Awake()
     {
@@ -19,14 +25,6 @@ public class ButtonClickSoundPlayer : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        }
-    }
-
-    public static void Play()
-    {
-        if (Instance != null)
-        {
-            Instance.ClickSound.Play();
         }
     }
 }

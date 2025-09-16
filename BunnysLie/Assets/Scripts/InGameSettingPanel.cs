@@ -13,7 +13,7 @@ public class InGameSettingPanel : MonoBehaviour
 
     [SerializeField] RectTransform Container;
     bool _IsOn;
-    bool IsOn
+    public bool IsOn
     {
         get { return _IsOn; }
         set { _IsOn = value; 
@@ -156,17 +156,22 @@ public class InGameSettingPanel : MonoBehaviour
         //IsActive_VoiceChat = PlayerPrefs.GetInt("IsActive_VoiceChat", 1) == 1;
 
 
-
-        SettingButton.onClick.AddListener(() =>
+        if(SettingButton != null)
         {
-            IsOn = !IsOn;
-            InGameManager.Instance.PlayButtonClickSound();
-        });
-        SettingXButton.onClick.AddListener(() =>
+            SettingButton.onClick.AddListener(() =>
+            {
+                IsOn = !IsOn;
+                InGameManager.Instance.PlayButtonClickSound();
+            });
+        }
+        if(SettingXButton != null)
         {
-            IsOn = false;
-            InGameManager.Instance.PlayButtonClickSound();
-        });
+            SettingXButton.onClick.AddListener(() =>
+            {
+                IsOn = false;
+                InGameManager.Instance.PlayButtonClickSound();
+            });
+        }
 
         MasterVolumeSlider.onValueChanged.AddListener((value01) =>
         {

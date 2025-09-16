@@ -55,7 +55,7 @@ public class HTTPLoginManager : MonoBehaviour
         if (id == "NULL")
         {
             SetupUI();
-            ShowLoginPanel();
+            //ShowLoginPanel();
         }
         else
         {
@@ -214,7 +214,6 @@ public class HTTPLoginManager : MonoBehaviour
         
         if (GameLobbyManager.Instance != null)
         {
-            Debug.Log("A");
             GameLobbyManager.Instance.OnLoginSuccess();
         }
         

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -17,56 +18,57 @@ public class SettingPanel : MonoBehaviour
         set
         {
             _IsViewing = value;
-            Panel.gameObject.SetActive(value);
+            gameObject.SetActive(value); 
         }
     }
 
     [SerializeField] Button SettingButton;
 
     Transform NowSelectedButton;
-    Vector3 OriginalButtonScale;
     [SerializeField] float SelectedButtonScaleFactor;
 
     [SerializeField] Button SoundSettingButton;
-    [SerializeField] Button FriendButton;
-    [SerializeField] Button HelperButton;
+    [SerializeField] Button CreditButton;
     [SerializeField] Button QuestButton;
+    [SerializeField] Button AccountButton;
+    [SerializeField] Button HotKeyButton;
+    [SerializeField] Button FriendButton;
 
     [SerializeField] RectTransform SoundSettingView;
-    [SerializeField] RectTransform FriendView;
-    [SerializeField] RectTransform HelperView;
+    [SerializeField] RectTransform CreditView;
     [SerializeField] RectTransform QuestView;
-
-    [Header("Sound Setting Sliders/Buttons")]
-    [SerializeField] Slider MasterVolumeSlider;
-    [SerializeField] Slider BGMVolumeSlider;
-    [SerializeField] Slider SFXVolumeSlider;
-
-    [SerializeField] Button MasterVolumeActiveButton; bool Flag_MVAB;
-    [SerializeField] Button BGMVolumeActiveButton; bool Flag_BVAB;
-    [SerializeField] Button SFXVolumeActiveButton; bool Flag_SVAB;
-
-    [SerializeField] Button VoiceChatActiveButton; bool Flag_VCAB;
-    [SerializeField] Button TextChatActiveButton; bool Flag_TCAB;
+    [SerializeField] RectTransform AccountView;
+    [SerializeField] RectTransform HotKeyView;
+    [SerializeField] RectTransform FriendView;
 
     void ResetNowButton2NormalScale()
     {
         if (NowSelectedButton == null)
         {
-            HelperButton.transform.localScale = OriginalButtonScale;
-            SoundSettingButton.transform.localScale = OriginalButtonScale;
-            FriendButton.transform.localScale = OriginalButtonScale;
+            SoundSettingButton.image.color = Color.white;
+            CreditButton.image.color = Color.white;
+            QuestButton.image.color = Color.white;
+            AccountButton.image.color = Color.white;
+            HotKeyButton.image.color = Color.white;
+            FriendButton.image.color = Color.white;
             return;
         }
-        NowSelectedButton.localScale = OriginalButtonScale;
+        NowSelectedButton.GetComponent<Image>().color = Color.white;
+    }
+    [SerializeField] Color SelectedButtonColor;
+    void MakeButtonUIAsSelected(Button b)
+    {
+        b.image.color = SelectedButtonColor;
     }
 
     void DisableAllViews()
     {
         SoundSettingView.gameObject.SetActive(false);
-        HelperView.gameObject.SetActive(false);
-        FriendView.gameObject.SetActive(false);
+        CreditView.gameObject.SetActive(false);
         QuestView.gameObject.SetActive(false);
+        AccountView.gameObject.SetActive(false);
+        HotKeyView.gameObject.SetActive(false);
+        FriendView.gameObject.SetActive(false);
     }
 
 
@@ -75,149 +77,72 @@ public class SettingPanel : MonoBehaviour
         ResetNowButton2NormalScale();
         DisableAllViews();
         NowSelectedButton = SoundSettingButton.transform;
-        SoundSettingButton.transform.localScale = OriginalButtonScale * SelectedButtonScaleFactor;
+        MakeButtonUIAsSelected(SoundSettingButton);
         SoundSettingView.gameObject.SetActive(true);
+        SoundSettingView.transform.GetComponentInChildren<InGameSettingPanel>().IsOn = true;
     }
-
     public void OnButtonClicked_Friend()
     {
         ResetNowButton2NormalScale();
         DisableAllViews();
-        NowSelectedButton = FriendButton.transform;
-        FriendButton.transform.localScale = OriginalButtonScale * SelectedButtonScaleFactor;
+        NowSelectedButton = HotKeyButton.transform;
+        MakeButtonUIAsSelected(HotKeyButton);
         FriendView.gameObject.SetActive(true);
     }
-
     public void OnButtonClicked_Helper()
     {
         ResetNowButton2NormalScale();
         DisableAllViews();
-        NowSelectedButton = HelperButton.transform;
-        HelperButton.transform.localScale = OriginalButtonScale * SelectedButtonScaleFactor;
-        HelperView.gameObject.SetActive(true);
+        NowSelectedButton = HotKeyButton.transform;
+        MakeButtonUIAsSelected(HotKeyButton);
+        HotKeyView.gameObject.SetActive(true);
     }
     public void OnButtonClicked_Quest()
     {
         ResetNowButton2NormalScale();
         DisableAllViews();
         NowSelectedButton = QuestButton.transform;
-        QuestButton.transform.localScale = OriginalButtonScale * SelectedButtonScaleFactor;
+        MakeButtonUIAsSelected(QuestButton);
         QuestView.gameObject.SetActive(true);
     }
-    private void Start()
+    public void OnButtonClicked_Credit()
     {
-        IsViewing = false;
+        ResetNowButton2NormalScale();
+        DisableAllViews();
+        NowSelectedButton = CreditButton.transform;
+        MakeButtonUIAsSelected(CreditButton);
+        CreditView.gameObject.SetActive(true);
+    }
+    public void OnButtonClicked_Account()
+    {
+        ResetNowButton2NormalScale();
+        DisableAllViews();
+        NowSelectedButton = AccountButton.transform;
+        MakeButtonUIAsSelected(AccountButton);
+        AccountView.gameObject.SetActive(true);
+    }
+    private void Awake()
+    {
+        //SettingButton.onClick.AddListener(() =>
+        //{
+        //    OnSettingButtonClicked();
+        //});
 
-        OriginalButtonScale = SoundSettingButton.transform.localScale;
 
-        SettingButton.onClick.AddListener(() =>
-        {
-            OnSettingButtonClicked();
-        });
-
-
-        SoundSettingButton.onClick.AddListener(() =>
-        {
-            OnButtonClicked_SoundSetting();
-        });
-        FriendButton.onClick.AddListener(() =>
-        {
-            OnButtonClicked_Friend();
-        });
-        HelperButton.onClick.AddListener(() =>
-        {
-            OnButtonClicked_Helper();
-        });
-        QuestButton.onClick.AddListener(() =>
-        {
-            OnButtonClicked_Quest();
-        });
-        /*
-         *     [SerializeField] Button MasterVolumeActiveButton; bool Flag_MVAB;
-    [SerializeField] Button BGMVolumeActiveButton; bool Flag_BVAB;
-    [SerializeField] Button SFXVolumeActiveButton; bool Flag_SVAB;
-
-    [SerializeField] Button VoiceChatActiveButton; bool Flag_VCAB;
-    [SerializeField] Button TextChatActiveButton; bool Flag_TCAB;
-         */
-
-        MasterVolumeActiveButton.onClick.AddListener(() =>
-        {
-            Flag_MVAB = !Flag_MVAB;
-            if(Flag_MVAB)
-            {
-                MasterVolumeActiveButton.GetComponentInChildren<TMP_Text>().text = "On";
-            }
-            else
-            {
-                MasterVolumeActiveButton.GetComponentInChildren<TMP_Text>().text = "Off";
-            }
-        });
-        BGMVolumeActiveButton.onClick.AddListener(() =>
-        {
-            Flag_BVAB = !Flag_BVAB;
-            if (Flag_BVAB)
-            {
-                BGMVolumeActiveButton.GetComponentInChildren<TMP_Text>().text = "On";
-            }
-            else
-            {
-                BGMVolumeActiveButton.GetComponentInChildren<TMP_Text>().text = "Off";
-            }
-        });
-        SFXVolumeActiveButton.onClick.AddListener(() =>
-        {
-            Flag_SVAB = !Flag_SVAB;
-            if (Flag_SVAB)
-            {
-                SFXVolumeActiveButton.GetComponentInChildren<TMP_Text>().text = "On";
-            }
-            else
-            {
-                SFXVolumeActiveButton.GetComponentInChildren<TMP_Text>().text = "Off";
-            }
-        });
-        VoiceChatActiveButton.onClick.AddListener(() =>
-        {
-            Flag_VCAB = !Flag_VCAB;
-            if (Flag_VCAB)
-            {
-                VoiceChatActiveButton.GetComponentInChildren<TMP_Text>().text = "On";
-            }
-            else
-            {
-                VoiceChatActiveButton.GetComponentInChildren<TMP_Text>().text = "Off";
-            }
-        });
-        TextChatActiveButton.onClick.AddListener(() =>
-        {
-            Flag_TCAB = !Flag_TCAB;
-            if (Flag_TCAB)
-            {
-                TextChatActiveButton.GetComponentInChildren<TMP_Text>().text = "On";
-            }
-            else
-            {
-                TextChatActiveButton.GetComponentInChildren<TMP_Text>().text = "Off";
-            }
-        });
-
-        OnButtonClicked_SoundSetting();
+        SoundSettingButton.onClick.AddListener(OnButtonClicked_SoundSetting);
+        CreditButton.onClick.AddListener(OnButtonClicked_Credit);
+        QuestButton.onClick.AddListener(OnButtonClicked_Quest);
+        AccountButton.onClick.AddListener(OnButtonClicked_Account);
+        HotKeyButton.onClick.AddListener(OnButtonClicked_Helper);
+        FriendButton.onClick.AddListener(OnButtonClicked_Friend);
     }
 
-    [SerializeField] RectTransform Panel;
     public void OnSettingButtonClicked()
     {
-        IsViewing = !IsViewing;
-
-
-        if(IsViewing)
-        {
-
-        }
-        else
-        {
-
-        }
+        gameObject.SetActive(true);
+        //IsViewing = true;
+        Debug.Log("Settings");
+        SoundSettingButton.onClick.Invoke();
+        //EditorApplication.isPaused = true;
     }
 }
