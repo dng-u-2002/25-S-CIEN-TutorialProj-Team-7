@@ -211,7 +211,7 @@ public class HTTPLoginManager : MonoBehaviour
     System.Random rnd = new();
     public void SuccessLogin_EDITOR()
     {
-        OnLoginSuccess("testUser", "Test User" + rnd.Next().ToString());
+        OnLoginSuccess("LoginWithoutAccount", "Test User" + rnd.Next().ToString());
     }
     private void OnLoginSuccess(string loginId, string name)
     {
@@ -231,7 +231,6 @@ public class HTTPLoginManager : MonoBehaviour
         if (GameLobbyManager.Instance != null)
         {
             GameLobbyManager.Instance.OnLoginSuccess();
-            Debug.Log("SCS");
         }
         
         gameObject.SetActive(false);

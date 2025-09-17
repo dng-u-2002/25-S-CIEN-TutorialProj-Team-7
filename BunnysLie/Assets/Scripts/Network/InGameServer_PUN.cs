@@ -110,17 +110,21 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         //    return;
         //}
 
+
+        if (Photon.Pun.PhotonNetwork.IsMasterClient == false)
+            return;
         foreach(var pl in PhotonNetwork.CurrentRoom.Players)
         {
+            //if (pl.Value.CustomProperties.TryGetValue("IsTmpUser", out var tmp))
+            //{
+            //    Debug.Log($"Tmp : {tmp}, {pl.Value.ActorNumber}");
+            //}
             if (pl.Value.CustomProperties.TryGetValue("IsReady", out var isReady) && (bool)isReady == false)
             {
                 Debugger.text = $"[Waiting] User {pl.Value.ActorNumber} is not ready.";
                 return;
             }
         }
-
-        if (Photon.Pun.PhotonNetwork.IsMasterClient == false)
-            return;
         if(IsGameStarted == false)
         {
             Debug.Log($"Now Player Count : {PhotonNetwork.CurrentRoom.PlayerCount}");
@@ -169,7 +173,6 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     PacketWriter.WriteByte(character);
                     character++;
                 }
-                
                 SendPacket(user);
             }
             Debug.Log($"[Game Start] A new 2-player game has started with Users: {string.Join(", ", room.Players.Select(u => u.Id))}.");

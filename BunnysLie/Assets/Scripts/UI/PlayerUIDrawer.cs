@@ -339,8 +339,24 @@ public class PlayerUIDrawer : MonoBehaviour
     }
     public void SetNickName()
     {
-        Debug.Log($"Setting nickname for player {Target.ID} to {PhotonNetwork.CurrentRoom.Players.First((p) => p.Value.ActorNumber == Target.ID).Value.NickName}");
-        NickNameTextBox.text = PhotonNetwork.CurrentRoom.Players.First((p) => p.Value.ActorNumber == Target.ID).Value.NickName;
+        string nickName = PhotonNetwork.CurrentRoom.Players.First((p) => p.Value.ActorNumber == Target.ID).Value.NickName;
+        if (nickName.Contains("Test User"))
+        {
+            if (Character == 0)
+            {
+                nickName = "계순이";
+            }
+            else if (Character == 1)
+            {
+                nickName = "달래";
+            }
+            else
+            {
+                nickName = "덕구";
+            }
+        }
+        Debug.Log($"Setting nickname for player {Target.ID} to {nickName}");
+        NickNameTextBox.text = nickName;
     }
 
     public string GetNickName()

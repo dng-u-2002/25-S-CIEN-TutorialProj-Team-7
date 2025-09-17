@@ -274,7 +274,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     int roomID = reader.ReadInt();
                     List<int> users = new List<int>(new int[] { reader.ReadInt(), reader.ReadInt(), reader.ReadInt() });
                     List<byte> characters = new List<byte>(new byte[] { reader.ReadByte(), reader.ReadByte(), reader.ReadByte() });
-
+                    //List<bool> isTmpUsers = new List<bool>(new bool[] { reader.ReadBool(), reader.ReadBool(), reader.ReadBool() });
                     if (users.Contains(Id) == false)
                     {
                         Debug.LogError($"[InGameUser_PUN] User ID {Id} not found in the user list for room {roomID}, " + "Current User IDs: " + string.Join(", ", users));
@@ -284,9 +284,25 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                     var idx = users.IndexOf(Id);
                     InGameManager.Instance.SetLocalPlayerCharacter(characters[idx]);
+                    if(PlayerPrefs.GetString("LoginId") == "LoginWithoutAccount") //내거
+                    {
+                        if (characters[idx] == 0)
+                        {
+                            PhotonNetwork.LocalPlayer.NickName = "계순이";
+                        }
+                        else if (characters[idx] == 1)
+                        {
+                            PhotonNetwork.LocalPlayer.NickName = "달래";
+                        }
+                        else
+                        {
+                            PhotonNetwork.LocalPlayer.NickName = "덕구";
+                        }
+                    }
 
                     users.Remove(Id);         //내건 지움
                     characters.RemoveAt(idx); //내건 지움
+                    //isTmpUsers.RemoveAt(idx); //내건 지금
 
                     Debug.Log("Starting game with Room ID: " + roomID);
                     InGameManager.Instance.RoomID = roomID;
@@ -296,10 +312,6 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     foreach(var p in Photon.Pun.PhotonNetwork.CurrentRoom.Players)
                     {
                         Debug.Log($"Player ID: {p.Value.ActorNumber}, Nickname: {p.Value.NickName}");
-                    }
-                    foreach (var p in users)
-                    {
-                        Debug.Log($"Player ID: {p}");
                     }
                     InGameManager.Instance.LoopForAllPlayerDrawers((d) =>
                     {
