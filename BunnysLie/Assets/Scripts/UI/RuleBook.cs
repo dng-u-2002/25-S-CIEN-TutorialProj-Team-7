@@ -13,7 +13,7 @@ public class RuleBook : MonoBehaviour
     [SerializeField] Button LeftButton;
     [SerializeField] Button RightButton;
 
-    private void Start()
+    private void Awake()
     {
         LeftButton.onClick.AddListener(() =>
         {
@@ -55,7 +55,7 @@ public class RuleBook : MonoBehaviour
         RightButton.gameObject.SetActive(active);
     }
 
-    void ShowRuleBook(int page)
+    public void ShowRuleBook(int page)
     {
         if (page <= 0)
             page = 0;

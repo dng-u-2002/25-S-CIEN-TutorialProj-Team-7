@@ -231,6 +231,7 @@ public class HTTPLoginManager : MonoBehaviour
         if (GameLobbyManager.Instance != null)
         {
             GameLobbyManager.Instance.OnLoginSuccess();
+            Debug.Log("SCS");
         }
         
         gameObject.SetActive(false);

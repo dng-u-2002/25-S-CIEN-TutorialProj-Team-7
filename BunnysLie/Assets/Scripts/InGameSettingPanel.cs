@@ -266,7 +266,7 @@ public class InGameSettingPanel : MonoBehaviour
             else
                 MasterVolumeSlider.value = 0.1f;
 
-            InGameManager.Instance.PlayButtonClickSound();
+            ButtonClickSoundPlayer.Play();
         });
         BGMVolumeActiveButton.onClick.AddListener(() =>
         {
@@ -274,7 +274,7 @@ public class InGameSettingPanel : MonoBehaviour
                 BGMVolumeSlider.value = 0.0f;
             else
                 BGMVolumeSlider.value = 0.1f;
-            InGameManager.Instance.PlayButtonClickSound();
+            ButtonClickSoundPlayer.Play();
         });
         SFXVolumeActiveButton.onClick.AddListener(() =>
         {
@@ -282,7 +282,7 @@ public class InGameSettingPanel : MonoBehaviour
                 SFXVolumeSlider.value = 0.0f;
             else
                 SFXVolumeSlider.value = 0.1f;
-            InGameManager.Instance.PlayButtonClickSound();
+            ButtonClickSoundPlayer.Play();
         });
         VoiceChatActiveButton.onClick.AddListener(() =>
         {
@@ -292,14 +292,14 @@ public class InGameSettingPanel : MonoBehaviour
                 VoiceChatVolumeSlider.value = 0.1f;
             //PlayerPrefs.SetInt("IsActive_VoiceChat", IsActive_VoiceChat ? 1 : 0); // 플레이어 설정 저장
             //PlayerPrefs.Save();
-            InGameManager.Instance.PlayButtonClickSound();
+            ButtonClickSoundPlayer.Play();
         });
         TextChatActiveButton.onClick.AddListener(() =>
         {
             IsActive_TextChat = !IsActive_TextChat;
             PlayerPrefs.SetInt("IsActive_TextChat", IsActive_TextChat ? 1 : 0); // 플레이어 설정 저장
             PlayerPrefs.Save();
-            InGameManager.Instance.PlayButtonClickSound();
+            ButtonClickSoundPlayer.Play();
 
             FindObjectOfType<Chating>(true).gameObject.SetActive(IsActive_TextChat);
         });
@@ -312,7 +312,7 @@ public class InGameSettingPanel : MonoBehaviour
         {
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel("Lobby");
-            InGameManager.Instance.PlayButtonClickSound();
+            ButtonClickSoundPlayer.Play();
         });
     }
 

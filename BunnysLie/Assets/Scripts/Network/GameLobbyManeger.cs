@@ -1166,7 +1166,8 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         transform.GetChild(0).gameObject.SetActive(true);
         UpdateAccountInfo();
 
-        RuleBookButton.onClick.Invoke(); //시작 시 룰북 보여줌
+        //RuleBookButton.onClick.Invoke(); //시작 시 룰북 보여줌
+        FindObjectOfType<RuleBook>().ShowRuleBook(0);
     }
     
     void LoginWithGoogle()
