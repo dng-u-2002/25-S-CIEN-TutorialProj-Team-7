@@ -1,5 +1,6 @@
 using Photon.Pun;
 using Photon.Voice.Unity;
+using Photon.Voice.Unity.Demos;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -145,14 +146,12 @@ public class InGameSettingPanel : MonoBehaviour
     }
 
     [SerializeField] Button LeaveGameButton;
+    [SerializeField] TMPro.TMP_Dropdown ResolutionSelector;
+    [SerializeField] Toggle FullScreenToggle;
 
     private void Awake()
     {
-        MasterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
-        BGMVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
-        SFXVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
-        VoiceChatVolumeSlider.value = PlayerPrefs.GetFloat("VoiceChatVolume", 0.5f);
-        IsActive_TextChat = PlayerPrefs.GetInt("IsActive_TextChat", 1) == 1;
+
         //IsActive_VoiceChat = PlayerPrefs.GetInt("IsActive_VoiceChat", 1) == 1;
 
 
@@ -303,10 +302,34 @@ public class InGameSettingPanel : MonoBehaviour
 
             FindObjectOfType<Chating>(true).gameObject.SetActive(IsActive_TextChat);
         });
+        //int width = PlayerPrefs.GetInt("Width", 1920);
+        //int height = PlayerPrefs.GetInt("Height", 1080);
+        ResolutionSelector.onValueChanged.AddListener((selection) =>
+        {
+            var texts = ResolutionSelector.options[selection].text.Split('x');
+            texts[0] = texts[0].Remove(0, texts[0].IndexOf('(') + 1);
+            texts[1] = texts[1].TrimEnd(')');
 
+            int width = int.Parse(texts[0]);
+            int height = int.Parse(texts[1]);
+            PlayerPrefs.SetInt("Width", width);
+            PlayerPrefs.SetInt("Height", height);
+            PlayerPrefs.Save();
+            Screen.SetResolution(width, height, PlayerPrefs.GetInt("FullScreen", 1) == 1);
+        });
 
+        FullScreenToggle.onValueChanged.AddListener((full) =>
+        {
+            int width = PlayerPrefs.GetInt("Width");
+            int height = PlayerPrefs.GetInt("Height");
+            PlayerPrefs.SetInt("FullScreen", full ? 1 : 0);
+            PlayerPrefs.Save();
+            Screen.SetResolution(width, height, full);
+        });
+
+        ResolutionSelector.onValueChanged.Invoke(ResolutionSelector.options.IndexOf(ResolutionSelector.options.Find((o) => o.text.Contains(PlayerPrefs.GetInt("Width", 1920).ToString()) && o.text.Contains(PlayerPrefs.GetInt("Height", 1080).ToString()))));
+        FullScreenToggle.SetValue(PlayerPrefs.GetInt("FullScreen", 1) == 1);
         Container.localPosition = new Vector3(0, 0);
-        IsOn = false;
 
         LeaveGameButton.onClick.AddListener(() =>
         {
@@ -314,14 +337,16 @@ public class InGameSettingPanel : MonoBehaviour
             PhotonNetwork.LoadLevel("Lobby");
             ButtonClickSoundPlayer.Play();
         });
+        MasterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
+        BGMVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
+        SFXVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
+        VoiceChatVolumeSlider.value = PlayerPrefs.GetFloat("VoiceChatVolume", 0.5f);
+        IsActive_TextChat = PlayerPrefs.GetInt("IsActive_TextChat", 1) == 1;
+        IsOn = false;
     }
 
     private void Start()
     {
-        MasterVolumeSlider.value = MasterVolumeSlider.value;
-        BGMVolumeSlider.value = BGMVolumeSlider.value;
-        SFXVolumeSlider.value = SFXVolumeSlider.value;
-        VoiceChatVolumeSlider.value = VoiceChatVolumeSlider.value;
-        IsActive_TextChat = IsActive_TextChat;
+
     }
 }

@@ -332,6 +332,10 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
             PlayerPrefs.SetFloat("SFXVolume", 0.5f);
             PlayerPrefs.SetInt("IsActive_TextChat", 1);
             PlayerPrefs.SetInt("IsActive_VoiceChat", 1);
+            PlayerPrefs.SetInt("Width", 1920);
+            PlayerPrefs.SetInt("Height", 1080);
+            PlayerPrefs.SetInt("FullScreen", 1);
+            PlayerPrefs.Save();
         }
     }
     
