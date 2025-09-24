@@ -1612,7 +1612,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         return true;
     }
-    int CalculateScore(List<Tuple<byte, byte>> cards)
+    public static int CalculateScore(List<Tuple<byte, byte>> cards)
     {
         if (cards.Count < 2)
         {
@@ -1629,6 +1629,23 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             Debug.Log($"[Special Rule] Normal case: {card1.Item1}:{card1.Item2} and {card2.Item1}:{card2.Item2}.");
             return (card1.Item2 + card2.Item2 + 2) % 10; // Normal case
+        }
+    }
+    public static int CalculateScore(List<Card> cards)
+    {
+        if (cards.Count < 2)
+        {
+            return 0;
+        }
+        var card1 = cards[0];
+        var card2 = cards[1];
+        if (card1.Value == card2.Value) //���� ����
+        {
+            return 100 + card1.Value; // Special case for pairs
+        }
+        else
+        {
+            return (card1.Value + card2.Value + 2) % 10; // Normal case
         }
     }
     private void SendIOResultAllPlayers(Room room, bool isFinal)

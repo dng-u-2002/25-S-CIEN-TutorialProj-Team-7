@@ -50,6 +50,20 @@ public class InGameManager : MonoBehaviour
         return null;
     }
 
+    public List<int> GetUserIDs()
+    {
+        return new List<int>(new int[] { LocalPlayer.ID, RemotePlayers[0].ID, RemotePlayers[1].ID });
+    }
+    public Dictionary<int, List<Card>> GetAllCards()
+    {
+        Dictionary<int, List<Card>> allCards = new Dictionary<int, List<Card>>();
+        allCards[LocalPlayer.ID] = LocalPlayer.ThisDeck.GetCardsAsList();
+        foreach (var rp in RemotePlayers)
+        {
+            allCards[rp.ID] = rp.ThisDeck.GetCardsAsList();
+        }
+        return allCards;
+    }
 
     private void Awake()
     {

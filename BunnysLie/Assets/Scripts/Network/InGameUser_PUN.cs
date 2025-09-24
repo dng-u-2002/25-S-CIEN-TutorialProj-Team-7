@@ -75,7 +75,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         Writer = new NetworkDataWriter_PUN();
     }
     [SerializeField] TMP_Text Debugger;
-    int RoundCounter;
+    public int RoundCounter { get; private set; }
     [SerializeField] AudioSource CardDistributionSound;
 
     public override void OnConnectedToMaster()
@@ -333,6 +333,10 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         FullscreenBlackImage.gameObject.SetActive(false);
                     }, 1.0f);
+
+
+                    QuestController.ResetValuesPerGame();
+                    QuestController.ResetValuesPerRound();
                 }
                 break;
 
@@ -540,6 +544,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         if (players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true)// 내가 리매치
                         {
+                            QuestController.OnDrawRPS(); //이전에 비긴걸 여기서 처리
+
                             //화면에 메세지 띄우고,
                             InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.message_WhenLocalShouldRematch, 1);
                             InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
@@ -758,6 +764,14 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     byte outCount = reader.ReadByte();
                     RoundCounter++;
                     InGameManager.Instance.ShowLoserOfThisRound(loserId, outCount, RoundCounter);
+
+                    ///////////////////////////////////////////////////////////////////////////////
+                    ///퀘스트 처리
+                    if (loserId == InGameManager.Instance.LocalPlayer.ID)
+                        QuestController.OnLoseRoundGame();
+                    else
+                        QuestController.OnWinRoundGame();
+                    ///////////////////////////////////////////////////////////////////////////////
                 }
                 break;
             case ePacketType_InGameServer.Broadcast_SomeoneSelectedCard2RemoveISR:
@@ -1353,6 +1367,9 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
                     InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
 
+
+                    //업적 준비
+                    QuestController.OnExchangeCardWithOpponent();
                 }
                 break;
 
@@ -1448,39 +1465,27 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                     }
                         InGameManager.Instance.StartNextRound(reason);
+
+                    QuestController.ResetValuesPerRound();
                 }
                 break;
             case ePacketType_InGameServer.Broadcast_FinalResult:
                 {
                     int loserID = reader.ReadInt();
                     InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(string.Format(ConstStrings.Message_FinalLoser, InGameManager.Instance.FindDrawerByID(loserID).GetNickName()), InGameManager.Instance.LocalPlayerUIDrawer.Character + 5);
-                   
 
+                    ///////////////////////////////////////////////////////////////////////////////
+                    ///퀘스트 처리
+                    if (loserID == InGameManager.Instance.LocalPlayer.ID)
+                        QuestController.OnLoseTotalGame();
+                    else
+                        QuestController.OnWinTotalGame();
+                    ///////////////////////////////////////////////////////////////////////////////
+                    
                     DelayedFunctionHelper.InvokeDelayed(() =>
-                    {
-                        InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
                         {
-                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2S_DisagreedReGame);
-                            Writer.WriteInt(Id);
-                            Writer.SendPacket(ServerPeer);
-
-                            InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
-                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_WaitingReGame, 0);
-                        });
-                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons(ConstStrings.Message_ReGame, 0, ConstStrings.Text_ReGame_Yes, ConstStrings.Text_ReGame_No,
-                            () =>
+                            InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
                             {
-                                InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
-                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2S_AgreedReGame);
-                                Writer.WriteInt(Id);
-                                Writer.SendPacket(ServerPeer);
-
-                                InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
-                                InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_WaitingReGame, 0);
-                            },
-                            () =>
-                            {
-                                InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                                 Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2S_DisagreedReGame);
                                 Writer.WriteInt(Id);
                                 Writer.SendPacket(ServerPeer);
@@ -1488,7 +1493,28 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
                                 InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_WaitingReGame, 0);
                             });
-                    }, 3.0f);
+                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons(ConstStrings.Message_ReGame, 0, ConstStrings.Text_ReGame_Yes, ConstStrings.Text_ReGame_No,
+                                () =>
+                                {
+                                    InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
+                                    Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2S_AgreedReGame);
+                                    Writer.WriteInt(Id);
+                                    Writer.SendPacket(ServerPeer);
+
+                                    InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
+                                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_WaitingReGame, 0);
+                                },
+                                () =>
+                                {
+                                    InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
+                                    Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2S_DisagreedReGame);
+                                    Writer.WriteInt(Id);
+                                    Writer.SendPacket(ServerPeer);
+
+                                    InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
+                                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_WaitingReGame, 0);
+                                });
+                        }, 3.0f);
                 }
                 break;
             case ePacketType_InGameServer.Broadcast_ReGameResult:
