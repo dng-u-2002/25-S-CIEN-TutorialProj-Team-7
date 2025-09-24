@@ -100,7 +100,7 @@ public class AchievementManager : MonoBehaviour
         if (Instance == null || !Instance._statsReady) return;
         if (!Ach.TryGetValue(id, out var api)) return;
         // 진행 팝업 (RequestCurrentStats 성공 후에만 true) :contentReference[oaicite:6]{index=6}
-        SteamUserStats.IndicateAchievementProgress(api, cur, max);
+        SteamUserStats.IndicateAchievementProgress(api, (uint)cur, (uint)max);
     }
 
     public static void AddToStat(AchievementId statApiEnum, int delta, (AchievementId ach, int target)? gate = null)
