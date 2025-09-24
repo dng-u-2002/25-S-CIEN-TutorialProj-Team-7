@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Text;
 using Photon.Pun;
+using Steamworks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -50,9 +52,19 @@ public class HTTPLoginManager : MonoBehaviour
     
     private void Start()
     {
+        if (SteamAPI.Init() == false)
+            return;
 
-    
+        if (SteamManager.Initialized == false)
+            return;
+
+        var localNickname = Steamworks.SteamFriends.GetPersonaName();
+        PlayerPrefs.SetString("LoginId", localNickname);
+        PlayerPrefs.SetString("Nickname", localNickname);
+        SteamNicknameText.text = localNickname;
     }
+
+    [SerializeField] TMP_Text SteamNicknameText;
 
     bool LoginFlag = false;
     private void Update()
