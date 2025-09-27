@@ -45,20 +45,31 @@ public class SettingPanel : MonoBehaviour
     {
         if (NowSelectedButton == null)
         {
-            SoundSettingButton.image.color = Color.white;
-            CreditButton.image.color = Color.white;
-            QuestButton.image.color = Color.white;
-            AccountButton.image.color = Color.white;
-            HotKeyButton.image.color = Color.white;
-            FriendButton.image.color = Color.white;
+            SoundSettingButton.image.color = UnSelectedButtonColor;
+            CreditButton.image.color = UnSelectedButtonColor;
+            QuestButton.image.color = UnSelectedButtonColor;
+            AccountButton.image.color = UnSelectedButtonColor;
+            HotKeyButton.image.color = UnSelectedButtonColor;
+            FriendButton.image.color = UnSelectedButtonColor;
+            SoundSettingButton.GetComponentInChildren<TMP_Text>(true).color = UnSelectedButtonColor_Text;
+            CreditButton.GetComponentInChildren<TMP_Text>(true).color = UnSelectedButtonColor_Text;
+            QuestButton.GetComponentInChildren<TMP_Text>(true).color = UnSelectedButtonColor_Text;
+            AccountButton.GetComponentInChildren<TMP_Text>(true).color = UnSelectedButtonColor_Text;
+            HotKeyButton.GetComponentInChildren<TMP_Text>(true).color = UnSelectedButtonColor_Text;
+            FriendButton.GetComponentInChildren<TMP_Text>(true).color = UnSelectedButtonColor_Text;
             return;
         }
-        NowSelectedButton.GetComponent<Image>().color = Color.white;
+        NowSelectedButton.GetComponent<Image>().color = UnSelectedButtonColor;
+        NowSelectedButton.GetComponentInChildren<TMP_Text>(true).color = UnSelectedButtonColor_Text;
     }
     [SerializeField] Color SelectedButtonColor;
+    [SerializeField] Color UnSelectedButtonColor;
+    [SerializeField] Color SelectedButtonColor_Text;
+    [SerializeField] Color UnSelectedButtonColor_Text;
     void MakeButtonUIAsSelected(Button b)
     {
         b.image.color = SelectedButtonColor;
+        b.GetComponentInChildren<TMP_Text>(true).color = SelectedButtonColor_Text;
     }
 
     void DisableAllViews()

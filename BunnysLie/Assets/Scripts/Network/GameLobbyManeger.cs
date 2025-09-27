@@ -212,18 +212,18 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     public static GameLobbyManager Instance { get; private set; }
     
     [Header("매칭 키 UI")]
-    public Button privateRoomButton;
-    public Button quickMatchButton;
-    public Button selectRandomMatchingModeButton;
-    //public Button randomMatchingButton;
-    public Button twoCardGameButton;
-    public Button threeCardGameButton;
-    public Button enterPrivateGameButton;
-    public Button[] BackButtons;
+    public Button PrevButton_ShowPrivateRoomButtons;
+    public Button RealButton_EnterQuickMatchButton;
+    public Button PrevButton_ShowModeSelectingButton;
+    public Button RealButton_EnterRoomWithTwoCardGameButton;
+    public Button RealButton_EnterRoomWithThreeCardGameButton;
+    public Button RealButton_ShowPrivateCodeEnterPanelButton;
+    public Button[] CancleBackButtons;
 
     public Transform ModeSelectButtons;
     public Transform RandomMatchingButtons;
     public Transform PrivateMatchingButtons;
+    public Button[] ExitNowMatchButtons;
 
     [Header("설정 키 UI")]
     public Button settingsButton;
@@ -236,12 +236,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     [Header("팝업 패널들")]
     public GameObject privateRoomPanel;
     public GameObject settingsPanel;
-    //public GameObject soundPanel;
-    //public GameObject accountPanel;
-    //public GameObject helpPanel;
-    //public GameObject friendPanel;
     public GameObject exitConfirmPanel;
-    public GameObject matchmakingPanel;
     public GameObject friendInvitePanel;
     public GameObject friendRemoveConfirmPanel;
     public GameObject messagePanel;
@@ -374,25 +369,35 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     }
     void SetupEventListeners()
     {
-        privateRoomButton.onClick.AddListener(() => ShowPrivateMathcingButtons());
-        enterPrivateGameButton.onClick.AddListener(() => ShowPrivateRoomPanel());
-        foreach(var bb in BackButtons)
+        PrevButton_ShowPrivateRoomButtons.onClick.AddListener(() => ShowPrivateMathcingButtons());
+        RealButton_ShowPrivateCodeEnterPanelButton.onClick.AddListener(() => ShowPrivateRoomPanel());
+        foreach(var bb in CancleBackButtons)
         {
             bb.onClick.AddListener(() => CloseAllPanels());
         }
-        //randomMatchingButton.onClick.AddListener(() => StartRandomMatching());
-        selectRandomMatchingModeButton.onClick.AddListener(() => ShowRandomMatchingModeButtons());
-        twoCardGameButton.onClick.AddListener(() =>
+        foreach (var bb in ExitNowMatchButtons)
+        {
+            bb.onClick.AddListener(()=>
+            {
+                //if (PhotonNetwork.InRoom == false)
+                //    return;
+
+                //방 안에 있을 때에만 작동
+                CloseAllPanels();
+            });
+        }
+        PrevButton_ShowModeSelectingButton.onClick.AddListener(() => ShowRandomMatchingModeButtons());
+        RealButton_EnterRoomWithTwoCardGameButton.onClick.AddListener(() =>
         {
             SelectGameType(eGameMode.TwoCards);
             StartRandomMatching();
         });
-        threeCardGameButton.onClick.AddListener(() =>
+        RealButton_EnterRoomWithThreeCardGameButton.onClick.AddListener(() =>
         {
             SelectGameType(eGameMode.ThreeCards);
             StartRandomMatching();
         });
-        quickMatchButton.onClick.AddListener(() => StartQuickMatch());
+        RealButton_EnterQuickMatchButton.onClick.AddListener(() => StartQuickMatch());
 
         createPrivateRoomButton_TwoCards.onClick.AddListener(() =>
         {
@@ -485,7 +490,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.GameVersion = "b21";
+            PhotonNetwork.GameVersion = "b25";
             PhotonNetwork.AutomaticallySyncScene = false;
 
             // 고정 리전 지정 (둘 다 같은 값으로!)
@@ -528,9 +533,9 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         Color selectedColor = Color.green;
         Color normalColor = Color.white;
         
-        twoCardGameButton.GetComponent<Image>().color = 
+        RealButton_EnterRoomWithTwoCardGameButton.GetComponent<Image>().color = 
             selectedGameType == eGameMode.TwoCards ? selectedColor : normalColor;
-        threeCardGameButton.GetComponent<Image>().color = 
+        RealButton_EnterRoomWithThreeCardGameButton.GetComponent<Image>().color = 
             selectedGameType == eGameMode.ThreeCards ? selectedColor : normalColor;
     }
 
@@ -545,9 +550,9 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         Color selectedColor = Color.green;
         Color normalColor = Color.white;
 
-        twoCardGameButton.GetComponent<Image>().color =
+        RealButton_EnterRoomWithTwoCardGameButton.GetComponent<Image>().color =
             normalColor;
-        threeCardGameButton.GetComponent<Image>().color =
+        RealButton_EnterRoomWithThreeCardGameButton.GetComponent<Image>().color =
             normalColor;
     }
     
@@ -559,7 +564,6 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         }
         
         isMatchmaking = true;
-        ShowMatchmakingPanel();
         UpdateMyActivityStatus(FriendActivity.Matchmaking);
         
         ExitGames.Client.Photon.Hashtable roomProps = new ExitGames.Client.Photon.Hashtable();
@@ -573,6 +577,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         };
         
         PhotonNetwork.JoinRandomRoom(roomProps, 3);
+        ShowReadyPanel();
     }
     
     void StartQuickMatch()
@@ -583,7 +588,9 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         }
         
         isMatchmaking = true;
-        ShowMatchmakingPanel();
+        //ShowMatchmakingPanel();
+        readyPanel.transform.localPosition = Vector3.zero;
+        readyPanel.gameObject.SetActive(true);
         UpdateMyActivityStatus(FriendActivity.Matchmaking);
         PhotonNetwork.JoinRandomRoom();
     }
@@ -628,7 +635,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                matchmakingStatusText.text = $"플레이어 대기 중... ({PhotonNetwork.CurrentRoom.PlayerCount}/3)";
+                //readyPanelText.text = $"플레이어 대기 중... ({PhotonNetwork.CurrentRoom.PlayerCount}/3)";
             }
         }
         Debug.Log(($"방에 참가함: {PhotonNetwork.CurrentRoom.Name}"));
@@ -645,16 +652,32 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            StartCoroutine(_ShowPlayerCounter());
+            if(PlayerCounterRunner != null)
+                StopCoroutine(PlayerCounterRunner);
+            ShowReadyPanel();
+            PlayerCounterRunner = StartCoroutine(_ShowPlayerCounter());
         }
     }
 
+    Coroutine PlayerCounterRunner;
+
     IEnumerator _ShowPlayerCounter()
     {
-        while (PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount < 3)
+        if ((bool)PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("IsPrivate", out var priv) == true && (bool)priv == true)
         {
-            readyPanelText.text = "방 코드 : " + PhotonNetwork.CurrentRoom.Name + $"\n플레이어 대기 중... ({PhotonNetwork.CurrentRoom.PlayerCount}/3)";
-            yield return new WaitForSeconds(1f);
+            while (PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount < 3)
+            {
+                readyPanelText.text = "방 코드 : " + PhotonNetwork.CurrentRoom.Name + $"\n플레이어 대기 중... ({PhotonNetwork.CurrentRoom.PlayerCount}/3)";
+                yield return new WaitForSeconds(1f);
+            }
+        }
+        else
+        {
+            while (PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount < 3)
+            {
+                readyPanelText.text =$"\n플레이어 대기 중... ({PhotonNetwork.CurrentRoom.PlayerCount}/3)";
+                yield return new WaitForSeconds(1f);
+            }
         }
     }
 
@@ -667,7 +690,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            matchmakingStatusText.text = "방 코드 : " + PhotonNetwork.CurrentRoom.Name + $"\n플레이어 대기 중... ({PhotonNetwork.CurrentRoom.PlayerCount}/3)";
+            //matchmakingStatusText.text = "방 코드 : " + PhotonNetwork.CurrentRoom.Name + $"\n플레이어 대기 중... ({PhotonNetwork.CurrentRoom.PlayerCount}/3)";
         }
     }
     
@@ -702,6 +725,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         };
         
         PhotonNetwork.CreateRoom(roomCode, roomOptions);
+        ShowReadyPanel();
     }
     
     void JoinPrivateRoom()
@@ -1034,20 +1058,24 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     {
         CloseAllPanels();
         ModeSelectButtons.gameObject.SetActive(false);
-        privateRoomButton.gameObject.SetActive(false);
-        quickMatchButton.gameObject.SetActive(false);
-        selectRandomMatchingModeButton.gameObject.SetActive(false);
+        PrevButton_ShowPrivateRoomButtons.gameObject.SetActive(false);
+        RealButton_EnterQuickMatchButton.gameObject.SetActive(false);
+        PrevButton_ShowModeSelectingButton.gameObject.SetActive(false);
         privateRoomPanel.transform.localPosition = Vector3.zero;
         privateRoomPanel.SetActive(true);
+        roomCodeInput.text = string.Empty;
     }
     
-    void ShowMatchmakingPanel()
+
+    public void ShowReadyPanel()
     {
         CloseAllPanels();
-        ModeSelectButtons.gameObject.SetActive(false);
-        matchmakingPanel.transform.localPosition = Vector3.zero;
-        matchmakingPanel.SetActive(true);
-        matchmakingStatusText.text = "매칭 중...";
+        readyPanel.transform.localPosition = Vector3.zero;
+        readyPanel.gameObject.SetActive(true);
+        readyPanelText.text = string.Empty;
+
+        if (PlayerCounterRunner != null)
+            StopCoroutine(PlayerCounterRunner);
     }
     
     void ShowSettingsPanel()
@@ -1097,16 +1125,17 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         RandomMatchingButtons.gameObject.SetActive(false);
         PrivateMatchingButtons.gameObject.SetActive(false);
 
-        privateRoomButton.gameObject.SetActive(true);
-        quickMatchButton.gameObject.SetActive(true);
-        selectRandomMatchingModeButton.gameObject.SetActive(true);
+        PrevButton_ShowPrivateRoomButtons.gameObject.SetActive(true);
+        RealButton_EnterQuickMatchButton.gameObject.SetActive(true);
+        PrevButton_ShowModeSelectingButton.gameObject.SetActive(true);
         ModeSelectButtons.gameObject.SetActive(true);
 
         privateRoomPanel.SetActive(false);
         settingsPanel.SetActive(false);
         exitConfirmPanel.SetActive(false);
-        matchmakingPanel.SetActive(false);
-        
+
+        FindObjectOfType<RuleBook>()?.OffRuleBook();
+
         if (friendInvitePanel != null) friendInvitePanel.SetActive(false);
         if (friendRemoveConfirmPanel != null) friendRemoveConfirmPanel.SetActive(false);
         if (messagePanel != null) messagePanel.SetActive(false);
@@ -1115,8 +1144,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     bool AnyPanelOpen()
     {
         return privateRoomPanel.activeSelf || settingsPanel.activeSelf || 
-               exitConfirmPanel.activeSelf ||
-               matchmakingPanel.activeSelf ||
+               exitConfirmPanel.activeSelf || readyPanel.activeSelf ||
                (friendInvitePanel != null && friendInvitePanel.activeSelf) ||
                (friendRemoveConfirmPanel != null && friendRemoveConfirmPanel.activeSelf) ||
                (messagePanel != null && messagePanel.activeSelf);

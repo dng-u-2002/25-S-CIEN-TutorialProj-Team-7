@@ -300,7 +300,7 @@ public class InGameSettingPanel : MonoBehaviour
             PlayerPrefs.Save();
             ButtonClickSoundPlayer.Play();
 
-            FindObjectOfType<Chating>(true).gameObject.SetActive(IsActive_TextChat);
+            FindObjectOfType<Chating>(true)?.gameObject.SetActive(IsActive_TextChat);
         });
         //int width = PlayerPrefs.GetInt("Width", 1920);
         //int height = PlayerPrefs.GetInt("Height", 1080);

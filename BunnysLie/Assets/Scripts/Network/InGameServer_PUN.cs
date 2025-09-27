@@ -1379,7 +1379,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         int finalLoser = -1;
         foreach (var pl in room.Players)
         {
-            if (room.OutCounts.TryGetValue(pl.Id, out var count) && count <= 2)
+            if (room.OutCounts.TryGetValue(pl.Id, out var count) && count <= 0) //0이여야 3개까지
             {
                 finalLoser = pl.Id;
                 break;

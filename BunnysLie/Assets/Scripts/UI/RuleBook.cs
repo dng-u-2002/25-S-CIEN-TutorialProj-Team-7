@@ -83,7 +83,7 @@ public class RuleBook : MonoBehaviour
             ActiveRightButton(false);
         }
     }
-    void OffRuleBook()
+    public void OffRuleBook()
     {
         IsShowing = false;
         ActiveLeftButton(false);
