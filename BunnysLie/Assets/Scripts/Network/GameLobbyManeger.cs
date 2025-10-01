@@ -592,6 +592,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         readyPanel.transform.localPosition = Vector3.zero;
         readyPanel.gameObject.SetActive(true);
         UpdateMyActivityStatus(FriendActivity.Matchmaking);
+        selectedGameType = UnityEngine.Random.value > 0.5f ? eGameMode.TwoCards : eGameMode.ThreeCards;
         PhotonNetwork.JoinRandomRoom();
     }
     

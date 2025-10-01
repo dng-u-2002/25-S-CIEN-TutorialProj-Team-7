@@ -26,6 +26,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [SerializeField] bool AutoStartGame = false;
     [SerializeField] Image FullscreenBlackImage;
+    [SerializeField] AudioSource OnFinalGameEnd;
 
     private void Start()
     {
@@ -1464,9 +1465,22 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
 
                     }
+                    if(reason == 125)
+                    {
+                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_AllHaveSameScore, 0);
+                        DelayedFunctionHelper.InvokeDelayed(() =>
+                        {
+                            InGameManager.Instance.StartNextRound(reason);
+
+                            QuestController.ResetValuesPerRound();
+                        }, 2.0f);
+                    }
+                    else
+                    {
                         InGameManager.Instance.StartNextRound(reason);
 
-                    QuestController.ResetValuesPerRound();
+                        QuestController.ResetValuesPerRound();
+                    }
                 }
                 break;
             case ePacketType_InGameServer.Broadcast_FinalResult:
@@ -1484,6 +1498,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     
                     DelayedFunctionHelper.InvokeDelayed(() =>
                         {
+                            OnFinalGameEnd.Play();
                             InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
                             {
                                 Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2S_DisagreedReGame);

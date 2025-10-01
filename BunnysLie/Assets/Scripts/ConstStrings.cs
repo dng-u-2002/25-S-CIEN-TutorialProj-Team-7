@@ -19,6 +19,7 @@ public static class ConstStrings
     public const string Message_TimeOut = "제한 시간 초과 횟수가 4회를 넘었어요.\n게임에서 퇴장합니다.";
     public const string Message_NotEnoughPlayer = "다른 플레이어가 게임을 떠났어요.\n플레이어가 부족하여 게임을 종료할게요.";
     public const string Message_SelectOut = "2명이 먼저 퇴청하였으므로,\n자동으로 참가합니다. 난 꼴찌 탈출!";
+    public const string Message_AllHaveSameScore = "모든 플레이어가 동점이에요.\n다음 라운드로 넘어갑니다.";
     //TextCloud : 말풍선
     public const string TextCloud_Card2Exchange = "어떤 카드를\n교환할까?";
     public const string TextCloud_Card2Delete = "어떤 카드를 버릴까?";

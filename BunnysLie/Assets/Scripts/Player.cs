@@ -99,12 +99,12 @@ public class Player : MonoBehaviour
                 return;
         }
 
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             InGameManager.Instance.LocalPlayerUIDrawer.InOutButton_In.onClick.Invoke();
             KeyboardCallback = null;
         }
-        if (Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.X))
         {
             InGameManager.Instance.LocalPlayerUIDrawer.InOutButton_Out.onClick.Invoke();
             KeyboardCallback = null;

@@ -265,14 +265,14 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         }
         if (SpecialRuleButton_ExchangeWithDeck.interactable && SpecialRuleButton_ExchangeWithDeck.gameObject.activeInHierarchy)
         {
-            if(Input.GetKeyDown(KeyCode.I))
+            if(Input.GetKeyDown(KeyCode.Z))
             {
                 SpecialRuleButton_ExchangeWithDeck.onClick.Invoke();
             }
         }
         if(SpecialRuleButton_ExchangeWithOpponent.interactable && SpecialRuleButton_ExchangeWithOpponent.gameObject.activeInHierarchy)
         {
-            if(Input.GetKeyDown(KeyCode.O))
+            if(Input.GetKeyDown(KeyCode.X))
             {
                 SpecialRuleButton_ExchangeWithOpponent.onClick.Invoke();
             }
@@ -436,6 +436,9 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         }
     }
 
+    [Header("Mic Button")]
+    public Sprite MicOn;
+    public Sprite MicOff;
 
     protected override void Start()
     {
@@ -455,20 +458,24 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             if (IsMicActive)
             {
                 FindObjectOfType<Recorder>().TransmitEnabled = true;
+                MicButton.image.sprite = MicOn;
             }
             else
             {
                 FindObjectOfType<Recorder>().TransmitEnabled = false;
+                MicButton.image.sprite = MicOff;
             }
         });
         IsMicActive = PlayerPrefs.GetInt("IsActive_VoiceChat", 1) == 1;
         if (IsMicActive)
         {
             FindObjectOfType<Recorder>().TransmitEnabled = true;
+            MicButton.image.sprite = MicOn;
         }
         else
         {
             FindObjectOfType<Recorder>().TransmitEnabled = false;
+            MicButton.image.sprite = MicOff;
         }
         StopClock();
         KeyboardCallback_SelectCard = Callback_SelectCard;

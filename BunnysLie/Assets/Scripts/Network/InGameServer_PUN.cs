@@ -1498,7 +1498,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 DelayedFunctionHelper.InvokeDelayed(() =>
                 {
-                    StartNextRound(room, 4); //4�� 3�� �� �� & ������ ���
+                    StartNextRound(room, 125); //4�� 3�� �� �� & ������ ���
                 }, time2StartNextRound);
                 return false;
             }
