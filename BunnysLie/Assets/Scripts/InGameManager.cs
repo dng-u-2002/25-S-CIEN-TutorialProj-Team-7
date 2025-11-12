@@ -18,6 +18,7 @@ public class InGameManager : MonoBehaviour
 
 
     public eGameMode Mode = eGameMode.TwoCards;
+    public bool IsRandomMode = false;
     public RectTransform DeckTransform;
 
 

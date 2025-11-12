@@ -48,20 +48,23 @@ public class HTTPLoginManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        //if (SteamAPI.Init() == false)
+        //    return;
     }
     
     private void Start()
     {
-        if (SteamAPI.Init() == false)
-            return;
 
-        if (SteamManager.Initialized == false)
-            return;
+        //if (SteamManager.Initialized == false)
+        //    return;
 
         var localNickname = Steamworks.SteamFriends.GetPersonaName();
         PlayerPrefs.SetString("LoginId", localNickname);
         PlayerPrefs.SetString("Nickname", localNickname);
         SteamNicknameText.text = localNickname;
+
+        AchievementManager.Unlock(AchievementId.ConnectWithSteam);
     }
 
     [SerializeField] TMP_Text SteamNicknameText;

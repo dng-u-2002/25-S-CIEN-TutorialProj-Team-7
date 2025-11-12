@@ -6,16 +6,19 @@ using Steamworks;
 
 public enum AchievementId
 {
-    WinNoLoss,     // 한 라운드도 안 지고 최종 승리
-    WinPairTen,    // 10별 페어로 라운드 승리
-    WinZeroMoon,   // 0달 족보로 라운드 승리
-    Play2Mode5Games, //2장 모드 5번 플레이
-    Play3Mode5Games, //3장 모드 5번 플레이
-    WinSpecialRule5Times, //스페셜 룰 5번 플레이
-    WinRoundBiggerCardsThanOutPlayer, //퇴청한 상대보다 높은 패로 참가해 라운드 승리하기
-    WatchCredit, //크레딧 보기
-    Draw5RPS, //가위바위보 5번 연속 무승부
-    WinSpecialRuleAfterExhangeCardWithOpponent //1 vs 1 룰에서 상대와 교환 후 승리하기
+    ConnectWithSteam, //Steam에 연동 / 토끼의 친구가 된 걸 환영해!
+    WinNoLoss,     // 한 라운드도 안 지고 최종 승리 / 완벽한 승리
+    WinPairTen,    // 10별 페어로 라운드 승리 / 가장 높은 산
+    WinZeroMoon,   // 0달 족보로 라운드 승리 / 가장 깊은 바다
+    Play2Mode5Games, //2장 모드 5번 플레이 / 깔끔한 승부
+    Play3Mode5Games, //3장 모드 5번 플레이 / 고수의 세계
+    PlayRandomMode5Games, //랜덤 모드 5번 플레이 / 장인은 도구를 가리지 않지
+    WinSpecialRule5Times, //스페셜 룰 5번 플레이 / 지상 최강의 토끼
+    WinRoundBiggerCardsThanOutPlayer, //퇴청한 상대보다 높은 패로 참가해 라운드 승리하기 / 토끼의 블러핑
+    WatchCredit, //크레딧 보기 / 가족사진
+    Draw5RPS, //가위바위보 5번 연속 무승부 / 천생연분
+    PlayWithFriend, // 친구와 플레이 1회 진행 / 블러핑으로 다져진 우정
+    WinSpecialRuleAfterExhangeCardWithOpponent //1 vs 1 룰에서 상대와 교환 후 승리하기 / 네 카드가 탐나는데?
 }
 
 public class AchievementManager : MonoBehaviour
@@ -32,15 +35,18 @@ public class AchievementManager : MonoBehaviour
     // Steamworks 파트너 페이지의 API Name과 반드시 1:1 매칭
     private static readonly Dictionary<AchievementId, string> Ach = new()
     {
+        { AchievementId.ConnectWithSteam,        "ACH_CONNECT_TO_STEAM" },
         { AchievementId.WinNoLoss,        "ACH_WIN_NO_LOSS" },
         { AchievementId.WinPairTen,       "ACH_WIN_PAIR_10STAR" },
         { AchievementId.WinZeroMoon,      "ACH_WIN_ZERO_MOON" },
         { AchievementId.Play2Mode5Games,      "ACH_PLAY_2MODE_3GAMES" },
         { AchievementId.Play3Mode5Games,      "ACH_PLAY_3MODE_3GAMES" },
+        { AchievementId.PlayRandomMode5Games,      "ACH_PLAY_RANDOM_3GAMES" },
         { AchievementId.WinSpecialRule5Times,      "ACH_WIN_SPC_5" },
         { AchievementId.WinRoundBiggerCardsThanOutPlayer,      "ACH_WIN_BIGGERCARDS_THANOUTPLAYER" },
         { AchievementId.WatchCredit,      "WATCH_CREDIT" },
         { AchievementId.Draw5RPS,      "DRAW_RPS_5TIMES" },
+        { AchievementId.PlayWithFriend,      "PLAY_WITH_FRIEND" },
         { AchievementId.WinSpecialRuleAfterExhangeCardWithOpponent,      "WIN_SPECAILGAME_EXHANGE_OPPONENT" }
     };
 
@@ -48,7 +54,9 @@ public class AchievementManager : MonoBehaviour
     {
         if (Instance != null) { Destroy(gameObject); return; }
         Instance = this; DontDestroyOnLoad(gameObject);
-
+    }
+    private void Start()
+    {
         if (!SteamManager.Initialized) { Debug.LogWarning("Steam not initialized"); return; }
 
         _cbStatsReceived = Callback<UserStatsReceived_t>.Create(OnStatsReceived);
@@ -62,6 +70,10 @@ public class AchievementManager : MonoBehaviour
 
     private void OnStatsReceived(UserStatsReceived_t p)
     {
+        //Debug.Log((ulong)p.m_nGameID);
+        //Debug.Log(SteamUtils.GetAppID().m_AppId);
+        //Debug.Log((ulong)p.m_nGameID == SteamUtils.GetAppID().m_AppId);
+        //Debug.Log(p.m_eResult);
         if ((ulong)p.m_nGameID == SteamUtils.GetAppID().m_AppId && p.m_eResult == EResult.k_EResultOK)
         {
             _statsReady = true;
@@ -70,8 +82,16 @@ public class AchievementManager : MonoBehaviour
         }
     }
 
-    private void OnStatsStored(UserStatsStored_t p) { /* 필요시 로그 */ }
-    private void OnAchievementStored(UserAchievementStored_t p) { /* 필요시 로그 */ }
+    private void OnStatsStored(UserStatsStored_t p) {
+        //로그
+        Debug.Log($"Stats stored: {p.m_eResult}");
+        /* 필요시 로그 */
+    }
+    private void OnAchievementStored(UserAchievementStored_t p) { 
+        //로그 출력
+        Debug.Log($"Achievement stored: {p.m_rgchAchievementName} : {p.m_nMaxProgress}, {p.m_nCurProgress}");
+        /* 필요시 로그 */
+    }
 
     public static void Unlock(AchievementId id)
     {
@@ -80,16 +100,31 @@ public class AchievementManager : MonoBehaviour
         Instance.TryUnlock(id);
     }
 
+    public static bool IsUnLocked(AchievementId id)
+    {
+        if (Instance == null || !Instance._statsReady) return false;
+        if (!Ach.TryGetValue(id, out var api)) return false;
+        bool already;
+        SteamUserStats.GetAchievement(api, out already);
+        return already;
+    }
+
     private void TryUnlock(AchievementId id)
     {
         if (!Ach.TryGetValue(id, out var api)) return;
 
         bool already;
         SteamUserStats.GetAchievement(api, out already);
-        if (already) return;
-
-        if (SteamUserStats.SetAchievement(api))
+        if (already)
         {
+            Debug.Log($"Achievement already unlocked: {api}");
+            return;
+        }
+        var b = SteamUserStats.SetAchievement(api);
+        Debug.Log(b);
+        if (b)
+        {
+            Debug.Log($"Achievement unlocked: {api}");
             SteamUserStats.StoreStats(); // 서버 반영 트리거 (중요) :contentReference[oaicite:5]{index=5}
         }
     }
@@ -142,6 +177,14 @@ public class AchievementManager : MonoBehaviour
         }
     }
 
+    [EditorCools.Button]
+    public void ClaerAll()
+    {
+        foreach(var kvp in Ach)
+        {
+            SteamUserStats.ClearAchievement(kvp.Value);
+        }
+    }
     // 테스트용 리셋(개발 중에만 사용)
     public static void Clear(AchievementId id)
     {

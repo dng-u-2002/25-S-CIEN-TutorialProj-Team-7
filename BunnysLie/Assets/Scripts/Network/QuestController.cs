@@ -26,6 +26,7 @@ public class QuestController : MonoBehaviour
         var cards = InGameManager.Instance.GetAllCards();
         var localId = InGameManager.Instance.LocalPlayer.ID;
         var mode = InGameManager.Instance.Mode;
+        var rnd = InGameManager.Instance.IsRandomMode;
         var round = InGameUser_PUN.Instance.RoundCounter;
 
         //한 라운드도 지지 않고 승리하기
@@ -41,6 +42,10 @@ public class QuestController : MonoBehaviour
         if(mode == eGameMode.ThreeCards)
         {
             AchievementManager.AddToStat(AchievementId.Play3Mode5Games, 1, (AchievementId.Play3Mode5Games, 5));
+        }
+        if(rnd)
+        {
+            AchievementManager.AddToStat(AchievementId.PlayRandomMode5Games, 1, (AchievementId.PlayRandomMode5Games, 5));
         }
     }
     public static void OnWinRoundGame()

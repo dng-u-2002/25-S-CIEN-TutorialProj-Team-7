@@ -71,6 +71,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         else
         {
             InGameManager.Instance.Mode = PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameMode", out var mode) ? (eGameMode)(int)mode : eGameMode.TwoCards;
+            InGameManager.Instance.IsRandomMode = PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("RandomMode", out var rnd) ? (bool)rnd : false;
         }
 
         Writer = new NetworkDataWriter_PUN();

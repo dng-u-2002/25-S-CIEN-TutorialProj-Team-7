@@ -144,8 +144,10 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
             }
             PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameMode", out var mode);
+            PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("RandomMode", out var randommode);
             Debug.Log("Mode : " + mode);
             InGameManager.Instance.Mode = mode != null ? (eGameMode)(int)mode : eGameMode.ThreeCards;
+            InGameManager.Instance.IsRandomMode = randommode != null ? ((bool)randommode) : false;
             room.Mode = InGameManager.Instance.Mode;
             //Rooms.Add(room.GetHashCode(), room);
             ThisRoomData = room;

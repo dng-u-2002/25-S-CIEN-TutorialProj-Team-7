@@ -123,7 +123,6 @@ public class SettingPanel : MonoBehaviour
         NowSelectedButton = CreditButton.transform;
         MakeButtonUIAsSelected(CreditButton);
         CreditView.gameObject.SetActive(true);
-
         AchievementManager.Unlock(AchievementId.WatchCredit);
     }
     public void OnButtonClicked_Account()
@@ -154,7 +153,6 @@ public class SettingPanel : MonoBehaviour
     {
         gameObject.SetActive(true);
         //IsViewing = true;
-        Debug.Log("Settings");
         SoundSettingButton.onClick.Invoke();
         //EditorApplication.isPaused = true;
     }

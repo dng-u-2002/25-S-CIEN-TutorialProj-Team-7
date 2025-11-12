@@ -92,7 +92,9 @@
     <Compile Include="Assets\Scripts\ConstStrings.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Scripts\BaseController.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Scripts\VoiceDemoUI.cs" />
+    <Compile Include="Assets\Scripts\Steamworks.NET\FriendListManager.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Scripts\MouseLookHelper.cs" />
+    <Compile Include="Assets\Scripts\Steamworks.NET\SteamBootstrap.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoiceUI\Scripts\CodecSettingsUI.cs" />
     <Compile Include="Assets\Scripts\User2UserConnection\ChatSender.cs" />
     <Compile Include="Assets\Scripts\Voice\VoiceReceiver.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Assets\Scripts\Cards\CardImages.cs" />
     <Compile Include="Assets\Scripts\LobbyUI\SoundSettingPanel.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Standard Assets\CrossPlatformInput\Scripts\CrossPlatformInputManager.cs" />
+    <Compile Include="Assets\Scripts\Steamworks.NET\NewBehaviourScript.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Standard Assets\CrossPlatformInput\Scripts\TouchPad.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Scripts\ChangePOV.cs" />
     <Compile Include="Assets\EditorCools\InspectorButton\ButtonAttribute.cs" />
@@ -116,6 +119,7 @@
     <Compile Include="Assets\Photon\PhotonRealtime\Demos\DemoLoadBalancing\ConnectAndJoinRandomLb.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoDataStream\DataStreamClient.cs" />
     <Compile Include="Assets\Scripts\UI\PlayerUIDrawer.cs" />
+    <Compile Include="Assets\Scripts\Steamworks.NET\PresenceManager.cs" />
     <Compile Include="Assets\Scripts\Cards\CardObject.cs" />
     <Compile Include="Assets\Scripts\Voice\VoiceSender.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Standard Assets\CrossPlatformInput\Scripts\InputAxisScrollbar.cs" />
@@ -128,6 +132,7 @@
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Standard Assets\CrossPlatformInput\Scripts\MobileControlRig.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Scripts\Highlighter.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\ChatAppIdCheckerUI.cs" />
+    <Compile Include="Assets\Scripts\Steamworks.NET\LobbyManager.cs" />
     <Compile Include="Assets\Scripts\Cards\CardDeck.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Scripts\ThirdPersonController.cs" />
     <Compile Include="Assets\Scripts\CursorOnButton.cs" />
@@ -157,6 +162,7 @@
     <Compile Include="Assets\Scripts\UI\ConstStrings.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\Common\TextButtonTransition.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Scripts\BetterToggle.cs" />
+    <Compile Include="Assets\Scripts\Steamworks.NET\EmoticonLocker.cs" />
     <Compile Include="Assets\Scripts\CursorOnButtonBulkAdder.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -567,6 +573,14 @@
     </Reference>
     <Reference Include="Photon3Unity3D">
       <HintPath>Assets\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>C:\Program Files\Unity 2022.3.57f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>C:\Program Files\Unity 2022.3.57f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Common.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">

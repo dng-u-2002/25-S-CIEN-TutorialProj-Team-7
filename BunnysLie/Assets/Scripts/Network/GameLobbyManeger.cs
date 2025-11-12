@@ -9,6 +9,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using System.Collections;
+using Steamworks;
+using System.Text;
 
 public class GameLobbyManager : MonoBehaviourPunCallbacks
 {
@@ -292,10 +294,10 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     
     public eGameMode selectedGameType = eGameMode.TwoCards;
     private bool isMatchmaking = false;
-    private List<FriendData> friendList = new List<FriendData>();
+    //private List<FriendData> friendList = new List<FriendData>();
     private FriendData pendingInviteFriend;
     private FriendData pendingRemoveFriend;
-    private Dictionary<string, FriendItem> friendItemDict = new Dictionary<string, FriendItem>();
+    //private Dictionary<string, FriendItem> friendItemDict = new Dictionary<string, FriendItem>();
     
     private float friendActivityUpdateInterval = 10f;
     private float lastFriendActivityUpdate = 0f;
@@ -342,12 +344,24 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         ConnectToPhoton();
 
 
-        SetupLocalFriendMock();//Test
+        //SetupLocalFriendMock();//Test
 
-        LoadFriendList();
-        StartFriendActivitySimulation();
+        //LoadFriendList();
+        //StartFriendActivitySimulation();
+
+        var friends = FriendListManager.Instance.GetFriends(true, false);
+        Debug.Log($"[Friends] Count = {friends.Count}");
+        foreach (var f in friends)
+        {
+            var sb = new StringBuilder();
+            sb.Append($"{f.name} ({f.id}) state={f.state}");
+            if (f.isPlayingThisGame) sb.Append(" | in THIS game");
+            if (!string.IsNullOrEmpty(f.richStatus)) sb.Append($" | status='{f.richStatus}'");
+            Debug.Log(sb.ToString());
+        }
     }
-    
+
+
     void InitializeUI()
     {
         CloseAllPanels();
@@ -426,15 +440,13 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         
         googleLoginButton.onClick.AddListener(() => LoginWithGoogle());
         steamLoginButton.onClick.AddListener(() => LoginWithSteam());
-        
-        addFriendButton.onClick.AddListener(() => AddFriend());
-        refreshFriendListButton.onClick.AddListener(() => RefreshFriendList());
+       
         
         sendInviteButton.onClick.AddListener(() => SendFriendInvite());
         cancelInviteButton.onClick.AddListener(() => CancelFriendInvite());
         
-        confirmRemoveButton.onClick.AddListener(() => ConfirmRemoveFriend());
-        cancelRemoveButton.onClick.AddListener(() => CancelRemoveFriend());
+        //confirmRemoveButton.onClick.AddListener(() => ConfirmRemoveFriend());
+        //cancelRemoveButton.onClick.AddListener(() => CancelRemoveFriend());
         
         messageOkButton.onClick.AddListener(() => CloseMessage());
         //inviteFriendButton.onClick.AddListener(() => InviteFriend());
@@ -459,8 +471,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
                 HandleBackButton();
             }
         }
-        UpdateFriendActivitySimulation();
-
+        UpdateFriendList();
 
         if(PhotonNetwork.InRoom)
         {
@@ -524,7 +535,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         
         if (InGameManager.Instance != null)
         {
-            InGameManager.Instance.Mode = (eGameMode)selectedGameType;
+            //InGameManager.Instance.Mode = (eGameMode)selectedGameType;
         }
     }
     
@@ -568,7 +579,8 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         
         ExitGames.Client.Photon.Hashtable roomProps = new ExitGames.Client.Photon.Hashtable();
         roomProps["GameMode"] = (int)selectedGameType;
-        
+        roomProps["RandomMode"] = true;
+
         RoomOptions roomOptions = new RoomOptions()
         {
             MaxPlayers = 3,
@@ -601,6 +613,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         base.OnJoinRandomFailed(returnCode, message);
         ExitGames.Client.Photon.Hashtable roomProps = new ExitGames.Client.Photon.Hashtable();
         roomProps["GameMode"] = (int)selectedGameType;
+        roomProps["RandomMode"] = false;
         
         RoomOptions roomOptions = new RoomOptions()
         {
@@ -767,64 +780,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         UpdateMyActivityStatus(FriendActivity.InLobby);
         CloseAllPanels();
     }
-    
-    void LoadFriendList()
-    {
-        if (ServerFetchFriends != null)
-        {
-            ServerFetchFriends(
-                list =>
-                {
-                    friendList = list ?? new List<FriendData>();
-                    UpdateFriendList();
-                },
-                err =>
-                {
-                    friendList = new List<FriendData>();
-                    UpdateFriendList();
-                    ShowMessage("친구 목록 불러오기 실패");
-                }
-            );
-        }
-        else
-        {
-            friendList = new List<FriendData>();
-            UpdateFriendList();
-        }
-    }
-    
-    void AddFriend()
-    {
-        string friendCode = friendCodeInput != null ? friendCodeInput.text.Trim() : "";
-        if (string.IsNullOrEmpty(friendCode))
-        {
-            ShowMessage("친구 코드를 입력해주세요.");
-            return;
-        }
-        if (ServerAddFriend == null)
-        {
-            ShowMessage("친구 추가 연동이 설정되지 않았습니다");
-            return;
-        }
-        ServerAddFriend(
-            friendCode,
-            added =>
-            {
-                if (added == null) { ShowMessage("친구 추가 실패"); return; }
-                if (!friendList.Any(f => f.friendCode.Equals(added.friendCode, StringComparison.OrdinalIgnoreCase)))
-                    friendList.Add(added);
-                if (friendCodeInput != null) friendCodeInput.text = "";
-                UpdateFriendList();
-                ShowMessage($"{added.nickname}님이 친구로 추가되었습니다.");
-            },
-            err => { ShowMessage("친구 추가 실패"); }
-        );
-    }
-    
-    void RefreshFriendList()
-    {
-        LoadFriendList();
-    }
+
     
     void UpdateFriendList()
     {
@@ -832,13 +788,22 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         {
             Destroy(child.gameObject);
         }
-        friendItemDict.Clear();
-        
-        var sortedFriends = friendList.OrderByDescending(f => f.isOnline)
-                                     .ThenBy(f => f.nickname)
+        var friends = FriendListManager.Instance.GetFriends(true, false);
+        Debug.Log($"[Friends] Count = {friends.Count}");
+        foreach (var f in friends)
+        {
+            var sb = new StringBuilder();
+            sb.Append($"{f.name} ({f.id}) state={f.state}");
+            if (f.isPlayingThisGame) sb.Append(" | in THIS game");
+            if (!string.IsNullOrEmpty(f.richStatus)) sb.Append($" | status='{f.richStatus}'");
+            Debug.Log(sb.ToString());
+        }
+
+        var sortedFriends = friends.OrderByDescending(f => f.isPlayingThisGame)
+                                     .ThenBy(f => f.name)
                                      .ToList();
         
-        foreach (FriendData friend in sortedFriends)
+        foreach (var friend in sortedFriends)
         {
             if (friendItemPrefab != null)
             {
@@ -847,7 +812,6 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
                 if (friendItemScript != null)
                 {
                     friendItemScript.SetupFriend(friend);
-                    friendItemDict[friend.friendCode] = friendItemScript;
                 }
             }
         }
@@ -942,36 +906,6 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         friendRemoveConfirmPanel.SetActive(true);
     }
     
-    void ConfirmRemoveFriend()
-    {
-        if (pendingRemoveFriend != null)
-        {
-            if (ServerRemoveFriend == null)
-            {
-                ShowMessage("친구 삭제 연동이 설정되지 않았습니다");
-            }
-            else
-            {
-                var target = pendingRemoveFriend;
-                ServerRemoveFriend(
-                    target.friendCode,
-                    () =>
-                    {
-                        friendList.Remove(target);
-                        UpdateFriendList();
-                        ShowMessage($"{target.nickname}님이 친구 목록에서 삭제되었습니다.");
-                    },
-                    err =>
-                    {
-                        ShowMessage("삭제 실패");
-                    }
-                );
-            }
-        }
-        
-        friendRemoveConfirmPanel.SetActive(false);
-        pendingRemoveFriend = null;
-    }
     
     void CancelRemoveFriend()
     {
@@ -984,44 +918,6 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     void StartFriendActivitySimulation()
     {
         lastFriendActivityUpdate = Time.time;
-    }
-    
-    void UpdateFriendActivitySimulation()
-    {
-        if (ServerFetchActivities == null) return;
-        if (Time.time - lastFriendActivityUpdate > friendActivityUpdateInterval)
-        {
-            ServerFetchActivities(
-                updates =>
-                {
-                    if (updates != null)
-                    {
-                        foreach (var u in updates)
-                        {
-                            var f = friendList.FirstOrDefault(x => x.friendCode == u.friendCode);
-                            if (f != null)
-                            {
-                                f.isOnline = u.isOnline;
-                                f.currentActivity = u.currentActivity;
-                                f.currentRoomName = u.currentRoomName;
-                                if (!u.isOnline) f.lastSeen = DateTime.Now;
-                                UpdateFriendItemDisplay(f);
-                            }
-                        }
-                    }
-                },
-                err => {}
-            );
-            lastFriendActivityUpdate = Time.time;
-        }
-    }
-    
-    void UpdateFriendItemDisplay(FriendData friend)
-    {
-        if (friendItemDict.ContainsKey(friend.friendCode))
-        {
-            friendItemDict[friend.friendCode].UpdateFriendData(friend);
-        }
     }
     
     void UpdateMyActivityStatus(FriendActivity activity, string roomName = "")
