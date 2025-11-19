@@ -359,7 +359,21 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
             if (!string.IsNullOrEmpty(f.richStatus)) sb.Append($" | status='{f.richStatus}'");
             Debug.Log(sb.ToString());
         }
+        refreshFriendListButton.onClick.AddListener(() => UpdateFriendList());
+        UpdateFriendList();
+        StartCoroutine(_LoopUpdateFriendList(1.5f));
     }
+
+    IEnumerator _LoopUpdateFriendList(float dt)
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(dt);
+            UpdateFriendList();
+        }
+    }
+
+
 
 
     void InitializeUI()
@@ -471,7 +485,6 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
                 HandleBackButton();
             }
         }
-        UpdateFriendList();
 
         if(PhotonNetwork.InRoom)
         {
