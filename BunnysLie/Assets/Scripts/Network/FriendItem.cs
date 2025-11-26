@@ -117,7 +117,7 @@ public class FriendItem : MonoBehaviour
             inviteButton2.onClick.RemoveAllListeners();
             inviteButton2.onClick.AddListener(() =>
             {
-                GameLobbyManager.Instance.selectedGameType = eGameMode.TwoCards;
+                //GameLobbyManager.Instance.selectedGameType = eGameMode.TwoCards;
                 OnInviteButtonClicked();
                 });
         }
@@ -126,7 +126,7 @@ public class FriendItem : MonoBehaviour
             inviteButton3.onClick.RemoveAllListeners();
             inviteButton3.onClick.AddListener(() =>
             {
-                GameLobbyManager.Instance.selectedGameType = eGameMode.ThreeCards;
+                //GameLobbyManager.Instance.selectedGameType = eGameMode.ThreeCards;
                 OnInviteButtonClicked();
             });
         }

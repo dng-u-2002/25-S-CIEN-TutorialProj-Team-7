@@ -375,6 +375,10 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     }
 
 
+    public void SetFriendPanelActive(bool active)
+    {
+        friendListContent.parent.gameObject.SetActive(active);
+    }
 
 
     void InitializeUI()
@@ -389,6 +393,8 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         
         UpdateGameTypeSelection();
         UpdateAccountInfo();
+
+        SetFriendPanelActive(false);
     }
     void ShowPrivateMathcingButtons()
     {
@@ -684,6 +690,26 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
                 StopCoroutine(PlayerCounterRunner);
             ShowReadyPanel();
             PlayerCounterRunner = StartCoroutine(_ShowPlayerCounter());
+
+
+            bool isPrivate = false;
+            var data = PhotonNetwork.CurrentRoom.PropertiesListedInLobby;
+            foreach(var d in data)
+            {
+                if(d == "IsPrivate")
+                {
+                    isPrivate = true;
+                    break;
+                }
+            }
+            if(isPrivate)
+            {
+                SetFriendPanelActive(true);
+            }
+            else
+            {
+                SetFriendPanelActive(false);
+            }
         }
     }
 
@@ -1049,6 +1075,8 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         exitConfirmPanel.SetActive(false);
 
         FindObjectOfType<RuleBook>()?.OffRuleBook();
+
+        SetFriendPanelActive(false);
 
         if (friendInvitePanel != null) friendInvitePanel.SetActive(false);
         if (friendRemoveConfirmPanel != null) friendRemoveConfirmPanel.SetActive(false);
