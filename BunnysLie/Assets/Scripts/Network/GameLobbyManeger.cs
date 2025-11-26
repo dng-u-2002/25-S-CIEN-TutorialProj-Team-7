@@ -163,7 +163,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
                     f.isOnline = !f.isOnline;
                     if (!f.isOnline)
                     {
-                        f.currentActivity = FriendActivity.Idle;
+                        f.currentActivity = FriendActivity.InLobby;
                         f.currentRoomName = "";
                         f.lastSeen = DateTime.Now;
                     }
@@ -1164,6 +1164,6 @@ public class FriendData
     public string friendCode;
     public bool isOnline;
     public DateTime lastSeen;
-    public FriendActivity currentActivity = FriendActivity.Idle;
+    public FriendActivity currentActivity = FriendActivity.InLobby;
     public string currentRoomName = "";
 }
