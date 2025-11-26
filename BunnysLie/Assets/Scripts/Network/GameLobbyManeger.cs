@@ -731,11 +731,11 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         }
     }
     
-    void CreatePrivateRoom()
+    public string CreatePrivateRoom()
     {
         if (!PhotonNetwork.IsConnectedAndReady)
         {
-            return;
+            return string.Empty;
         }
 
         string roomCode = GenerateRoomCode();
@@ -754,6 +754,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         
         PhotonNetwork.CreateRoom(roomCode, roomOptions);
         ShowReadyPanel();
+        return roomCode;
     }
     
     void JoinPrivateRoom()

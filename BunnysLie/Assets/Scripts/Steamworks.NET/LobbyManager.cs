@@ -1,6 +1,7 @@
 using UnityEngine;
 using Steamworks;
 using System.Collections.Generic;
+using Photon.Pun;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -104,10 +105,12 @@ public class LobbyManager : MonoBehaviour
             return;
         }
 
+        var id = FindFirstObjectByType<GameLobbyManager>().CreatePrivateRoom();
         CurrentLobby = new CSteamID(e.m_ulSteamIDLobby);
         Debug.Log($"[Lobby] Created: {CurrentLobby}");
 
         SteamMatchmaking.SetLobbyData(CurrentLobby, "mode", "cards");
+        SteamMatchmaking.SetLobbyData(CurrentLobby, "id", id);
         SteamMatchmaking.SetLobbyData(CurrentLobby, "build", Application.version);
         SteamMatchmaking.SetLobbyJoinable(CurrentLobby, true);
 
@@ -126,6 +129,12 @@ public class LobbyManager : MonoBehaviour
     {
         CurrentLobby = new CSteamID(e.m_ulSteamIDLobby);
         Debug.Log($"[Lobby] Entered: {CurrentLobby}");
+
+        var id = SteamMatchmaking.GetLobbyData(CurrentLobby, "id");
+
+        // FindFirstObjectByType<GameLobbyManager>().jo
+
+        PhotonNetwork.JoinRoom(id);
 
         PresenceManager.Instance?.SetStatus(FriendActivity.InLobby);
         PresenceManager.Instance?.SetConnect($"lobby:{CurrentLobby.m_SteamID}");

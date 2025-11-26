@@ -6,7 +6,7 @@ public class PresenceManager : MonoBehaviour
     public static PresenceManager Instance { get; private set; }
 
     protected Callback<GameRichPresenceJoinRequested_t> _rpJoinRequested;
-
+    private Callback<FriendRichPresenceUpdate_t> _cbRichPresenceUpdate;
     public delegate void JoinPresenceRequested(string connect);
     public event JoinPresenceRequested OnJoinPresenceRequested;
 
@@ -17,8 +17,22 @@ public class PresenceManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         _rpJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnRichPresenceJoinRequested);
+        _cbRichPresenceUpdate = Callback<FriendRichPresenceUpdate_t>.Create(OnFriendRichPresenceUpdate);
     }
+    void OnFriendRichPresenceUpdate(FriendRichPresenceUpdate_t param)
+    {
+        //var fid = (CSteamID)param.m_steamIDFriend;
+        //int keyCount = SteamFriends.GetFriendRichPresenceKeyCount(fid);
 
+        //Debug.Log($"[RP] Update from {SteamFriends.GetFriendPersonaName(fid)}, keys: {keyCount}");
+
+        //for (int i = 0; i < keyCount; i++)
+        //{
+        //    string key = SteamFriends.GetFriendRichPresenceKeyByIndex(fid, i);
+        //    string val = SteamFriends.GetFriendRichPresence(fid, key);
+        //    Debug.Log($"[RP] {fid}  {key} = '{val}'");
+        //}
+    }
     public void SetStatus(FriendActivity status)
     {
         /*
