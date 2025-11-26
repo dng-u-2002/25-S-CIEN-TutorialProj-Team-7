@@ -361,6 +361,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         }
         refreshFriendListButton.onClick.AddListener(() => UpdateFriendList());
         UpdateFriendList();
+        gameObject.SetActive(true);
         StartCoroutine(_LoopUpdateFriendList(1.5f));
     }
 
@@ -936,6 +937,8 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     void UpdateMyActivityStatus(FriendActivity activity, string roomName = "")
     {
         Debug.Log($"내 활동 상태 업데이트: {activity}");
+        //FriendListManager.Instance.UpdateMyActivity(activity, roomName);
+        PresenceManager.Instance.SetStatus(activity);
     }
     
     void ShowMessage(string message)
@@ -1149,7 +1152,6 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
 public enum FriendActivity
 {
-    Idle,
     InLobby,
     Matchmaking,
     InGame

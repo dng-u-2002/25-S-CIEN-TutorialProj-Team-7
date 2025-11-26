@@ -19,7 +19,26 @@ public class PresenceManager : MonoBehaviour
         _rpJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnRichPresenceJoinRequested);
     }
 
-    public void SetStatus(string status) => SteamFriends.SetRichPresence("status", status);
+    public void SetStatus(FriendActivity status)
+    {
+        /*
+         * 		"#Status_InLobby"	 "로비"
+		"#Status_Matchmaking"	"매칭중"
+		"#Status_InGame"	"게임중"
+         */
+        switch (status)
+        {
+            case FriendActivity.InLobby:
+                SteamFriends.SetRichPresence("steam_display", "#Status_InLobby");
+                break;
+            case FriendActivity.Matchmaking:
+                SteamFriends.SetRichPresence("steam_display", "#Status_Matchmaking");
+                break;
+            case FriendActivity.InGame:
+                SteamFriends.SetRichPresence("steam_display", "#Status_InGame");
+                break;
+        }
+    }
     public void SetConnect(string connect) => SteamFriends.SetRichPresence("connect", connect);
     public void SetPlayerGroup(string groupId) => SteamFriends.SetRichPresence("steam_player_group", groupId);
     public void ClearAll() => SteamFriends.ClearRichPresence();

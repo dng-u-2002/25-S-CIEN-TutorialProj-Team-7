@@ -111,7 +111,7 @@ public class LobbyManager : MonoBehaviour
         SteamMatchmaking.SetLobbyData(CurrentLobby, "build", Application.version);
         SteamMatchmaking.SetLobbyJoinable(CurrentLobby, true);
 
-        PresenceManager.Instance?.SetStatus("In Lobby");
+        PresenceManager.Instance?.SetStatus(FriendActivity.InLobby.ToString());
         PresenceManager.Instance?.SetConnect($"lobby:{CurrentLobby.m_SteamID}");
         PresenceManager.Instance?.SetPlayerGroup(CurrentLobby.ToString());
 
@@ -127,7 +127,7 @@ public class LobbyManager : MonoBehaviour
         CurrentLobby = new CSteamID(e.m_ulSteamIDLobby);
         Debug.Log($"[Lobby] Entered: {CurrentLobby}");
 
-        PresenceManager.Instance?.SetStatus("In Lobby");
+        PresenceManager.Instance?.SetStatus(FriendActivity.InLobby.ToString());
         PresenceManager.Instance?.SetConnect($"lobby:{CurrentLobby.m_SteamID}");
         PresenceManager.Instance?.SetPlayerGroup(CurrentLobby.ToString());
 

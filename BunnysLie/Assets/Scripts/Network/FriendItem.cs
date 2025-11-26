@@ -45,6 +45,7 @@ public class FriendItem : MonoBehaviour
 
         //if (friendData.isOnline)
         //{
+        Debug.Log(friendData.richStatus);
         switch (friendData.richStatus)
         {
             case "In Lobby":

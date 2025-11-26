@@ -124,6 +124,11 @@ public class SettingPanel : MonoBehaviour
         MakeButtonUIAsSelected(CreditButton);
         CreditView.gameObject.SetActive(true);
         AchievementManager.Unlock(AchievementId.WatchCredit);
+
+        FindFirstObjectByType<CreditPlayer>().Play(() =>
+        {
+            OnButtonClicked_SoundSetting();
+        });
     }
     public void OnButtonClicked_Account()
     {
