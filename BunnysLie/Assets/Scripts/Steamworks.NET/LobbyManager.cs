@@ -138,9 +138,9 @@ public class LobbyManager : MonoBehaviour
 
         // FindFirstObjectByType<GameLobbyManager>().jo
         Debug.Log(id);
-        if (PhotonNetwork.InRoom)
-            PhotonNetwork.LeaveRoom();
-        PhotonNetwork.JoinRoom(id);
+        if (PhotonNetwork.InRoom == false)
+            //PhotonNetwork.LeaveRoom();
+            PhotonNetwork.JoinRoom(id);
 
         PresenceManager.Instance?.SetStatus(FriendActivity.InLobby);
         PresenceManager.Instance?.SetConnect($"lobby:{CurrentLobby.m_SteamID}");
