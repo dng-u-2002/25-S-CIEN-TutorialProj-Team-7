@@ -14,7 +14,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: CIENTPSVN
   productName: BunnysLie
-  defaultCursor: {fileID: 2800000, guid: c42b41f04c939594989b95f05d668441, type: 3}
+  defaultCursor: {fileID: 2800000, guid: 6d7c3482531e3bc48b9e05b3a9962f29, type: 3}
   cursorHotspot: {x: 50, y: 60}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
   m_ShowUnitySplashScreen: 1

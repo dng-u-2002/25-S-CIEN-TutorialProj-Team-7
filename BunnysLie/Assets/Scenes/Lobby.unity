@@ -10912,14 +10912,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaab2679d22d5f04db4d36bdacd27a40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultCursor: {fileID: 2800000, guid: c51ff594ed474ec4f8df4e62c57db634, type: 3}
-  hoverCursor: {fileID: 2800000, guid: c51ff594ed474ec4f8df4e62c57db634, type: 3}
-  pressedCursor: {fileID: 2800000, guid: c51ff594ed474ec4f8df4e62c57db634, type: 3}
-  disabledCursor: {fileID: 2800000, guid: c51ff594ed474ec4f8df4e62c57db634, type: 3}
-  defaultHotspot: {x: 13, y: 13}
-  hoverHotspot: {x: 13, y: 13}
-  pressedHotspot: {x: 13, y: 13}
-  disabledHotspot: {x: 13, y: 13}
+  defaultCursor: {fileID: 2800000, guid: f331e75f4006fce42b5886676387dd5f, type: 3}
+  hoverCursor: {fileID: 2800000, guid: f331e75f4006fce42b5886676387dd5f, type: 3}
+  pressedCursor: {fileID: 2800000, guid: f331e75f4006fce42b5886676387dd5f, type: 3}
+  disabledCursor: {fileID: 2800000, guid: f331e75f4006fce42b5886676387dd5f, type: 3}
+  defaultHotspot: {x: 4, y: 4}
+  hoverHotspot: {x: 4, y: 4}
+  pressedHotspot: {x: 4, y: 4}
+  disabledHotspot: {x: 4, y: 4}
 --- !u!4 &877700571
 Transform:
   m_ObjectHideFlags: 0
@@ -13065,19 +13065,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1503656731109520788, guid: 17bba2c9cff1f674ebbf93df933eafed, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1503656731109520788, guid: 17bba2c9cff1f674ebbf93df933eafed, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1503656731109520788, guid: 17bba2c9cff1f674ebbf93df933eafed, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 473.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1503656731109520788, guid: 17bba2c9cff1f674ebbf93df933eafed, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -21.6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1519435577103953451, guid: 17bba2c9cff1f674ebbf93df933eafed, type: 3}
       propertyPath: m_AnchorMax.x
