@@ -67,6 +67,7 @@ public class LobbyManager : MonoBehaviour
     public void InviteFriendsOverlay()
     {
         if (!InLobby) { Debug.LogWarning("[Lobby] No lobby."); return; }
+        
         SteamFriends.ActivateGameOverlayInviteDialog(CurrentLobby);
     }
 
@@ -162,6 +163,12 @@ public class LobbyManager : MonoBehaviour
     private void OnJoinRequested(GameLobbyJoinRequested_t e)
     {
         Debug.Log($"[Lobby] Join requested by overlay. Lobby={e.m_steamIDLobby}");
+        //if (PhotonNetwork.InRoom)
+        //{
+        //    Debug.Log("Already In Room");
+        //    return;
+        //}
+        SteamMatchmaking.LeaveLobby(CurrentLobby);
         SteamMatchmaking.JoinLobby(e.m_steamIDLobby);
     }
 
