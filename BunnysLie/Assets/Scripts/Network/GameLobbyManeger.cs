@@ -830,14 +830,14 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
             Destroy(child.gameObject);
         }
         var friends = FriendListManager.Instance.GetFriends(true, false);
-        Debug.Log($"[Friends] Count = {friends.Count}");
+        //Debug.Log($"[Friends] Count = {friends.Count}");
         foreach (var f in friends)
         {
             var sb = new StringBuilder();
             sb.Append($"{f.name} ({f.id}) state={f.state}");
             if (f.isPlayingThisGame) sb.Append(" | in THIS game");
             if (!string.IsNullOrEmpty(f.richStatus)) sb.Append($" | status='{f.richStatus}'");
-            Debug.Log(sb.ToString());
+            //Debug.Log(sb.ToString());
         }
 
         var sortedFriends = friends.OrderByDescending(f => f.isPlayingThisGame)

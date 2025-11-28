@@ -105,7 +105,11 @@ public class LobbyManager : MonoBehaviour
             return;
         }
 
-        var id = FindFirstObjectByType<GameLobbyManager>().CreatePrivateRoom();
+        string id;
+        if(PhotonNetwork.InRoom == false)
+            id = FindFirstObjectByType<GameLobbyManager>().CreatePrivateRoom();
+        else
+            id = PhotonNetwork.CurrentRoom.Name;
         CurrentLobby = new CSteamID(e.m_ulSteamIDLobby);
         Debug.Log($"[Lobby] Created: {CurrentLobby}");
 
