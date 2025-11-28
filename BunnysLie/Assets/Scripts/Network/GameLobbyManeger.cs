@@ -367,6 +367,18 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         Debug.Log("로비에 참가함");
         PresenceManager.Instance.SetStatus(FriendActivity.InLobby);
         //UpdateMyActivityStatus(FriendActivity.InLobby);
+
+        if (PendedRoomCode != "")
+        {
+            PhotonNetwork.JoinRoom(PendedRoomCode);
+            PendedRoomCode = "";
+        }
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        base.OnJoinRoomFailed(returnCode, message);
+        Debug.Log($"{returnCode} : {message}");
     }
 
 
@@ -650,11 +662,6 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         base.OnLeftRoom();
         //PresenceManager.Instance.SetStatus(FriendActivity.InLobby);
         //LobbyManager.Instance.LeaveLobby();
-        if(string.IsNullOrEmpty(PendedRoomCode) == false)
-        {
-            PhotonNetwork.JoinRoom(PendedRoomCode);
-            PendedRoomCode = "";
-        }
     }
 
     public void UpdateFriendRichPresence(CSteamID fid, string status)

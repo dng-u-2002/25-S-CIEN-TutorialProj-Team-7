@@ -141,10 +141,10 @@ public class LobbyManager : MonoBehaviour
         Debug.Log(id);
         if (PhotonNetwork.InRoom == false)
             PhotonNetwork.JoinRoom(id);
-        else
+        else if (PhotonNetwork.CurrentRoom.Name != id)
         {
-            PhotonNetwork.LeaveRoom();
             GameLobbyManager.PendedRoomCode = id;
+            PhotonNetwork.LeaveRoom();
             //PhotonNetwork.JoinRoom(id);
         }
 
