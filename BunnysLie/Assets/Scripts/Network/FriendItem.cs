@@ -27,7 +27,7 @@ public class FriendItem : MonoBehaviour
         SetupButtons();
     }
     
-    void UpdateFriendDisplay()
+    public void UpdateFriendDisplay()
     {
         //if (friendData == null) return;
         if (nicknameText != null) nicknameText.text = friendData.name;
