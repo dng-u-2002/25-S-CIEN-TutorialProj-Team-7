@@ -436,8 +436,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -183.98871, y: -29.140596}
-  m_SizeDelta: {x: 86.7048, y: 26.8822}
+  m_AnchoredPosition: {x: -110.63568, y: -29.140596}
+  m_SizeDelta: {x: 233.4112, y: 26.8822}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8346412071090098309
 CanvasRenderer:
@@ -503,7 +503,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1049,7 +1049,7 @@ MonoBehaviour:
   inviteButton2: {fileID: 5388047174413229091}
   statusIndicator: {fileID: 2690576361258415346}
   activityText: {fileID: 7586626911506822645}
-  onlineColor: {r: 0, g: 1, b: 0, a: 1}
-  offlineColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  busyColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  onlineColor: {r: 1, g: 1, b: 1, a: 1}
+  offlineColor: {r: 0.3433962, g: 0.3433962, b: 0.3433962, a: 1}
+  unknownColor: {r: 0.7433963, g: 0.7433963, b: 0.7433963, a: 1}
   inGameColor: {r: 1, g: 0, b: 0, a: 1}

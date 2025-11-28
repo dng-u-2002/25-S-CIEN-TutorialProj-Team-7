@@ -4,12 +4,19 @@ using System.Collections.Generic;
 
 public class FriendListManager : MonoBehaviour
 {
+    public enum FriendState
+    {
+        //얘네 순서대로 친구 목록에 뜸(값이 큰거)
+        PlayingThisGame = 2,
+        HiddenOrUnknown = 1,
+        NotPlayingThisGame = 0
+    }
     public class FriendInfo
     {
         public CSteamID id;
         public string name;
         public EPersonaState state;
-        public bool isPlayingThisGame;   // 오직 현재 이 앱을 플레이 중인지로 판별
+        public FriendState gameState;   // 오직 현재 이 앱을 플레이 중인지로 판별
         public string richStatus;        // RP "status"
     }
 
@@ -44,10 +51,23 @@ public class FriendListManager : MonoBehaviour
             // "현재 이 앱 플레이 중인지"만 판단
             bool playingThis = false;
             FriendGameInfo_t gi;
+            FriendState s = FriendState.HiddenOrUnknown;
+
             if (SteamFriends.GetFriendGamePlayed(fid, out gi))
             {
-                Debug.Log(gi.m_gameID.AppID());
                 playingThis = (gi.m_gameID.AppID() == myApp);
+                if(playingThis)
+                {
+                    s = FriendState.PlayingThisGame;
+                }
+                else
+                {
+                    s = FriendState.NotPlayingThisGame;
+                }
+            }
+            else
+            {
+                s = FriendState.HiddenOrUnknown;
             }
 
             if (onlyPlayingThisGame && !playingThis) continue;
@@ -57,7 +77,7 @@ public class FriendListManager : MonoBehaviour
                 id = fid,
                 name = SteamFriends.GetFriendPersonaName(fid),
                 state = state,
-                isPlayingThisGame = playingThis,
+                gameState = s,
                 richStatus = SteamFriends.GetFriendRichPresence(fid, "steam_display"),
             });
         }

@@ -15,7 +15,7 @@ public class FriendItem : MonoBehaviour
     [Header("Status Colors")]
     public Color onlineColor = Color.green;
     public Color offlineColor = Color.gray;
-    public Color busyColor = Color.yellow;
+    public Color unknownColor = Color.yellow;
     public Color inGameColor = Color.red;
     
     private FriendListManager.FriendInfo friendData;
@@ -33,10 +33,22 @@ public class FriendItem : MonoBehaviour
         if (nicknameText != null) nicknameText.text = friendData.name;
         UpdateStatusAndActivity();
         UpdateStatusIndicator();
-        if (inviteButton2 != null)
-            inviteButton2.interactable = friendData.isPlayingThisGame;
-        if (inviteButton3 != null)
-            inviteButton3.interactable = friendData.isPlayingThisGame;
+
+        switch(friendData.gameState)
+        {
+            case FriendListManager.FriendState.HiddenOrUnknown:
+                inviteButton2.interactable = true;
+                inviteButton3.interactable = true;
+                break;
+            case FriendListManager.FriendState.PlayingThisGame:
+                inviteButton2.interactable = true;
+                inviteButton3.interactable = true;
+                break;
+            case FriendListManager.FriendState.NotPlayingThisGame:
+                inviteButton2.interactable = false;
+                inviteButton3.interactable = false;
+                break;
+        }
     }
     
     void UpdateStatusAndActivity()
@@ -46,21 +58,21 @@ public class FriendItem : MonoBehaviour
         //if (friendData.isOnline)
         //{
         //Debug.Log(friendData.richStatus);
-        switch (friendData.richStatus)
-        {
-            case "In Lobby":
-                statusText.text = "로비";
-                statusText.color = onlineColor;
-                break;
-            case "Playing":
-                statusText.text = "게임중";
-                statusText.color = inGameColor;
-                break;
-            case "In Matching":
-                statusText.text = "매칭중";
-                statusText.color = busyColor;
-                break;
-        }
+        //switch (friendData.richStatus)
+        //{
+        //    case "In Lobby":
+        //        statusText.text = "로비";
+        //        statusText.color = onlineColor;
+        //        break;
+        //    case "Playing":
+        //        statusText.text = "게임중";
+        //        statusText.color = inGameColor;
+        //        break;
+        //    case "In Matching":
+        //        statusText.text = "매칭중";
+        //        statusText.color = busyColor;
+        //        break;
+        //}
         //if (activityText != null) activityText.text = GetActivityDetail();
         //}
         //else
@@ -77,25 +89,41 @@ public class FriendItem : MonoBehaviour
     void UpdateStatusIndicator()
     {
         if (statusIndicator == null) return;
-        if (friendData.isPlayingThisGame)
+
+        switch (friendData.gameState)
         {
-            statusIndicator.color = onlineColor;
-            statusText.text = "온라인";
-            //switch (friendData.richStatus)
-            //{
-            //    case "In Lobby":
-            //        statusIndicator.color = onlineColor; break;
-            //    case "Playing":
-            //        statusIndicator.color = inGameColor; break;
-            //    case "In Matching":
-            //        statusIndicator.color = busyColor; break;
-            //}
+            case FriendListManager.FriendState.HiddenOrUnknown:
+                statusIndicator.color = unknownColor;
+                statusText.text = "확인할 수 없음/비공개";
+                break;
+            case FriendListManager.FriendState.PlayingThisGame:
+                statusIndicator.color = onlineColor;
+                statusText.text = "온라인";
+                break;
+            case FriendListManager.FriendState.NotPlayingThisGame:
+                statusIndicator.color = offlineColor;
+                statusText.text = "오프라인";
+                break;
         }
-        else
-        {
-            statusIndicator.color = offlineColor;
-            statusText.text = "오프라인";
-        }
+        //if (friendData.isPlayingThisGame)
+        //{
+        //    statusIndicator.color = onlineColor;
+        //    statusText.text = "온라인";
+        //    //switch (friendData.richStatus)
+        //    //{
+        //    //    case "In Lobby":
+        //    //        statusIndicator.color = onlineColor; break;
+        //    //    case "Playing":
+        //    //        statusIndicator.color = inGameColor; break;
+        //    //    case "In Matching":
+        //    //        statusIndicator.color = busyColor; break;
+        //    //}
+        //}
+        //else
+        //{
+        //    statusIndicator.color = offlineColor;
+        //    statusText.text = "오프라인";
+        //}
     }
     
     //string GetActivityDetail()
