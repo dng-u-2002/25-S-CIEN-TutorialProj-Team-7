@@ -11,6 +11,7 @@ using ExitGames.Client.Photon;
 using System.Collections;
 using Steamworks;
 using System.Text;
+using System.Security.Cryptography;
 
 public class GameLobbyManager : MonoBehaviourPunCallbacks
 {
@@ -349,16 +350,16 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         //LoadFriendList();
         //StartFriendActivitySimulation();
 
-        var friends = FriendListManager.Instance.GetFriends(true, false);
-        Debug.Log($"[Friends] Count = {friends.Count}");
-        foreach (var f in friends)
-        {
-            var sb = new StringBuilder();
-            sb.Append($"{f.name} ({f.id}) state={f.state}");
-            if (f.isPlayingThisGame) sb.Append(" | in THIS game");
-            if (!string.IsNullOrEmpty(f.richStatus)) sb.Append($" | status='{f.richStatus}'");
-            Debug.Log(sb.ToString());
-        }
+        //var friends = FriendListManager.Instance.GetFriends(true, false);
+        //Debug.Log($"[Friends] Count = {friends.Count}");
+        //foreach (var f in friends)
+        //{
+        //    var sb = new StringBuilder();
+        //    sb.Append($"{f.name} ({f.id}) state={f.state}");
+        //    if (f.isPlayingThisGame) sb.Append(" | in THIS game");
+        //    if (!string.IsNullOrEmpty(f.richStatus)) sb.Append($" | status='{f.richStatus}'");
+        //    Debug.Log(sb.ToString());
+        //}
         refreshFriendListButton.onClick.AddListener(() => UpdateFriendList());
         UpdateFriendList();
         gameObject.SetActive(true);
@@ -372,7 +373,20 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         while(true)
         {
             yield return new WaitForSeconds(dt);
-            UpdateFriendList();
+            //UpdateFriendList();
+
+            var list = new List<FriendInfo>();
+            int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
+            AppId_t myApp = SteamUtils.GetAppID();
+
+            for (int i = 0; i < count; i++)
+            {
+                var fid = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
+                var state = SteamFriends.GetFriendPersonaState(fid);
+                if (state == EPersonaState.k_EPersonaStateOffline) continue;
+
+                SteamFriends.RequestFriendRichPresence(fid);
+            }
         }
     }
 
@@ -826,16 +840,26 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         CloseAllPanels();
     }
 
-    
+    public void UpdateFriendRichPresence(CSteamID fid, string status)
+    {
+        foreach(var f in FriendList)
+        {
+            if(f.id == fid)
+            {
+                f.richStatus = status;
+            }
+        }
+    }
+    List<FriendListManager.FriendInfo> FriendList = new ();
     void UpdateFriendList()
     {
         foreach (Transform child in friendListContent)
         {
             Destroy(child.gameObject);
         }
-        var friends = FriendListManager.Instance.GetFriends(true, false);
+        FriendList = FriendListManager.Instance.GetFriends(true, false);
         //Debug.Log($"[Friends] Count = {friends.Count}");
-        foreach (var f in friends)
+        foreach (var f in FriendList)
         {
             var sb = new StringBuilder();
             sb.Append($"{f.name} ({f.id}) state={f.state}");
@@ -844,7 +868,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
            // Debug.Log(sb.ToString());
         }
 
-        var sortedFriends = friends.OrderByDescending(f => f.isPlayingThisGame)
+        var sortedFriends = FriendList.OrderByDescending(f => f.isPlayingThisGame)
                                      .ThenBy(f => f.name)
                                      .ToList();
         

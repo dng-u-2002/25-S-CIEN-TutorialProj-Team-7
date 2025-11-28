@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class FriendListManager : MonoBehaviour
 {
-    public struct FriendInfo
+    public class FriendInfo
     {
         public CSteamID id;
         public string name;
@@ -39,7 +39,7 @@ public class FriendListManager : MonoBehaviour
             if (onlyOnline && state == EPersonaState.k_EPersonaStateOffline) continue;
 
             // 최신 Rich Presence 요청
-            SteamFriends.RequestFriendRichPresence(fid);
+            //SteamFriends.RequestFriendRichPresence(fid);
 
             // "현재 이 앱 플레이 중인지"만 판단
             bool playingThis = false;
@@ -57,7 +57,7 @@ public class FriendListManager : MonoBehaviour
                 name = SteamFriends.GetFriendPersonaName(fid),
                 state = state,
                 isPlayingThisGame = playingThis,
-                richStatus = SteamFriends.GetFriendRichPresence(fid, "status"),
+                richStatus = SteamFriends.GetFriendRichPresence(fid, "steam_display"),
             });
         }
 

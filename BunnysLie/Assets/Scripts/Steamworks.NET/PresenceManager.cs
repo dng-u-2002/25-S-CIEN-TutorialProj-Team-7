@@ -21,17 +21,19 @@ public class PresenceManager : MonoBehaviour
     }
     void OnFriendRichPresenceUpdate(FriendRichPresenceUpdate_t param)
     {
-        //var fid = (CSteamID)param.m_steamIDFriend;
-        //int keyCount = SteamFriends.GetFriendRichPresenceKeyCount(fid);
+        var fid = (CSteamID)param.m_steamIDFriend;
+        int keyCount = SteamFriends.GetFriendRichPresenceKeyCount(fid);
 
-        //Debug.Log($"[RP] Update from {SteamFriends.GetFriendPersonaName(fid)}, keys: {keyCount}");
+        Debug.Log($"[RP] Update from {SteamFriends.GetFriendPersonaName(fid)}, keys: {keyCount}");
 
-        //for (int i = 0; i < keyCount; i++)
-        //{
-        //    string key = SteamFriends.GetFriendRichPresenceKeyByIndex(fid, i);
-        //    string val = SteamFriends.GetFriendRichPresence(fid, key);
-        //    Debug.Log($"[RP] {fid}  {key} = '{val}'");
-        //}
+        for (int i = 0; i < keyCount; i++)
+        {
+            string key = SteamFriends.GetFriendRichPresenceKeyByIndex(fid, i);
+            string val = SteamFriends.GetFriendRichPresence(fid, key);
+            Debug.Log($"[RP] {fid}  {key} = '{val}'");
+            GameLobbyManager.Instance.UpdateFriendRichPresence(fid, val);
+        }
+
     }
     public void SetStatus(FriendActivity status)
     {
@@ -43,13 +45,13 @@ public class PresenceManager : MonoBehaviour
         switch (status)
         {
             case FriendActivity.InLobby:
-                SteamFriends.SetRichPresence("status", "#Status_InLobby");
+                SteamFriends.SetRichPresence("steam_display", "#Status_InLobby");
                 break;
             case FriendActivity.Matchmaking:
-                SteamFriends.SetRichPresence("status", "#Status_Matchmaking");
+                SteamFriends.SetRichPresence("steam_display", "#Status_Matchmaking");
                 break;
             case FriendActivity.InGame:
-                SteamFriends.SetRichPresence("status", "#Status_InGame");
+                SteamFriends.SetRichPresence("steam_display", "#Status_InGame");
                 break;
         }
     }
