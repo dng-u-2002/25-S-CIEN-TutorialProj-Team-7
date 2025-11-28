@@ -57,7 +57,7 @@ public class FriendListManager : MonoBehaviour
                 name = SteamFriends.GetFriendPersonaName(fid),
                 state = state,
                 isPlayingThisGame = playingThis,
-                richStatus = SteamFriends.GetFriendRichPresence(fid, "steam_display"),
+                richStatus = SteamFriends.GetFriendRichPresence(fid, "status"),
             });
         }
 

@@ -43,13 +43,13 @@ public class PresenceManager : MonoBehaviour
         switch (status)
         {
             case FriendActivity.InLobby:
-                SteamFriends.SetRichPresence("steam_display", "#Status_InLobby");
+                SteamFriends.SetRichPresence("status", "#Status_InLobby");
                 break;
             case FriendActivity.Matchmaking:
-                SteamFriends.SetRichPresence("steam_display", "#Status_Matchmaking");
+                SteamFriends.SetRichPresence("status", "#Status_Matchmaking");
                 break;
             case FriendActivity.InGame:
-                SteamFriends.SetRichPresence("steam_display", "#Status_InGame");
+                SteamFriends.SetRichPresence("status", "#Status_InGame");
                 break;
         }
     }

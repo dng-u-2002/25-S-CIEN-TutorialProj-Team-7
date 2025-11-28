@@ -118,9 +118,9 @@ public class LobbyManager : MonoBehaviour
         SteamMatchmaking.SetLobbyData(CurrentLobby, "build", Application.version);
         SteamMatchmaking.SetLobbyJoinable(CurrentLobby, true);
 
-        PresenceManager.Instance?.SetStatus(FriendActivity.InLobby);
-        PresenceManager.Instance?.SetConnect($"lobby:{CurrentLobby.m_SteamID}");
-        PresenceManager.Instance?.SetPlayerGroup(CurrentLobby.ToString());
+        //PresenceManager.Instance?.SetStatus(FriendActivity.InLobby);
+        //PresenceManager.Instance?.SetConnect($"lobby:{CurrentLobby.m_SteamID}");
+        //PresenceManager.Instance?.SetPlayerGroup(CurrentLobby.ToString());
 
         // 로비가 생겼으니 대기열의 초대 처리
         while (_pendingInvites.Count > 0)
@@ -142,9 +142,9 @@ public class LobbyManager : MonoBehaviour
             //PhotonNetwork.LeaveRoom();
             PhotonNetwork.JoinRoom(id);
 
-        PresenceManager.Instance?.SetStatus(FriendActivity.InLobby);
-        PresenceManager.Instance?.SetConnect($"lobby:{CurrentLobby.m_SteamID}");
-        PresenceManager.Instance?.SetPlayerGroup(CurrentLobby.ToString());
+        //PresenceManager.Instance?.SetStatus(FriendActivity.InLobby);
+        //PresenceManager.Instance?.SetConnect($"lobby:{CurrentLobby.m_SteamID}");
+        //PresenceManager.Instance?.SetPlayerGroup(CurrentLobby.ToString());
 
         OnLobbyEntered?.Invoke(CurrentLobby);
         CheckFull();

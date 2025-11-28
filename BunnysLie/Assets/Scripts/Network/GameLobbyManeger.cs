@@ -363,6 +363,8 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         UpdateFriendList();
         gameObject.SetActive(true);
         StartCoroutine(_LoopUpdateFriendList(1.5f));
+
+        PresenceManager.Instance.SetStatus(FriendActivity.InLobby);
     }
 
     IEnumerator _LoopUpdateFriendList(float dt)
@@ -498,6 +500,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
             if(PhotonNetwork.CurrentRoom.PlayerCount >= 3 && IsSceneLoadingStarted == false)
             {
                 Debug.Log("방에 충분한 플레이어가 있습니다. 게임 시작 중...");
+                PresenceManager.Instance.SetStatus(FriendActivity.InGame);
                 LoadGameScene();
             }
         }
@@ -650,6 +653,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
             CloseAllPanels();
+        PresenceManager.Instance.SetStatus(FriendActivity.Matchmaking);
         ModeSelectButtons.gameObject.SetActive(false);
         if (isMatchmaking)
         {
@@ -837,7 +841,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
             sb.Append($"{f.name} ({f.id}) state={f.state}");
             if (f.isPlayingThisGame) sb.Append(" | in THIS game");
             if (!string.IsNullOrEmpty(f.richStatus)) sb.Append($" | status='{f.richStatus}'");
-            //Debug.Log(sb.ToString());
+           // Debug.Log(sb.ToString());
         }
 
         var sortedFriends = friends.OrderByDescending(f => f.isPlayingThisGame)
