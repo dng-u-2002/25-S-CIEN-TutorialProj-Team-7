@@ -644,11 +644,17 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         //UpdateMyActivityStatus(FriendActivity.InLobby);
         CloseAllPanels();
     }
-
+    public static string PendedRoomCode = "";
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
-        PresenceManager.Instance.SetStatus(FriendActivity.InLobby);
+        //PresenceManager.Instance.SetStatus(FriendActivity.InLobby);
+        //LobbyManager.Instance.LeaveLobby();
+        if(string.IsNullOrEmpty(PendedRoomCode) == false)
+        {
+            PhotonNetwork.JoinRoom(PendedRoomCode);
+            PendedRoomCode = "";
+        }
     }
 
     public void UpdateFriendRichPresence(CSteamID fid, string status)

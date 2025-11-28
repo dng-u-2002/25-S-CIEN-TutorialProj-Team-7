@@ -140,8 +140,13 @@ public class LobbyManager : MonoBehaviour
         // FindFirstObjectByType<GameLobbyManager>().jo
         Debug.Log(id);
         if (PhotonNetwork.InRoom == false)
-            //PhotonNetwork.LeaveRoom();
             PhotonNetwork.JoinRoom(id);
+        else
+        {
+            PhotonNetwork.LeaveRoom();
+            GameLobbyManager.PendedRoomCode = id;
+            //PhotonNetwork.JoinRoom(id);
+        }
 
         //PresenceManager.Instance?.SetStatus(FriendActivity.InLobby);
         //PresenceManager.Instance?.SetConnect($"lobby:{CurrentLobby.m_SteamID}");
@@ -168,7 +173,6 @@ public class LobbyManager : MonoBehaviour
         //    Debug.Log("Already In Room");
         //    return;
         //}
-        SteamMatchmaking.LeaveLobby(CurrentLobby);
         SteamMatchmaking.JoinLobby(e.m_steamIDLobby);
     }
 
