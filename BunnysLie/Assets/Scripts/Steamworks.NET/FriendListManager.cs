@@ -46,6 +46,7 @@ public class FriendListManager : MonoBehaviour
             FriendGameInfo_t gi;
             if (SteamFriends.GetFriendGamePlayed(fid, out gi))
             {
+                Debug.Log(gi.m_gameID.AppID());
                 playingThis = (gi.m_gameID.AppID() == myApp);
             }
 

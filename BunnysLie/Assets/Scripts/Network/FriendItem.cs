@@ -45,7 +45,7 @@ public class FriendItem : MonoBehaviour
 
         //if (friendData.isOnline)
         //{
-        Debug.Log(friendData.richStatus);
+        //Debug.Log(friendData.richStatus);
         switch (friendData.richStatus)
         {
             case "In Lobby":
@@ -79,19 +79,22 @@ public class FriendItem : MonoBehaviour
         if (statusIndicator == null) return;
         if (friendData.isPlayingThisGame)
         {
-            switch (friendData.richStatus)
-            {
-                case "In Lobby":
-                    statusIndicator.color = onlineColor; break;
-                case "Playing":
-                    statusIndicator.color = inGameColor; break;
-                case "In Matching":
-                    statusIndicator.color = busyColor; break;
-            }
+            statusIndicator.color = onlineColor;
+            statusText.text = "온라인";
+            //switch (friendData.richStatus)
+            //{
+            //    case "In Lobby":
+            //        statusIndicator.color = onlineColor; break;
+            //    case "Playing":
+            //        statusIndicator.color = inGameColor; break;
+            //    case "In Matching":
+            //        statusIndicator.color = busyColor; break;
+            //}
         }
         else
         {
             statusIndicator.color = offlineColor;
+            statusText.text = "오프라인";
         }
     }
     
