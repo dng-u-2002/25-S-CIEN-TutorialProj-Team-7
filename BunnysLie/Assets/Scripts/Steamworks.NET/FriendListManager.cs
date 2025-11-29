@@ -43,8 +43,8 @@ public class FriendListManager : MonoBehaviour
         {
             var fid = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
             var state = SteamFriends.GetFriendPersonaState(fid);
+            Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)} / {state}");
             if (onlyOnline && state == EPersonaState.k_EPersonaStateOffline) continue;
-
             // 최신 Rich Presence 요청
             //SteamFriends.RequestFriendRichPresence(fid);
 
@@ -53,22 +53,48 @@ public class FriendListManager : MonoBehaviour
             FriendGameInfo_t gi;
             FriendState s = FriendState.HiddenOrUnknown;
 
-            if (SteamFriends.GetFriendGamePlayed(fid, out gi))
+            if(state == EPersonaState.k_EPersonaStateOffline) //스팀 앱이 꺼져 있는 경우
             {
-                playingThis = (gi.m_gameID.AppID() == myApp);
-                if(playingThis)
+                //근데 위에서 막아놔서 어차피 안 들어옴
+            }
+            else //스팀 앱이 켜져 있는 경우
+            {
+                if (SteamFriends.GetFriendGamePlayed(fid, out gi))
                 {
-                    s = FriendState.PlayingThisGame;
+                    //비공개 계정은 현재 무슨 게임 중인지도 알려주지 않으므로...
+                    //여기 들어오면 일단은 비공개 계정은 아님(공개 계정임)
+                    Debug.Log($"Game : {SteamFriends.GetFriendPersonaName(fid)} / {gi.m_gameID.AppID()}");
+                    playingThis = (gi.m_gameID.AppID() == myApp);
+
+
+                    if (playingThis)
+                    {
+                        //확실하게 우리 게임 중
+                        s = FriendState.PlayingThisGame;
+                    }
+                    else
+                    {
+                        //확실하게 다른 게임 중
+                        s = FriendState.NotPlayingThisGame;
+                    }
                 }
                 else
                 {
-                    s = FriendState.NotPlayingThisGame;
+                    //여기선 경우가 2개인데, 아예 비공개 계정이거나 아무 게임도 하고 있지 않은 경우임
+                    var rp = SteamFriends.GetFriendRichPresence(fid, "steam_display");
+                    if(rp == "")
+                    {
+                        //이러면 비공개 계정임 (물론, 우리 게임을 하고 있는지/아닌지는 확인할 수 없음)
+                        s = FriendState.HiddenOrUnknown;
+                    }
+                    else
+                    {
+                        //이러면 공개 계정인데, 그냥 아무 게임도 하고 있지 않은 것임
+                        s = FriendState.NotPlayingThisGame;
+                    }
                 }
             }
-            else
-            {
-                s = FriendState.HiddenOrUnknown;
-            }
+
 
             if (onlyPlayingThisGame && !playingThis) continue;
 

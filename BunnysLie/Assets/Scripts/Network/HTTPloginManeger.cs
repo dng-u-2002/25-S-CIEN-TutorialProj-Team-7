@@ -82,7 +82,6 @@ public class HTTPLoginManager : MonoBehaviour
         }
         var id = PlayerPrefs.GetString("LoginId", "NULL");
         var name = PlayerPrefs.GetString("Nickname", "Guest User");
-        Debug.Log(id);
         if (id == "NULL")
         {
             SetupUI();

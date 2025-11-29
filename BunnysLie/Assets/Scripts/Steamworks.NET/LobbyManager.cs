@@ -138,14 +138,17 @@ public class LobbyManager : MonoBehaviour
         var id = SteamMatchmaking.GetLobbyData(CurrentLobby, "id");
 
         // FindFirstObjectByType<GameLobbyManager>().jo
-        Debug.Log(id);
-        if (PhotonNetwork.InRoom == false)
-            PhotonNetwork.JoinRoom(id);
-        else if (PhotonNetwork.CurrentRoom.Name != id)
+        if(id != string.Empty)
         {
-            GameLobbyManager.PendedRoomCode = id;
-            PhotonNetwork.LeaveRoom();
-            //PhotonNetwork.JoinRoom(id);
+            Debug.Log(id);
+            if (PhotonNetwork.InRoom == false)
+                PhotonNetwork.JoinRoom(id);
+            else if (PhotonNetwork.CurrentRoom.Name != id)
+            {
+                GameLobbyManager.PendedRoomCode = id;
+                PhotonNetwork.LeaveRoom();
+                //PhotonNetwork.JoinRoom(id);
+            }
         }
 
         //PresenceManager.Instance?.SetStatus(FriendActivity.InLobby);

@@ -179,17 +179,17 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
             //UpdateFriendList();
 
             //var list = new List<FriendInfo>();
-            //int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
+            int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
             //AppId_t myApp = SteamUtils.GetAppID();
 
-            //for (int i = 0; i < count; i++)
-            //{
-            //    var fid = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
-            //    var state = SteamFriends.GetFriendPersonaState(fid);
-            //    if (state == EPersonaState.k_EPersonaStateOffline) continue;
+            for (int i = 0; i < count; i++)
+            {
+                var fid = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
+                var state = SteamFriends.GetFriendPersonaState(fid);
+                if (state == EPersonaState.k_EPersonaStateOffline) continue;
 
-            //    SteamFriends.RequestFriendRichPresence(fid);
-            //}
+                SteamFriends.RequestFriendRichPresence(fid);
+            }
             UpdateFriendList();
         }
     }
