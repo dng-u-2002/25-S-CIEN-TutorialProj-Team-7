@@ -142,6 +142,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         get
         {
+            if (PhotonNetwork.InRoom == false || PhotonNetwork.CurrentRoom == null)
+                return null;
             foreach (var u in Photon.Pun.PhotonNetwork.CurrentRoom.Players)
             {
                 if (u.Value.ActorNumber == Photon.Pun.PhotonNetwork.CurrentRoom.MasterClientId)
@@ -193,6 +195,9 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         if(PhotonNetwork.InRoom == true && InGameManager.Instance.IsStarted == true && PhotonNetwork.CurrentRoom.PlayerCount <= 2)
         {
             InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_NotEnoughPlayer, 3);
+            var d = FindFirstObjectByType<PunVoiceClient>();
+            if (d != null)
+                Destroy(d.gameObject);
             PhotonNetwork.LeaveRoom();
             DelayedFunctionHelper.InvokeDelayed(() =>
             {

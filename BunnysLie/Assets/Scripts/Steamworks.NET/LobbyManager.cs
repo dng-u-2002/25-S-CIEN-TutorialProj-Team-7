@@ -2,6 +2,7 @@ using UnityEngine;
 using Steamworks;
 using System.Collections.Generic;
 using Photon.Pun;
+using Helpers;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -147,6 +148,11 @@ public class LobbyManager : MonoBehaviour
             {
                 GameLobbyManager.PendedRoomCode = id;
                 PhotonNetwork.LeaveRoom();
+                    //PhotonNetwork.LoadLevel("Lobby");
+
+                //DelayedFunctionHelper.InvokeDelayed(() =>
+                //{
+                //}, 2.0f);
                 //PhotonNetwork.JoinRoom(id);
             }
         }
@@ -171,11 +177,11 @@ public class LobbyManager : MonoBehaviour
     private void OnJoinRequested(GameLobbyJoinRequested_t e)
     {
         Debug.Log($"[Lobby] Join requested by overlay. Lobby={e.m_steamIDLobby}");
-        //if (PhotonNetwork.InRoom)
-        //{
-        //    Debug.Log("Already In Room");
-        //    return;
-        //}
+        if (FindFirstObjectByType<InGameManager>() != null)
+        {
+            Debug.Log("Already Playing Game!");
+            return;
+        }
         SteamMatchmaking.JoinLobby(e.m_steamIDLobby);
     }
 

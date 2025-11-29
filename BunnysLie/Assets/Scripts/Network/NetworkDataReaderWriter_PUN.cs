@@ -48,6 +48,11 @@ public class NetworkDataWriter_PUN
 
 	public void SendPacket(InGameServer_PUN.User peer)
 	{
+		if(peer == null)
+		{
+			Debug.LogWarning($"{peer} is null!");
+			return;
+		}
 		Photon.Pun.PhotonNetwork.RaiseEvent(packetType, Data.ToArray(), new RaiseEventOptions
 		{
 			TargetActors = new int[] { peer.Player.ActorNumber },

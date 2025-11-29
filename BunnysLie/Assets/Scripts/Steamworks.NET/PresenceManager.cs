@@ -31,7 +31,7 @@ public class PresenceManager : MonoBehaviour
             string key = SteamFriends.GetFriendRichPresenceKeyByIndex(fid, i);
             string val = SteamFriends.GetFriendRichPresence(fid, key);
             Debug.Log($"[RP] {fid}  {key} = '{val}'");
-            GameLobbyManager.Instance.UpdateFriendRichPresence(fid, val);
+            GameLobbyManager.Instance?.UpdateFriendRichPresence(fid, val);
         }
 
     }
