@@ -81,17 +81,10 @@ public class FriendListManager : MonoBehaviour
                 else
                 {
                     //여기선 경우가 2개인데, 아예 비공개 계정이거나 아무 게임도 하고 있지 않은 경우임
-                    var rp = SteamFriends.GetFriendRichPresence(fid, "steam_display");
-                    if(rp == "")
-                    {
-                        //이러면 비공개 계정임 (물론, 우리 게임을 하고 있는지/아닌지는 확인할 수 없음)
-                        s = FriendState.HiddenOrUnknown;
-                    }
-                    else
-                    {
-                        //이러면 공개 계정인데, 그냥 아무 게임도 하고 있지 않은 것임
-                        s = FriendState.NotPlayingThisGame;
-                    }
+                    //근데 비공개 계정인지 확인하는 그런 함수도 없고, Rich Presence로 우회하려고 해도 비공개 계정은 RP에 그냥 값이 없어서 안됨
+                    //현재 우리 게임을 플레이하지 않음 -> RP == emtpy
+                    //비공개 계정임 -> RP == empty
+                    s = FriendState.HiddenOrUnknown;
                 }
             }
 

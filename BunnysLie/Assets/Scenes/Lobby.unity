@@ -13201,19 +13201,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1503656731109520788, guid: 17bba2c9cff1f674ebbf93df933eafed, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1503656731109520788, guid: 17bba2c9cff1f674ebbf93df933eafed, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1503656731109520788, guid: 17bba2c9cff1f674ebbf93df933eafed, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 473.1
       objectReference: {fileID: 0}
     - target: {fileID: 1503656731109520788, guid: 17bba2c9cff1f674ebbf93df933eafed, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -21.6
       objectReference: {fileID: 0}
     - target: {fileID: 1519435577103953451, guid: 17bba2c9cff1f674ebbf93df933eafed, type: 3}
       propertyPath: m_AnchorMax.x
@@ -27184,8 +27184,8 @@ SceneRoots:
   - {fileID: 356361464}
   - {fileID: 221731977}
   - {fileID: 813395753}
-  - {fileID: 1950748780}
   - {fileID: 670121118}
+  - {fileID: 1950748780}
   - {fileID: 1124574345}
   - {fileID: 392408574}
   - {fileID: 478532587}
