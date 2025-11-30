@@ -52,6 +52,18 @@ public class FriendItem : MonoBehaviour
                 inviteButton2.interactable = true;
                 inviteButton3.interactable = true;
                 break;
+            case FriendListManager.FriendState.NotPlayingThisGame:
+                inviteButton2.interactable = false;
+                inviteButton3.interactable = false;
+                break;
+            case FriendListManager.FriendState.SteamOffline:
+                inviteButton2.interactable = false;
+                inviteButton3.interactable = false;
+                break;
+            case FriendListManager.FriendState.SteamOnline:
+                inviteButton2.interactable = true;
+                inviteButton3.interactable = true;
+                break;
                 //case FriendListManager.FriendState.PlayingThisGame:
                 //    inviteButton2.interactable = true;
                 //    inviteButton3.interactable = true;
@@ -106,7 +118,7 @@ public class FriendItem : MonoBehaviour
         switch (friendData.gameState)
         {
             case FriendListManager.FriendState.HiddenOrUnknown:
-                statusIndicator.color = unknownColor;
+                statusIndicator.color = offlineColor;
                 statusText.text = "확인할 수 없음/비공개";
                 break;
             case FriendListManager.FriendState.InLobby:
@@ -120,6 +132,18 @@ public class FriendItem : MonoBehaviour
             case FriendListManager.FriendState.InMatching:
                 statusIndicator.color = onlineColor;
                 statusText.text = "매칭 중";
+                break;
+            case FriendListManager.FriendState.SteamOffline:
+                statusIndicator.color = offlineColor;
+                statusText.text = "스팀에 접속 중이지 않음";
+                break;
+            case FriendListManager.FriendState.NotPlayingThisGame:
+                statusIndicator.color = offlineColor;
+                statusText.text = "다른 게임 중";
+                break;
+            case FriendListManager.FriendState.SteamOnline:
+                statusIndicator.color = onlineColor;
+                statusText.text = "스팀에 접속 중";
                 break;
                 //case FriendListManager.FriendState.PlayingThisGame:
                 //    statusIndicator.color = onlineColor;

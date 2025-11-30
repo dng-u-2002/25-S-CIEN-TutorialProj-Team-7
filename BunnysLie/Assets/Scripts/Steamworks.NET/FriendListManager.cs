@@ -12,6 +12,9 @@ public class FriendListManager : MonoBehaviour
         InLobby = 0,
         InGame,
         InMatching,
+        SteamOnline,
+        NotPlayingThisGame,
+        SteamOffline,
         //PlayingThisGame = 2,
         HiddenOrUnknown,
         //NotPlayingThisGame = 0
@@ -114,8 +117,21 @@ public class FriendListManager : MonoBehaviour
                     string rpKey = msg.Substring(3); // "steam_display" 등
                     string rpValue = msg[3].ToString();
                     Debug.Log($"[Server] {remote} 의 Rich Presence '{rpKey}' = '{rpValue}'");
-                    //예시: 클라이언트에게 RP 값 전송
-                    CachedStates[remote] = int.Parse(rpValue);
+
+                    CachedStates[remote] = (FriendState)int.Parse(rpValue);
+                }
+            }
+        }
+        foreach(var kv in QRPTime)
+        {
+            //5초 이내에 응답이 없으면 NotPlayingThisGame으로 간주
+            //스팀은 켜져 있지만 우리 게임이 아닌 경우임
+            if (Time.time - kv.Value > 5.0f)
+            {
+                if (CachedStates[kv.Key] != FriendState.NotPlayingThisGame)
+                {
+                    CachedStates[kv.Key] = FriendState.NotPlayingThisGame;
+                    Debug.Log($"[Server] {kv.Key} 의 Rich Presence 응답 시간 초과. NotPlayingThisGame으로 간주.");
                 }
             }
         }
@@ -151,7 +167,8 @@ public class FriendListManager : MonoBehaviour
         SteamNetworking.CloseP2PSessionWithUser(clientId);
     }
 
-    public Dictionary<CSteamID, int> CachedStates = new();
+    public Dictionary<CSteamID, FriendState> CachedStates = new();
+    public Dictionary<CSteamID, float> QRPTime = new();
     /// <summary>
     /// onlyOnline: 온라인 친구만 가져올지
     /// onlyPlayingThisGame: "현재 이 앱을 플레이 중인 친구만" 필터링할지
@@ -167,23 +184,36 @@ public class FriendListManager : MonoBehaviour
             var fid = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
             var state = SteamFriends.GetFriendPersonaState(fid);
             //Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)} / {state}");
-            if (onlyOnline && state == EPersonaState.k_EPersonaStateOffline) continue;
+            //if (onlyOnline && state == EPersonaState.k_EPersonaStateOffline) continue;
             // 최신 Rich Presence 요청
             //SteamFriends.RequestFriendRichPresence(fid);
 
             SendToClient(fid, "QRP"); // rQuest Rich Presence
+            QRPTime[fid] = Time.time;
 
             // "현재 이 앱 플레이 중인지"만 판단
             bool playingThis = false;
             FriendGameInfo_t gi;
-            FriendState s = FriendState.HiddenOrUnknown;
+            //FriendState s = FriendState.HiddenOrUnknown;
+            if(CachedStates.TryGetValue(fid, out var v) == false)
+            {
+                CachedStates[fid] = FriendState.HiddenOrUnknown;
+            }
 
             if(state == EPersonaState.k_EPersonaStateOffline) //스팀 앱이 꺼져 있는 경우
             {
                 //근데 위에서 막아놔서 어차피 안 들어옴
+                //이제 안 막아둠
+                //s = FriendState.SteamOffline;
+                //이건 ERP가 날라와서 내가 확인하는게 아니므로, 여기서 처리해줘야 함
+                CachedStates[fid] = FriendState.SteamOffline;
             }
             else //스팀 앱이 켜져 있는 경우
             {
+                //오프라인/비공개 -> 온라인의 전환만 허용
+                //로비 -> 스팀 온라인 이런거 방지하기 위함
+                if(CachedStates[fid] == FriendState.HiddenOrUnknown || CachedStates[fid] == FriendState.SteamOffline)
+                    CachedStates[fid] = FriendState.SteamOnline;
                 //if (SteamFriends.GetFriendGamePlayed(fid, out gi))
                 //{
                 //    //비공개 계정은 현재 무슨 게임 중인지도 알려주지 않으므로...
@@ -221,7 +251,7 @@ public class FriendListManager : MonoBehaviour
                 id = fid,
                 name = SteamFriends.GetFriendPersonaName(fid),
                 state = state,
-                gameState = s,
+                gameState = CachedStates[fid],
                 richStatus = SteamFriends.GetFriendRichPresence(fid, "steam_display"),
             });
         }
