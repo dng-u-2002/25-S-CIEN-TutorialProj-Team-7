@@ -83,9 +83,12 @@ public class FriendListManager : MonoBehaviour
                 // UTF-8 문자열로 변환
                 string msg = Encoding.UTF8.GetString(buffer, 0, (int)bytesRead);
                 Debug.Log($"[Server] {remote} 로부터 받은 메시지: {msg}");
+                if (msg.StartsWith("QRP")) // rQuest Rich Presence
+                {
+                    SendToClient(remote, "ERP" + UnityEngine.Random.Range(0, 10));
+                }
 
-
-                if(msg.StartsWith("ERP")) //rEsponse Rich Presence
+                if (msg.StartsWith("ERP")) //rEsponse Rich Presence
                 {
                     //친구의 Rich Presence 응답
                     string rpKey = msg.Substring(3); // "steam_display" 등
