@@ -41,7 +41,7 @@ public class FriendListManager : MonoBehaviour
             Callback<P2PSessionConnectFail_t>.Create(OnP2PSessionConnectFail);
 
         // 릴레이 허용 (기본값 true지만, 명시적으로 써도 됨)
-        SteamGameServerNetworking.AllowP2PPacketRelay(true);
+        SteamNetworking.AllowP2PPacketRelay(true);
     }
     private Callback<P2PSessionRequest_t> _p2pSessionRequest;
     private Callback<P2PSessionConnectFail_t> _p2pSessionConnectFail;
@@ -54,7 +54,7 @@ public class FriendListManager : MonoBehaviour
 
         // 예: 로비에 있는 유저만 허용하는 식의 체크를 원래는 해야 함.
         // 여기서는 귀찮으니 일단 전부 수락.
-        bool ok = SteamGameServerNetworking.AcceptP2PSessionWithUser(remote);
+        bool ok = SteamNetworking.AcceptP2PSessionWithUser(remote);
         Debug.Log($"[Server] AcceptP2PSessionWithUser({remote}) = {ok}");
     }
 
@@ -65,15 +65,17 @@ public class FriendListManager : MonoBehaviour
     }
     private void Update()
     {
+        if (SteamManager.Initialized == false)
+            return;
         // 들어온 패킷이 있는지 확인
         uint packetSize;
-        while (SteamGameServerNetworking.IsP2PPacketAvailable(out packetSize, CHANNEL))
+        while (SteamNetworking.IsP2PPacketAvailable(out packetSize, CHANNEL))
         {
             byte[] buffer = new byte[packetSize];
             uint bytesRead;
             CSteamID remote;
 
-            if (SteamGameServerNetworking.ReadP2PPacket(
+            if (SteamNetworking.ReadP2PPacket(
                     buffer,
                     packetSize,
                     out bytesRead,
@@ -110,7 +112,7 @@ public class FriendListManager : MonoBehaviour
         uint length = (uint)data.Length;
 
         // Reliable로 전송 (필요에 따라 Unreliable 등으로 바꿔도 됨)
-        bool ok = SteamGameServerNetworking.SendP2PPacket(
+        bool ok = SteamNetworking.SendP2PPacket(
             clientId,
             data,
             length,
@@ -127,9 +129,9 @@ public class FriendListManager : MonoBehaviour
     public void CloseClient(CSteamID clientId)
     {
         // 특정 채널만 닫기
-        SteamGameServerNetworking.CloseP2PChannelWithUser(clientId, CHANNEL);
+        SteamNetworking.CloseP2PChannelWithUser(clientId, CHANNEL);
         // 전체 세션 닫기
-        SteamGameServerNetworking.CloseP2PSessionWithUser(clientId);
+        SteamNetworking.CloseP2PSessionWithUser(clientId);
     }
 
     Dictionary<CSteamID, int> CachedStates = new();
@@ -147,7 +149,7 @@ public class FriendListManager : MonoBehaviour
         {
             var fid = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
             var state = SteamFriends.GetFriendPersonaState(fid);
-            Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)} / {state}");
+            //Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)} / {state}");
             if (onlyOnline && state == EPersonaState.k_EPersonaStateOffline) continue;
             // 최신 Rich Presence 요청
             //SteamFriends.RequestFriendRichPresence(fid);
@@ -169,7 +171,7 @@ public class FriendListManager : MonoBehaviour
                 {
                     //비공개 계정은 현재 무슨 게임 중인지도 알려주지 않으므로...
                     //여기 들어오면 일단은 비공개 계정은 아님(공개 계정임)
-                    Debug.Log($"Game : {SteamFriends.GetFriendPersonaName(fid)} / {gi.m_gameID.AppID()}");
+                    //Debug.Log($"Game : {SteamFriends.GetFriendPersonaName(fid)} / {gi.m_gameID.AppID()}");
                     playingThis = (gi.m_gameID.AppID() == myApp);
 
 
