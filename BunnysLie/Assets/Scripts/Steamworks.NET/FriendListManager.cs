@@ -92,7 +92,6 @@ public class FriendListManager : MonoBehaviour
             {
                 // UTF-8 문자열로 변환
                 string msg = Encoding.UTF8.GetString(buffer, 0, (int)bytesRead);
-                Debug.Log($"[Server] {remote} 로부터 받은 메시지: {msg}");
                 if (msg.StartsWith("QRP")) // rQuest Rich Presence
                 {
                     FriendState state = FriendState.HiddenOrUnknown;
@@ -110,6 +109,7 @@ public class FriendListManager : MonoBehaviour
                         }
                     }
                     SendToClient(remote, "ERP" + (int)state);
+                    Debug.Log($"[Server] {remote} 의 Rich Presence 요청에 응답: {(int)state}");
                 }
 
                 if (msg.StartsWith("ERP")) //rEsponse Rich Presence
@@ -117,8 +117,8 @@ public class FriendListManager : MonoBehaviour
                     //친구의 Rich Presence 응답
                     string rpKey = msg.Substring(3); // "steam_display" 등
                     string rpValue = msg[3].ToString();
-                    Debug.Log($"[Server] {remote} 의 Rich Presence '{rpKey}' = '{rpValue}'");
-                    QRPResponsed[remote] = true;
+                    Debug.Log($"[Server] {remote} 의 Rich Presence '{SteamFriends.GetFriendPersonaState(remote)}' = '{rpValue}'");
+                    //QRPResponsed[remote] = true;
                     CachedStates[remote] = (FriendState)int.Parse(rpValue);
                 }
             }
@@ -127,7 +127,7 @@ public class FriendListManager : MonoBehaviour
         {
             //5초 이내에 응답이 없으면 NotPlayingThisGame으로 간주
             //스팀은 켜져 있지만 우리 게임이 아닌 경우임
-            if (Time.time - kv.Value > 5.0f && QRPResponsed[kv.Key] == false)
+            if (Time.time - kv.Value > 5.0f)
             {
                 var state = SteamFriends.GetFriendPersonaState(kv.Key);
                 if(state != EPersonaState.k_EPersonaStateOffline)
@@ -159,7 +159,7 @@ public class FriendListManager : MonoBehaviour
             CHANNEL
         );
 
-        Debug.Log($"[Server] SendP2PPacket to {clientId}, len={length}, result={ok}");
+        //Debug.Log($"[Server] SendP2PPacket to {clientId}, len={length}, result={ok}");
     }
 
     /// <summary>
@@ -175,7 +175,7 @@ public class FriendListManager : MonoBehaviour
 
     public Dictionary<CSteamID, FriendState> CachedStates = new();
     public Dictionary<CSteamID, float> QRPTime = new();
-    public Dictionary<CSteamID, bool> QRPResponsed = new();
+    //public Dictionary<CSteamID, bool> QRPResponsed = new();
     /// <summary>
     /// onlyOnline: 온라인 친구만 가져올지
     /// onlyPlayingThisGame: "현재 이 앱을 플레이 중인 친구만" 필터링할지
@@ -198,13 +198,18 @@ public class FriendListManager : MonoBehaviour
             if(QRPTime.TryGetValue(fid, out var t) == false)
             {
                 QRPTime[fid] = -1000f;
-                QRPResponsed[fid] = false;
+                //QRPResponsed[fid] = false;
             }
-            //직전 요청에 대답을 한 애들이거나, 5초 동안 요청을 안 보낸 애들한테 요청을 보냄
-            if (Time.time -  QRPTime[fid] > 5.0f || QRPResponsed[fid] == true)
+            if (CachedStates.TryGetValue(fid, out var v) == false)
             {
+                CachedStates[fid] = FriendState.HiddenOrUnknown;
+            }
+            //5초 동안 요청을 안 보낸 애들한테 요청을 보냄
+            if (Time.time -  QRPTime[fid] > 5.0f)
+            {
+                Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)}에게 QRP 보냄");
                 SendToClient(fid, "QRP"); // rQuest Rich Presence
-                QRPResponsed[fid] = false;
+                //QRPResponsed[fid] = false;
                 QRPTime[fid] = Time.time;
             }
 
@@ -212,10 +217,6 @@ public class FriendListManager : MonoBehaviour
             bool playingThis = false;
             FriendGameInfo_t gi;
             //FriendState s = FriendState.HiddenOrUnknown;
-            if(CachedStates.TryGetValue(fid, out var v) == false)
-            {
-                CachedStates[fid] = FriendState.HiddenOrUnknown;
-            }
 
             if(state == EPersonaState.k_EPersonaStateOffline) //스팀 앱이 꺼져 있는 경우
             {
@@ -261,7 +262,7 @@ public class FriendListManager : MonoBehaviour
             }
 
 
-            if (onlyPlayingThisGame && !playingThis) continue;
+            //if (onlyPlayingThisGame && !playingThis) continue;
 
             list.Add(new FriendInfo
             {
