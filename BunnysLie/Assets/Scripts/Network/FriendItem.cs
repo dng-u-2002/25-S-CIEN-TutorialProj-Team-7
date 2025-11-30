@@ -60,10 +60,10 @@ public class FriendItem : MonoBehaviour
                 inviteButton2.interactable = false;
                 inviteButton3.interactable = false;
                 break;
-            case FriendListManager.FriendState.SteamOnline:
-                inviteButton2.interactable = true;
-                inviteButton3.interactable = true;
-                break;
+            //case FriendListManager.FriendState.SteamOnline:
+            //    inviteButton2.interactable = true;
+            //    inviteButton3.interactable = true;
+            //    break;
                 //case FriendListManager.FriendState.PlayingThisGame:
                 //    inviteButton2.interactable = true;
                 //    inviteButton3.interactable = true;
@@ -141,10 +141,10 @@ public class FriendItem : MonoBehaviour
                 statusIndicator.color = offlineColor;
                 statusText.text = "다른 게임 중";
                 break;
-            case FriendListManager.FriendState.SteamOnline:
-                statusIndicator.color = onlineColor;
-                statusText.text = "스팀에 접속 중";
-                break;
+            //case FriendListManager.FriendState.SteamOnline:
+                //statusIndicator.color = onlineColor;
+                //statusText.text = "스팀에 접속 중";
+                //break;
                 //case FriendListManager.FriendState.PlayingThisGame:
                 //    statusIndicator.color = onlineColor;
                 //    statusText.text = "온라인";
