@@ -673,7 +673,8 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
                 f.richStatus = status;
             }
         }
-
+        if (friendListContent == null)
+            return;
         foreach (Transform child in friendListContent)
         {
             var it = child.GetComponent<FriendItem>();
