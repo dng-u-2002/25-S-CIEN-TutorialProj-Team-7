@@ -173,24 +173,32 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
     IEnumerator _LoopUpdateFriendList(float dt)
     {
+        float timer = 0.0f;
         while(true)
         {
-            yield return new WaitForSeconds(dt);
-            //UpdateFriendList();
-
-            //var list = new List<FriendInfo>();
-            int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
-            //AppId_t myApp = SteamUtils.GetAppID();
-
-            for (int i = 0; i < count; i++)
+            timer += Time.deltaTime;
+            if(timer >= dt)
             {
-                var fid = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
-                var state = SteamFriends.GetFriendPersonaState(fid);
-                if (state == EPersonaState.k_EPersonaStateOffline) continue;
+                timer = 0.0f;
+                //yield return new WaitForSeconds(dt);
+                //UpdateFriendList();
 
-                SteamFriends.RequestFriendRichPresence(fid);
+                //var list = new List<FriendInfo>();
+                int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
+                //AppId_t myApp = SteamUtils.GetAppID();
+
+                for (int i = 0; i < count; i++)
+                {
+                    var fid = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
+                    var state = SteamFriends.GetFriendPersonaState(fid);
+                    if (state == EPersonaState.k_EPersonaStateOffline) continue;
+
+                    SteamFriends.RequestFriendRichPresence(fid);
+                }
+                UpdateFriendList();
             }
-            UpdateFriendList();
+            UpdateFriendRP();
+            yield return null;
         }
     }
 
@@ -682,6 +690,33 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         }
     }
     List<FriendListManager.FriendInfo> FriendList = new ();
+
+    void UpdateFriendRP()
+    {
+        foreach (Transform child in friendListContent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        var sortedFriends = FriendList.OrderByDescending(f => (int)f.gameState)
+                                     .ThenBy(f => f.name)
+                                     .ToList();
+
+        foreach (var friend in sortedFriends)
+        {
+            if (friendItemPrefab != null)
+            {
+                GameObject friendItem = Instantiate(friendItemPrefab, friendListContent);
+                FriendItem friendItemScript = friendItem.GetComponent<FriendItem>();
+                if (friendItemScript != null)
+                {
+                    if (FriendListManager.Instance.CachedStates.TryGetValue(friend.id, out var state))
+                        friend.gameState = (FriendListManager.FriendState)FriendListManager.Instance.CachedStates[friend.id];
+                    friendItemScript.SetupFriend(friend);
+                }
+            }
+        }
+    }
     void UpdateFriendList()
     {
         foreach (Transform child in friendListContent)

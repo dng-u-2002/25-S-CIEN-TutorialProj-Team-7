@@ -40,14 +40,27 @@ public class FriendItem : MonoBehaviour
                 inviteButton2.interactable = true;
                 inviteButton3.interactable = true;
                 break;
-            case FriendListManager.FriendState.PlayingThisGame:
+            case FriendListManager.FriendState.InLobby:
                 inviteButton2.interactable = true;
                 inviteButton3.interactable = true;
                 break;
-            case FriendListManager.FriendState.NotPlayingThisGame:
+            case FriendListManager.FriendState.InGame:
                 inviteButton2.interactable = false;
                 inviteButton3.interactable = false;
                 break;
+            case FriendListManager.FriendState.InMatching:
+                inviteButton2.interactable = true;
+                inviteButton3.interactable = true;
+                break;
+                //case FriendListManager.FriendState.PlayingThisGame:
+                //    inviteButton2.interactable = true;
+                //    inviteButton3.interactable = true;
+                //    break;
+                //case FriendListManager.FriendState.NotPlayingThisGame:
+                //    inviteButton2.interactable = false;
+                //    inviteButton3.interactable = false;
+                //    break;
+
         }
     }
     
@@ -96,14 +109,26 @@ public class FriendItem : MonoBehaviour
                 statusIndicator.color = unknownColor;
                 statusText.text = "확인할 수 없음/비공개";
                 break;
-            case FriendListManager.FriendState.PlayingThisGame:
+            case FriendListManager.FriendState.InLobby:
                 statusIndicator.color = onlineColor;
-                statusText.text = "온라인";
+                statusText.text = "로비";
                 break;
-            case FriendListManager.FriendState.NotPlayingThisGame:
-                statusIndicator.color = offlineColor;
-                statusText.text = "오프라인";
+            case FriendListManager.FriendState.InGame:
+                statusIndicator.color = onlineColor;
+                statusText.text = "게임 중";
                 break;
+            case FriendListManager.FriendState.InMatching:
+                statusIndicator.color = onlineColor;
+                statusText.text = "매칭 중";
+                break;
+                //case FriendListManager.FriendState.PlayingThisGame:
+                //    statusIndicator.color = onlineColor;
+                //    statusText.text = "온라인";
+                //    break;
+                //case FriendListManager.FriendState.NotPlayingThisGame:
+                //    statusIndicator.color = offlineColor;
+                //    statusText.text = "오프라인";
+                //    break;
         }
         //if (friendData.isPlayingThisGame)
         //{

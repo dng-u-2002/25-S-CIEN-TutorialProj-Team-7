@@ -2,15 +2,19 @@ using UnityEngine;
 using Steamworks;
 using System.Collections.Generic;
 using System.Text;
+using Photon.Pun;
 
 public class FriendListManager : MonoBehaviour
 {
     public enum FriendState
     {
         //얘네 순서대로 친구 목록에 뜸(값이 큰거)
-        PlayingThisGame = 2,
-        HiddenOrUnknown = 1,
-        NotPlayingThisGame = 0
+        InLobby = 0,
+        InGame,
+        InMatching,
+        //PlayingThisGame = 2,
+        HiddenOrUnknown,
+        //NotPlayingThisGame = 0
     }
     public class FriendInfo
     {
@@ -87,7 +91,21 @@ public class FriendListManager : MonoBehaviour
                 Debug.Log($"[Server] {remote} 로부터 받은 메시지: {msg}");
                 if (msg.StartsWith("QRP")) // rQuest Rich Presence
                 {
-                    SendToClient(remote, "ERP" + UnityEngine.Random.Range(0, 10));
+                    FriendState state = FriendState.HiddenOrUnknown;
+                    if(InGameManager.Instance != null)
+                    {
+                        state = FriendState.InGame;
+                    }
+                    else
+                    {
+                        state = FriendState.InLobby;
+                        //게임 중은 아닌데, 방에 들어가 있으면 이건 매칭 중임
+                        if(PhotonNetwork.InRoom)
+                        {
+                            state = FriendState.InMatching;
+                        }
+                    }
+                    SendToClient(remote, "ERP" + (int)state);
                 }
 
                 if (msg.StartsWith("ERP")) //rEsponse Rich Presence
@@ -102,7 +120,6 @@ public class FriendListManager : MonoBehaviour
             }
         }
     }
-
     /// <summary>
     /// 특정 클라이언트에게 문자열 메시지 전송
     /// </summary>
@@ -134,7 +151,7 @@ public class FriendListManager : MonoBehaviour
         SteamNetworking.CloseP2PSessionWithUser(clientId);
     }
 
-    Dictionary<CSteamID, int> CachedStates = new();
+    public Dictionary<CSteamID, int> CachedStates = new();
     /// <summary>
     /// onlyOnline: 온라인 친구만 가져올지
     /// onlyPlayingThisGame: "현재 이 앱을 플레이 중인 친구만" 필터링할지
@@ -167,33 +184,33 @@ public class FriendListManager : MonoBehaviour
             }
             else //스팀 앱이 켜져 있는 경우
             {
-                if (SteamFriends.GetFriendGamePlayed(fid, out gi))
-                {
-                    //비공개 계정은 현재 무슨 게임 중인지도 알려주지 않으므로...
-                    //여기 들어오면 일단은 비공개 계정은 아님(공개 계정임)
-                    //Debug.Log($"Game : {SteamFriends.GetFriendPersonaName(fid)} / {gi.m_gameID.AppID()}");
-                    playingThis = (gi.m_gameID.AppID() == myApp);
+                //if (SteamFriends.GetFriendGamePlayed(fid, out gi))
+                //{
+                //    //비공개 계정은 현재 무슨 게임 중인지도 알려주지 않으므로...
+                //    //여기 들어오면 일단은 비공개 계정은 아님(공개 계정임)
+                //    //Debug.Log($"Game : {SteamFriends.GetFriendPersonaName(fid)} / {gi.m_gameID.AppID()}");
+                //    playingThis = (gi.m_gameID.AppID() == myApp);
 
 
-                    if (playingThis)
-                    {
-                        //확실하게 우리 게임 중
-                        s = FriendState.PlayingThisGame;
-                    }
-                    else
-                    {
-                        //확실하게 다른 게임 중
-                        s = FriendState.NotPlayingThisGame;
-                    }
-                }
-                else
-                {
-                    //여기선 경우가 2개인데, 아예 비공개 계정이거나 아무 게임도 하고 있지 않은 경우임
-                    //근데 비공개 계정인지 확인하는 그런 함수도 없고, Rich Presence로 우회하려고 해도 비공개 계정은 RP에 그냥 값이 없어서 안됨
-                    //현재 우리 게임을 플레이하지 않음 -> RP == emtpy
-                    //비공개 계정임 -> RP == empty
-                    s = FriendState.HiddenOrUnknown;
-                }
+                //    if (playingThis)
+                //    {
+                //        //확실하게 우리 게임 중
+                //        s = FriendState.PlayingThisGame;
+                //    }
+                //    else
+                //    {
+                //        //확실하게 다른 게임 중
+                //        s = FriendState.NotPlayingThisGame;
+                //    }
+                //}
+                //else
+                //{
+                //    //여기선 경우가 2개인데, 아예 비공개 계정이거나 아무 게임도 하고 있지 않은 경우임
+                //    //근데 비공개 계정인지 확인하는 그런 함수도 없고, Rich Presence로 우회하려고 해도 비공개 계정은 RP에 그냥 값이 없어서 안됨
+                //    //현재 우리 게임을 플레이하지 않음 -> RP == emtpy
+                //    //비공개 계정임 -> RP == empty
+                //    s = FriendState.HiddenOrUnknown;
+                //}
             }
 
 
