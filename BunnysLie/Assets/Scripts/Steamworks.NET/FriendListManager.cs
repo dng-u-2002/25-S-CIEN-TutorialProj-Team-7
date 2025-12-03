@@ -3,7 +3,6 @@ using Steamworks;
 using System.Collections.Generic;
 using System.Text;
 using Photon.Pun;
-using System.Security.Cryptography;
 
 public class FriendListManager : MonoBehaviour
 {
@@ -117,13 +116,14 @@ public class FriendListManager : MonoBehaviour
                     //친구의 Rich Presence 응답
                     string rpKey = msg.Substring(3); // "steam_display" 등
                     string rpValue = msg[3].ToString();
-                    Debug.Log($"[Server] {remote} 의 Rich Presence '{SteamFriends.GetFriendPersonaState(remote)}' = '{rpValue}'");
+                    Debug.Log($"[Server] {remote} 의 Rich Presence '{SteamFriends.GetFriendPersonaName(remote)}' = '{rpValue}'");
                     //QRPResponsed[remote] = true;
                     CachedStates[remote] = (FriendState)int.Parse(rpValue);
+                    ERPTime[remote] = Time.time;
                 }
             }
         }
-        foreach(var kv in QRPTime)
+        foreach(var kv in ERPTime)
         {
             //5초 이내에 응답이 없으면 NotPlayingThisGame으로 간주
             //스팀은 켜져 있지만 우리 게임이 아닌 경우임
@@ -133,7 +133,7 @@ public class FriendListManager : MonoBehaviour
                 if(state != EPersonaState.k_EPersonaStateOffline)
                 {
                     CachedStates[kv.Key] = FriendState.NotPlayingThisGame;
-                    Debug.Log($"[Server] {kv.Key} 의 Rich Presence 응답 시간 초과. NotPlayingThisGame으로 간주.");
+                    Debug.Log($"[Server] {SteamFriends.GetFriendPersonaName(kv.Key)} 의 Rich Presence 응답 시간 초과. NotPlayingThisGame으로 간주.");
                 }
                 else
                 {
@@ -174,6 +174,7 @@ public class FriendListManager : MonoBehaviour
     }
 
     public Dictionary<CSteamID, FriendState> CachedStates = new();
+    public Dictionary<CSteamID, float> ERPTime = new();
     public Dictionary<CSteamID, float> QRPTime = new();
     //public Dictionary<CSteamID, bool> QRPResponsed = new();
     /// <summary>
@@ -195,8 +196,9 @@ public class FriendListManager : MonoBehaviour
             // 최신 Rich Presence 요청
             //SteamFriends.RequestFriendRichPresence(fid);
 
-            if(QRPTime.TryGetValue(fid, out var t) == false)
+            if(ERPTime.TryGetValue(fid, out var t) == false)
             {
+                ERPTime[fid] = -1000f;
                 QRPTime[fid] = -1000f;
                 //QRPResponsed[fid] = false;
             }
@@ -204,13 +206,13 @@ public class FriendListManager : MonoBehaviour
             {
                 CachedStates[fid] = FriendState.HiddenOrUnknown;
             }
-            //5초 동안 요청을 안 보낸 애들한테 요청을 보냄
-            if (Time.time -  QRPTime[fid] > 5.0f)
+            //최신 응답을 받고 3초가 지난 애들한테 요청을 보냄
+            if (Time.time -  ERPTime[fid] > 3.0f || Time.time - QRPTime[fid] > 5.0f)
             {
                 Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)}에게 QRP 보냄");
                 SendToClient(fid, "QRP"); // rQuest Rich Presence
-                //QRPResponsed[fid] = false;
                 QRPTime[fid] = Time.time;
+                //QRPResponsed[fid] = false;
             }
 
             // "현재 이 앱 플레이 중인지"만 판단

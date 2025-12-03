@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Steamworks;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,17 +20,29 @@ public class FriendItem : MonoBehaviour
     public Color inGameColor = Color.red;
     
     private FriendListManager.FriendInfo friendData;
-    
+    public CSteamID FriendID
+    {
+        get {
+            if (friendData == null) return CSteamID.Nil;
+            return friendData.id; }
+    }
+    [SerializeField] GameObject ButtonBlocker;
     public void SetupFriend(FriendListManager.FriendInfo friend)
     {
         friendData = friend;
+        //Debug.Log(friend.gameState);
+        UpdateDisplay();
+    }
+
+    public void UpdateDisplay()
+    {
         UpdateFriendDisplay();
         SetupButtons();
     }
     
     public void UpdateFriendDisplay()
     {
-        //if (friendData == null) return;
+        if (friendData == null) return;
         if (nicknameText != null) nicknameText.text = friendData.name;
         UpdateStatusAndActivity();
         UpdateStatusIndicator();
@@ -37,28 +50,22 @@ public class FriendItem : MonoBehaviour
         switch(friendData.gameState)
         {
             case FriendListManager.FriendState.HiddenOrUnknown:
-                inviteButton2.interactable = true;
-                inviteButton3.interactable = true;
+                ButtonBlocker.gameObject.SetActive(!true);
                 break;
             case FriendListManager.FriendState.InLobby:
-                inviteButton2.interactable = true;
-                inviteButton3.interactable = true;
+                ButtonBlocker.gameObject.SetActive(!true);
                 break;
             case FriendListManager.FriendState.InGame:
-                inviteButton2.interactable = false;
-                inviteButton3.interactable = false;
+                ButtonBlocker.gameObject.SetActive(!false);
                 break;
             case FriendListManager.FriendState.InMatching:
-                inviteButton2.interactable = true;
-                inviteButton3.interactable = true;
+                ButtonBlocker.gameObject.SetActive(!true);
                 break;
             case FriendListManager.FriendState.NotPlayingThisGame:
-                inviteButton2.interactable = false;
-                inviteButton3.interactable = false;
+                ButtonBlocker.gameObject.SetActive(!false);
                 break;
             case FriendListManager.FriendState.SteamOffline:
-                inviteButton2.interactable = false;
-                inviteButton3.interactable = false;
+                ButtonBlocker.gameObject.SetActive(!false);
                 break;
             //case FriendListManager.FriendState.SteamOnline:
             //    inviteButton2.interactable = true;

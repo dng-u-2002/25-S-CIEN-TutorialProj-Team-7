@@ -12,6 +12,7 @@ using System.Collections;
 using Steamworks;
 using System.Text;
 using System.Security.Cryptography;
+using UnityEditor;
 
 public class GameLobbyManager : MonoBehaviourPunCallbacks
 {
@@ -173,7 +174,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
     IEnumerator _LoopUpdateFriendList(float dt)
     {
-        float timer = 0.0f;
+        float timer = dt * 10;
         while(true)
         {
             timer += Time.deltaTime;
@@ -184,17 +185,17 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
                 //UpdateFriendList();
 
                 //var list = new List<FriendInfo>();
-                int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
+                //int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
                 //AppId_t myApp = SteamUtils.GetAppID();
 
-                for (int i = 0; i < count; i++)
-                {
-                    var fid = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
-                    var state = SteamFriends.GetFriendPersonaState(fid);
-                    if (state == EPersonaState.k_EPersonaStateOffline) continue;
+                //for (int i = 0; i < count; i++)
+                //{
+                //    var fid = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
+                //    var state = SteamFriends.GetFriendPersonaState(fid);
+                //    if (state == EPersonaState.k_EPersonaStateOffline) continue;
 
-                    SteamFriends.RequestFriendRichPresence(fid);
-                }
+                //    SteamFriends.RequestFriendRichPresence(fid);
+                //}
                 UpdateFriendList();
             }
             UpdateFriendRP();
@@ -282,7 +283,11 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         //accountButton.onClick.AddListener(() => ShowAccountPanel());
         //helpButton.onClick.AddListener(() => ShowHelpPanel());
         //friendButton.onClick.AddListener(() => ShowFriendPanel());
-        exitButton.onClick.AddListener(() => ShowExitConfirmation());
+        exitButton.onClick.AddListener(() =>
+        {
+            Application.Quit();
+            Debug.Log("Exit Game!");
+        });
         
         soundToggle.onValueChanged.AddListener(SetSoundEnabled);
         pushNotificationToggle.onValueChanged.AddListener(SetPushNotification);
@@ -693,28 +698,37 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
     void UpdateFriendRP()
     {
-        foreach (Transform child in friendListContent)
-        {
-            Destroy(child.gameObject);
-        }
-
-        var sortedFriends = FriendList.OrderByDescending(f => (int)f.gameState)
+        var sortedFriends = FriendList.OrderBy(f => (int)f.gameState)
                                      .ThenBy(f => f.name)
                                      .ToList();
-
-        foreach (var friend in sortedFriends)
+        //이 순서대로 friendItme의 순서를 바꿈
+        var itmes = friendListContent.GetComponentsInChildren<FriendItem>();
+        for(int i = 0; i < sortedFriends.Count; i++)
         {
-            if (friendItemPrefab != null)
+            for (int j = 0; j < itmes.Length; j++)
             {
-                GameObject friendItem = Instantiate(friendItemPrefab, friendListContent);
-                FriendItem friendItemScript = friendItem.GetComponent<FriendItem>();
-                if (friendItemScript != null)
+                if (sortedFriends[i] == null || itmes[j] == null) continue;
+                if (sortedFriends[i].id == null || itmes[j].FriendID == CSteamID.Nil) continue;
+                if (itmes[j].FriendID == sortedFriends[i].id)
                 {
-                    if (FriendListManager.Instance.CachedStates.TryGetValue(friend.id, out var state))
-                        friend.gameState = (FriendListManager.FriendState)FriendListManager.Instance.CachedStates[friend.id];
-                    friendItemScript.SetupFriend(friend);
+                    itmes[j].transform.SetSiblingIndex(i);
+                    break;
                 }
             }
+        }
+
+        foreach (var friend in FriendList)
+        {
+            if (FriendListManager.Instance.CachedStates.TryGetValue(friend.id, out var state))
+                friend.gameState = (FriendListManager.FriendState)FriendListManager.Instance.CachedStates[friend.id];
+        }
+        //참조라서 이렇게 해도 됨
+
+        //var itmes = friendListContent.GetComponentsInChildren<FriendItem>();
+
+        foreach (var friend in itmes)
+        {
+            friend.UpdateDisplay();
         }
     }
     void UpdateFriendList()
@@ -725,7 +739,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         }
         FriendList = FriendListManager.Instance.GetFriends(true, false);
 
-        var sortedFriends = FriendList.OrderByDescending(f => (int)f.gameState)
+        var sortedFriends = FriendList.OrderBy(f => (int)f.gameState)
                                      .ThenBy(f => f.name)
                                      .ToList();
         
@@ -741,6 +755,10 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
                 }
             }
         }
+        //Canvas.ForceUpdateCanvases();
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(parentCanvas.GetComponent<RectTransform>());
+        //EditorApplication.isPaused = true;
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(friendListContent.GetComponent<RectTransform>());
     }
     
     //public void InviteFriendToGame(FriendData friend)

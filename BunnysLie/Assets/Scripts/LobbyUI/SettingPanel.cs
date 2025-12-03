@@ -127,7 +127,7 @@ public class SettingPanel : MonoBehaviour
 
         FindFirstObjectByType<CreditPlayer>().Play(() =>
         {
-            OnButtonClicked_SoundSetting();
+            //OnButtonClicked_SoundSetting();
         });
     }
     public void OnButtonClicked_Account()
