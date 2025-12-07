@@ -85,6 +85,7 @@ public class SettingPanel : MonoBehaviour
 
     public void OnButtonClicked_SoundSetting()
     {
+        ButtonClickSoundPlayer.Play();
         ResetNowButton2NormalScale();
         DisableAllViews();
         NowSelectedButton = SoundSettingButton.transform;
@@ -94,6 +95,7 @@ public class SettingPanel : MonoBehaviour
     }
     public void OnButtonClicked_Friend()
     {
+        ButtonClickSoundPlayer.Play();
         ResetNowButton2NormalScale();
         DisableAllViews();
         NowSelectedButton = HotKeyButton.transform;
@@ -102,6 +104,7 @@ public class SettingPanel : MonoBehaviour
     }
     public void OnButtonClicked_Helper()
     {
+        ButtonClickSoundPlayer.Play();
         ResetNowButton2NormalScale();
         DisableAllViews();
         NowSelectedButton = HotKeyButton.transform;
@@ -110,6 +113,7 @@ public class SettingPanel : MonoBehaviour
     }
     public void OnButtonClicked_Quest()
     {
+        ButtonClickSoundPlayer.Play();
         ResetNowButton2NormalScale();
         DisableAllViews();
         NowSelectedButton = QuestButton.transform;

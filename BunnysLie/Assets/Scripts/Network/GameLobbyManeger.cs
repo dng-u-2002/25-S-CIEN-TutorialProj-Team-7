@@ -237,7 +237,12 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         RealButton_ShowPrivateCodeEnterPanelButton.onClick.AddListener(() => ShowPrivateRoomPanel());
         foreach(var bb in CancleBackButtons)
         {
-            bb.onClick.AddListener(() => CloseAllPanels());
+            bb.onClick.AddListener(() =>
+            {
+                CloseAllPanels();
+
+                ButtonClickSoundPlayer.Play();
+            });
         }
         foreach (var bb in ExitNowMatchButtons)
         {
@@ -248,30 +253,39 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
                 //방 안에 있을 때에만 작동
                 CloseAllPanels();
+                ButtonClickSoundPlayer.Play();
             });
         }
-        PrevButton_ShowModeSelectingButton.onClick.AddListener(() => ShowRandomMatchingModeButtons());
+        PrevButton_ShowModeSelectingButton.onClick.AddListener(() => { ShowRandomMatchingModeButtons();
+            ButtonClickSoundPlayer.Play();
+        });
         RealButton_EnterRoomWithTwoCardGameButton.onClick.AddListener(() =>
         {
             SelectGameType(eGameMode.TwoCards);
             StartRandomMatching();
+            ButtonClickSoundPlayer.Play();
         });
         RealButton_EnterRoomWithThreeCardGameButton.onClick.AddListener(() =>
         {
             SelectGameType(eGameMode.ThreeCards);
             StartRandomMatching();
+            ButtonClickSoundPlayer.Play();
         });
-        RealButton_EnterQuickMatchButton.onClick.AddListener(() => StartQuickMatch());
+        RealButton_EnterQuickMatchButton.onClick.AddListener(() => { StartQuickMatch();
+            ButtonClickSoundPlayer.Play();
+        });
 
         createPrivateRoomButton_TwoCards.onClick.AddListener(() =>
         {
             SelectGameType(eGameMode.TwoCards);
             CreatePrivateRoom();
+            ButtonClickSoundPlayer.Play();
         });
         createPrivateRoomButton_ThreeCards.onClick.AddListener(() =>
         {
             SelectGameType(eGameMode.ThreeCards);
             CreatePrivateRoom();
+            ButtonClickSoundPlayer.Play();
         });
         joinPrivateRoomButton.onClick.AddListener(() => JoinPrivateRoom());
         
@@ -937,6 +951,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         CloseAllPanels();
         settingsPanel.SetActive(true);
         settingsPanel.transform.GetComponent<SettingPanel>().OnSettingButtonClicked();
+        ButtonClickSoundPlayer.Play();
     }
    
     
