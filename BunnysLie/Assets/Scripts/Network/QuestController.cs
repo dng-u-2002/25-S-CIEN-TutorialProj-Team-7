@@ -10,8 +10,10 @@ public class QuestController : MonoBehaviour
     static bool IsAlreadyOnceLoseIncludeSpecialRule = false; //한 라운드에서라도 진 적이 있는가?
 
     static bool IsExchangedCardWithOpponent = false;
+    static float StartTime = 0.0f;
     public static void ResetValuesPerGame()
     {
+        StartTime = Time.time;
         IsAlreadyOnceLoseExceptSpecialRule = false;
         IsAlreadyOnceLoseIncludeSpecialRule = false;
     }

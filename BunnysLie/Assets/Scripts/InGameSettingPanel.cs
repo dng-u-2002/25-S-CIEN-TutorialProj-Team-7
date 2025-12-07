@@ -326,8 +326,8 @@ public class InGameSettingPanel : MonoBehaviour
             PlayerPrefs.Save();
             Screen.SetResolution(width, height, full);
         });
-
-        ResolutionSelector.onValueChanged.Invoke(ResolutionSelector.options.IndexOf(ResolutionSelector.options.Find((o) => o.text.Contains(PlayerPrefs.GetInt("Width", 1920).ToString()) && o.text.Contains(PlayerPrefs.GetInt("Height", 1080).ToString()))));
+        ResolutionSelector.value = ResolutionSelector.options.IndexOf(ResolutionSelector.options.Find((o) => o.text.Contains(PlayerPrefs.GetInt("Width", 1920).ToString()) || o.text.Contains(PlayerPrefs.GetInt("Height", 1080).ToString())));
+        //ResolutionSelector.onValueChanged.Invoke(ResolutionSelector.options.IndexOf(ResolutionSelector.options.Find((o) => o.text.Contains(PlayerPrefs.GetInt("Width", 1920).ToString()) || o.text.Contains(PlayerPrefs.GetInt("Height", 1080).ToString()))));
         FullScreenToggle.SetValue(PlayerPrefs.GetInt("FullScreen", 1) == 1);
         Container.localPosition = new Vector3(0, 0);
 

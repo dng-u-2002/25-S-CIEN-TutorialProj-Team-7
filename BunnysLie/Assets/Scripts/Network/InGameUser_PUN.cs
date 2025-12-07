@@ -195,6 +195,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         if(PhotonNetwork.InRoom == true && InGameManager.Instance.IsStarted == true && PhotonNetwork.CurrentRoom.PlayerCount <= 2)
         {
             InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_NotEnoughPlayer, 3);
+            AchievementManager.AddToStat_INT(StatsId.SUDDEN_END_COUNT, 1);
             var d = FindFirstObjectByType<PunVoiceClient>();
             if (d != null)
                 Destroy(d.gameObject);
@@ -278,6 +279,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.Broadcast_StartGame:
                 //방, 방 안에 있는 유저의 ID, 캐릭터의 정보를 받아서 게임을 시작하기 위한 준비를 실행
                 {
+                    AchievementManager.AddToStat_INT(StatsId.GAMES_PLAYED, 1);
+
                     int roomID = reader.ReadInt();
                     List<int> users = new List<int>(new int[] { reader.ReadInt(), reader.ReadInt(), reader.ReadInt() });
                     List<byte> characters = new List<byte>(new byte[] { reader.ReadByte(), reader.ReadByte(), reader.ReadByte() });
@@ -778,6 +781,8 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         QuestController.OnLoseRoundGame();
                     else
                         QuestController.OnWinRoundGame();
+
+                    AchievementManager.AddToStat_INT(StatsId.TOTAL_ROUNDS, 1);
                     ///////////////////////////////////////////////////////////////////////////////
                 }
                 break;
@@ -1500,8 +1505,10 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         QuestController.OnLoseTotalGame();
                     else
                         QuestController.OnWinTotalGame();
+
+                    AchievementManager.AddToStat_INT(StatsId.GAMES_FINISHED, 1);
                     ///////////////////////////////////////////////////////////////////////////////
-                    
+
                     DelayedFunctionHelper.InvokeDelayed(() =>
                         {
                             OnFinalGameEnd.Play();

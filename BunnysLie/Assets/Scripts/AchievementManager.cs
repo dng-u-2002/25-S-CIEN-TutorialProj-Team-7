@@ -21,6 +21,16 @@ public enum AchievementId
     WinSpecialRuleAfterExhangeCardWithOpponent //1 vs 1 룰에서 상대와 교환 후 승리하기 / 네 카드가 탐나는데?
 }
 
+public enum StatsId
+{
+    GAMES_PLAYED,
+    GAMES_FINISHED,
+    SUDDEN_END_COUNT,
+    //TOTAL_MATCH_DURATION,
+    //MAX_MATCH_DURATION,
+    TOTAL_ROUNDS
+}
+
 public class AchievementManager : MonoBehaviour
 {
     public static AchievementManager Instance { get; private set; }
@@ -50,6 +60,15 @@ public class AchievementManager : MonoBehaviour
         { AchievementId.WinSpecialRuleAfterExhangeCardWithOpponent,      "WIN_SPECAILGAME_EXHANGE_OPPONENT" }
     };
 
+    private static readonly Dictionary<StatsId, string> Sts = new()
+    {
+        { StatsId.GAMES_PLAYED,        "GAMES_PLAYED" },
+        { StatsId.GAMES_FINISHED,        "GAMES_FINISHED" },
+        { StatsId.SUDDEN_END_COUNT,        "SUDDEN_END_COUNT" },
+        //{ StatsId.TOTAL_MATCH_DURATION,        "TOTAL_MATCH_DURATION" },
+        //{ StatsId.MAX_MATCH_DURATION,        "MAX_MATCH_DURATION" },
+        { StatsId.TOTAL_ROUNDS,        "TOTAL_ROUNDS" },
+    };
     void Awake()
     {
         if (Instance != null) { Destroy(gameObject); return; }
@@ -125,8 +144,8 @@ public class AchievementManager : MonoBehaviour
         if (b)
         {
             Debug.Log($"Achievement unlocked: {api}");
-            SteamUserStats.StoreStats(); // 서버 반영 트리거 (중요) :contentReference[oaicite:5]{index=5}
         }
+            SteamUserStats.StoreStats(); // 서버 반영 트리거 (중요) :contentReference[oaicite:5]{index=5}
     }
 
     // 진행형 업적(팝업 + 진행도 표시)
@@ -141,7 +160,7 @@ public class AchievementManager : MonoBehaviour
     public static void AddToStat(AchievementId statApiEnum, int delta, (AchievementId ach, int target)? gate = null)
     {
         if (Instance == null || !Instance._statsReady) return;
-        string statApiName = Ach[statApiEnum];
+        string statApiName = "S_" + Ach[statApiEnum];
         SteamUserStats.GetStat(statApiName, out int v);
         v += delta;
         SteamUserStats.SetStat(statApiName, v);
@@ -156,6 +175,24 @@ public class AchievementManager : MonoBehaviour
         {
             IndicateProgress(gate.Value.ach, v, gate.Value.target);
         }
+    }
+    public static void AddToStat_INT(StatsId id, int delta)
+    {
+        if (Instance == null || !Instance._statsReady) return;
+        string statApiName = Sts[id];
+        SteamUserStats.GetStat(statApiName, out int v);
+        v += delta;
+        SteamUserStats.SetStat(statApiName, v);
+        SteamUserStats.StoreStats();
+    }
+    public static void AddToStat_FLOAT(StatsId id, float delta)
+    {
+        if (Instance == null || !Instance._statsReady) return;
+        string statApiName = Sts[id];
+        SteamUserStats.GetStat(statApiName, out float v);
+        v += delta;
+        SteamUserStats.SetStat(statApiName, v);
+        SteamUserStats.StoreStats();
     }
     // 스탯 보조: 누적용 정수 스탯 예시
     public static void AddToStat(string statApiName, int delta, (AchievementId ach, int target)? gate = null)

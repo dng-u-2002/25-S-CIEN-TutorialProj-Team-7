@@ -1055,7 +1055,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         UpdateAccountInfo();
 
         //RuleBookButton.onClick.Invoke(); //시작 시 룰북 보여줌
-        FindObjectOfType<RuleBook>().ShowRuleBook(0);
+        FindObjectOfType<RuleBook>(true).ShowRuleBook(0);
     }
 
 
