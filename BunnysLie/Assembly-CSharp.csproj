@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{05A61F3B-1A05-0411-2CAB-15A5D35FF54B}</ProjectGuid>
+    <ProjectGuid>{0109FC5A-400F-C6DC-346B-0A15AA01D54A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -1295,95 +1295,95 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{459FE50E-006C-92ED-291B-A834AF4EDF48}</Project>
+      <Project>{43D2058E-46AD-034F-1A34-7C3A2E2DBDE1}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="com.rlabrecque.steamworks.net.csproj">
-      <Project>{E8B50A59-C2C9-5CCB-1426-B192BA8079B2}</Project>
+      <Project>{7F54A201-2EC2-C9B8-BD5E-8058A643BC05}</Project>
       <Name>com.rlabrecque.steamworks.net</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Editor.csproj">
-      <Project>{D58941B1-A443-CE5D-8EF9-3B5F1B1358C3}</Project>
+      <Project>{700AE165-0437-262B-05CE-045DE5F80FE5}</Project>
       <Name>PhotonUnityNetworking.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonVoice.API.csproj">
-      <Project>{B0736BA7-FE0C-8BE0-C554-1AA6DAB283A3}</Project>
+      <Project>{9065F352-D2D9-62C3-B51E-A40972E24374}</Project>
       <Name>PhotonVoice.API</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Utilities.PhotonPlayer.Editor.csproj">
-      <Project>{F5998C37-404D-E809-93AA-908A0EA236D6}</Project>
+      <Project>{B20FEC81-02C1-356E-D69D-F04249BEF20E}</Project>
       <Name>PhotonUnityNetworking.Utilities.PhotonPlayer.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonVoice.csproj">
-      <Project>{5A7D1AFE-4F95-7CFA-4F97-4B783BF1F60C}</Project>
+      <Project>{4D04698D-DFE8-D3F3-F579-CB4AEA4C53C6}</Project>
       <Name>PhotonVoice</Name>
     </ProjectReference>
     <ProjectReference Include="PunDemos.DemoSlotcarEditor.csproj">
-      <Project>{306BD67F-FE14-5166-FD28-727751D65DBE}</Project>
+      <Project>{83AFF7B1-4A9C-6285-1229-5253358953FE}</Project>
       <Name>PunDemos.DemoSlotcarEditor</Name>
     </ProjectReference>
     <ProjectReference Include="ParrelSync.csproj">
-      <Project>{C8E28E3B-0647-DD65-45B4-0426E4FF3161}</Project>
+      <Project>{8A8660F8-E637-7FF9-7461-E848BE40FB5D}</Project>
       <Name>ParrelSync</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonVoice.PUN.csproj">
-      <Project>{9853AF77-3C18-2025-099D-D3983A0F44F9}</Project>
+      <Project>{02906083-C347-BE4D-C489-A723FC393394}</Project>
       <Name>PhotonVoice.PUN</Name>
     </ProjectReference>
     <ProjectReference Include="MicAmplifierEditor.Editor.csproj">
-      <Project>{68057D62-E779-679B-76A9-7AABDAF010F7}</Project>
+      <Project>{FC5350FD-CABD-9B3A-20E4-5E686F51346A}</Project>
       <Name>MicAmplifierEditor.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonChat.csproj">
-      <Project>{E9F2522D-5FDD-9362-412C-7CC1A343993F}</Project>
+      <Project>{D9116C20-D1C7-D11B-207C-7CA8B8E2F52E}</Project>
       <Name>PhotonChat</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.csproj">
-      <Project>{A18A4753-7C43-B91A-B2CF-90C31811B714}</Project>
+      <Project>{7BFF74F8-A64C-674B-9620-062FE2F8BBEF}</Project>
       <Name>PhotonUnityNetworking</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Utilities.Culling.Editor.csproj">
-      <Project>{7E6805F3-7EF3-16D8-4FFF-866F8E2A0DF9}</Project>
+      <Project>{B133497F-731F-A982-208A-A8B324CD975A}</Project>
       <Name>PhotonUnityNetworking.Utilities.Culling.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Voice.FMOD.Editor.csproj">
-      <Project>{96FE8C6A-B8C8-0BD4-1E9D-EEA5A4FE9A85}</Project>
+      <Project>{5F85C84C-9DB0-3260-659D-1A9482C929D8}</Project>
       <Name>Voice.FMOD.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Demos.csproj">
-      <Project>{65BC525B-5B81-EA11-95BA-B388DA9535B9}</Project>
+      <Project>{904FB8A8-3F8F-168F-259A-0E5F155104ED}</Project>
       <Name>PhotonUnityNetworking.Demos</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Utilities.csproj">
-      <Project>{9949BEEE-B60E-3479-91AE-2195A6F0D83F}</Project>
+      <Project>{DF3F3AEB-2332-39B5-2E50-55B681D9CD8A}</Project>
       <Name>PhotonUnityNetworking.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="com.rlabrecque.steamworks.net.editor.csproj">
-      <Project>{7D822E16-D87A-54DA-858F-7F1A826A9555}</Project>
+      <Project>{23930BDD-D729-F6FF-3EB2-4A33E055E193}</Project>
       <Name>com.rlabrecque.steamworks.net.editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonVoice.Editor.csproj">
-      <Project>{26AB1D23-5025-8EA1-8558-425055152FF2}</Project>
+      <Project>{39DE69B5-A2EB-095D-4D1D-6961456FBD2A}</Project>
       <Name>PhotonVoice.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonVoice.Utilities.Editor.csproj">
-      <Project>{49172D5F-002E-6B5B-D183-5DCAE1010B7C}</Project>
+      <Project>{B7030125-9CBB-C692-943E-5238038C7B54}</Project>
       <Name>PhotonVoice.Utilities.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonRealtime.csproj">
-      <Project>{A1569715-F482-C682-5F60-FC1DECA75AF6}</Project>
+      <Project>{AA1AEC11-FAF7-BBC5-A6BF-51216C027696}</Project>
       <Name>PhotonRealtime</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonVoice.PUN.Editor.csproj">
-      <Project>{4EE3AD89-6988-EE57-A7F1-999E12792F85}</Project>
+      <Project>{A77914D1-8D59-2932-CA46-30A025827F15}</Project>
       <Name>PhotonVoice.PUN.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="LiteNetLib.csproj">
-      <Project>{49744ADC-EC88-8B72-6FFF-F418F1157765}</Project>
+      <Project>{8C34E99D-55DE-E424-0DE2-C673A92260FB}</Project>
       <Name>LiteNetLib</Name>
     </ProjectReference>
     <ProjectReference Include="PunDemos.DemoHubEditor.csproj">
-      <Project>{980E6CCA-1012-6327-1EE0-0F7F16F7FDEE}</Project>
+      <Project>{44617006-ECDA-A028-F336-7E4F65FA07A6}</Project>
       <Name>PunDemos.DemoHubEditor</Name>
     </ProjectReference>
   </ItemGroup>

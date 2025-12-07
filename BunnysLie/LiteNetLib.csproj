@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{49744ADC-EC88-8B72-6FFF-F418F1157765}</ProjectGuid>
+    <ProjectGuid>{8C34E99D-55DE-E424-0DE2-C673A92260FB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>LiteNetLib</AssemblyName>

@@ -440,24 +440,20 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         {
             return;
         }
-        
-        isMatchmaking = true;
-        //UpdateMyActivityStatus(FriendActivity.Matchmaking);
-        
-        ExitGames.Client.Photon.Hashtable roomProps = new ExitGames.Client.Photon.Hashtable();
-        roomProps["GameMode"] = (int)selectedGameType;
-        roomProps["RandomMode"] = true;
 
-        RoomOptions roomOptions = new RoomOptions()
-        {
-            MaxPlayers = 3,
-            CustomRoomProperties = roomProps,
-            CustomRoomPropertiesForLobby = new string[] { "GameMode" }
-        };
-        
-        PhotonNetwork.JoinRandomRoom(roomProps, 3);
+        isMatchmaking = true;
+
+        // 같은 모드 + 공개 방만 찾기
+        var expectedProps = new ExitGames.Client.Photon.Hashtable
+    {
+        { "GameMode", (int)selectedGameType },
+        { "IsPrivate", false }
+    };
+
+        PhotonNetwork.JoinRandomRoom(expectedProps, 0);
         ShowReadyPanel();
     }
+
     
     void StartQuickMatch()
     {
@@ -465,30 +461,44 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         {
             return;
         }
-        
+
         isMatchmaking = true;
-        //ShowMatchmakingPanel();
+
         readyPanel.transform.localPosition = Vector3.zero;
         readyPanel.gameObject.SetActive(true);
-        //UpdateMyActivityStatus(FriendActivity.Matchmaking);
+
+        // 새 방을 만들게 될 경우를 대비해서 미리 모드 하나 랜덤 픽
         selectedGameType = UnityEngine.Random.value > 0.5f ? eGameMode.TwoCards : eGameMode.ThreeCards;
-        PhotonNetwork.JoinRandomRoom();
+
+        // 비공개 방은 제외하고 매칭
+        var expectedProps = new ExitGames.Client.Photon.Hashtable
+    {
+        { "IsPrivate", false }
+    };
+
+        PhotonNetwork.JoinRandomRoom(expectedProps, 0);
     }
     
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         base.OnJoinRandomFailed(returnCode, message);
-        ExitGames.Client.Photon.Hashtable roomProps = new ExitGames.Client.Photon.Hashtable();
-        roomProps["GameMode"] = (int)selectedGameType;
-        roomProps["RandomMode"] = false;
-        
+
+        var roomProps = new ExitGames.Client.Photon.Hashtable
+    {
+        { "GameMode", (int)selectedGameType },
+        { "IsPrivate", false }      // 공개 랜덤 매칭 방
+    };
+
         RoomOptions roomOptions = new RoomOptions()
         {
             MaxPlayers = 3,
+            IsVisible = true,           // 랜덤 매칭에서 보이도록
+            IsOpen = true,
             CustomRoomProperties = roomProps,
-            CustomRoomPropertiesForLobby = new string[] { "GameMode" }
+            CustomRoomPropertiesForLobby = new string[] { "GameMode", "IsPrivate" }
         };
-        string roomName = "Room_" + UnityEngine.Random.Range(1000, 9999);
+
+        string roomName = "Room_" + UnityEngine.Random.Range(10000, 99999);
         Debug.Log($"매칭 실패, 새로운 방 생성: {roomName}");
         PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
@@ -541,23 +551,13 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
 
             bool isPrivate = false;
-            var data = PhotonNetwork.CurrentRoom.PropertiesListedInLobby;
-            foreach(var d in data)
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("IsPrivate", out var privObj)
+                && privObj is bool priv && priv)
             {
-                if(d == "IsPrivate")
-                {
-                    isPrivate = true;
-                    break;
-                }
+                isPrivate = true;
             }
-            if(isPrivate)
-            {
-                SetFriendPanelActive(true);
-            }
-            else
-            {
-                SetFriendPanelActive(false);
-            }
+
+            SetFriendPanelActive(isPrivate);
         }
     }
 
@@ -565,7 +565,14 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
     IEnumerator _ShowPlayerCounter()
     {
-        if ((bool)PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("IsPrivate", out var priv) == true && (bool)priv == true)
+        bool isPrivate = false;
+        if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("IsPrivate", out var privObj)
+            && privObj is bool priv && priv)
+        {
+            isPrivate = true;
+        }
+
+        if (isPrivate)
         {
             while (PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount < 3)
             {
@@ -614,18 +621,22 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
         string roomCode = GenerateRoomCode();
         roomCodeInput.text = roomCode;
-        
-        ExitGames.Client.Photon.Hashtable roomProps = new ExitGames.Client.Photon.Hashtable();
-        roomProps["GameMode"] = (int)selectedGameType;
-        roomProps["IsPrivate"] = true;
-        
+
+        var roomProps = new ExitGames.Client.Photon.Hashtable
+    {
+        { "GameMode", (int)selectedGameType },
+        { "IsPrivate", true }
+    };
+
         RoomOptions roomOptions = new RoomOptions()
         {
             MaxPlayers = 3,
+            IsVisible = false,                  // 랜덤 매칭/로비 목록에서 안 보이게
+            IsOpen = true,                      // 코드 아는 사람은 들어올 수 있게
             CustomRoomProperties = roomProps,
             CustomRoomPropertiesForLobby = new string[] { "GameMode", "IsPrivate" }
         };
-        
+
         PhotonNetwork.CreateRoom(roomCode, roomOptions);
         ShowReadyPanel();
         return roomCode;
