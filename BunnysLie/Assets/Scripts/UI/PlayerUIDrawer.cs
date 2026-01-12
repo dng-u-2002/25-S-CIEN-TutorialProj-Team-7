@@ -8,6 +8,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
@@ -339,7 +340,33 @@ public class PlayerUIDrawer : MonoBehaviour
     }
     public void SetNickName()
     {
-        string nickName = PhotonNetwork.CurrentRoom.Players.First((p) => p.Value.ActorNumber == Target.ID).Value.NickName;
+        Photon.Realtime.Player p = null;
+        foreach(var s in PhotonNetwork.CurrentRoom.Players)
+        {
+            if (s.Value.ActorNumber == Target.ID)
+                p = s.Value;
+        }
+        string nickName;
+        if (p != null)
+            nickName = p.NickName;
+        else
+        {
+            //º¿ÀÓ
+            //Target.ID
+            if (Character == 0)
+            {
+                nickName = "°è¼øÀÌ";
+            }
+            else if (Character == 1)
+            {
+                nickName = "´Þ·¡";
+            }
+            else
+            {
+                nickName = "´ö±¸";
+            }
+            //nickName = "Unknown";
+        }
         if (nickName.Contains("Test User"))
         {
             if (Character == 0)

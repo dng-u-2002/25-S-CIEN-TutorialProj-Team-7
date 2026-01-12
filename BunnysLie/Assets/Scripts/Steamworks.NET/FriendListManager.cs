@@ -133,7 +133,7 @@ public class FriendListManager : MonoBehaviour
                 if(state != EPersonaState.k_EPersonaStateOffline)
                 {
                     CachedStates[kv.Key] = FriendState.NotPlayingThisGame;
-                    Debug.Log($"[Server] {SteamFriends.GetFriendPersonaName(kv.Key)} 의 Rich Presence 응답 시간 초과. NotPlayingThisGame으로 간주.");
+                     //Debug.Log($"[Server] {SteamFriends.GetFriendPersonaName(kv.Key)} 의 Rich Presence 응답 시간 초과. NotPlayingThisGame으로 간주.");
                 }
                 else
                 {
@@ -209,7 +209,7 @@ public class FriendListManager : MonoBehaviour
             //최신 응답을 받고 3초가 지난 애들한테 요청을 보냄
             if (Time.time -  ERPTime[fid] > 3.0f || Time.time - QRPTime[fid] > 5.0f)
             {
-                Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)}에게 QRP 보냄");
+                //Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)}에게 QRP 보냄");
                 SendToClient(fid, "QRP"); // rQuest Rich Presence
                 QRPTime[fid] = Time.time;
                 //QRPResponsed[fid] = false;

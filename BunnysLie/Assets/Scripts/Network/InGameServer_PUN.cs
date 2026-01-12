@@ -15,6 +15,7 @@ using static UnityEngine.Rendering.DebugUI;
 
 
 
+[System.Serializable]
 public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public enum eRoomState
@@ -28,16 +29,30 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         ShouldStartRPS,
         WaitingForRPSSelection
     }
+    [System.Serializable]
     public class User
     {
         public Photon.Realtime.Player Player;
-        public int Id => Player.ActorNumber; //�ϴ���
+        public int Id
+        {
+            get
+            {
+                if (IsBot == false)
+                    return Player.ActorNumber;
+                else
+                    return BotID;
+            }
+        }
+        public int BotID = -1;
+        public bool IsBot;
+        public Bot BotInstance;
 
         public User(Photon.Realtime.Player player)
         {
             Player = player;
         }
     }
+    [System.Serializable]
     public class Room
     {
         public List<User> Players;
@@ -82,12 +97,24 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
     }
     void SendPacket(User u)
     {
-        PacketWriter.SendPacket(u);
-        PacketWriter.Clear();
+        if(u.IsBot == false)
+        {
+            PacketWriter.SendPacket(u);
+            PacketWriter.Clear();
+        }
+        else
+        {
+            u.BotInstance.OnEvent(PacketWriter.GetPacketType(), PacketWriter.GetDataList(), u);
+            PacketWriter.Clear();
+        }
     }
-
+    public List<User> GetUsers()
+    {
+        return ThisRoomData.Players;
+    }
     [SerializeField] TMP_Text Debugger;
     bool IsGameStarted = false;
+    List<Bot> Bots = new List<Bot>();
     //public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     void Update()
     {
@@ -96,20 +123,6 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             Debug.LogWarning("[Warning] Only Master Client can handle events.");
             return;
         }
-        //Debugger.text += $"[User Connection] New User connected: {newPlayer.ActorNumber}\n";
-        //Debug.Log($"[User Connection] New User connected: {newPlayer.ActorNumber}");
-
-        //PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.HandShake_S2U);
-        //PacketWriter.WriteInt(newPlayer.ActorNumber);
-        //SendPacket(new User(newPlayer));
-        //Debug.Log($"[HandShake] Server sent Handshake to User {newPlayer.ActorNumber}");
-
-        //if(PhotonNetwork.LevelLoadingProgress < 1.0f)
-        //{
-        //    Debugger.text = $"[Loading] {PhotonNetwork.LevelLoadingProgress * 100}%";
-        //    return;
-        //}
-
 
         if (Photon.Pun.PhotonNetwork.IsMasterClient == false)
             return;
@@ -130,11 +143,26 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             Debug.Log($"Now Player Count : {PhotonNetwork.CurrentRoom.PlayerCount}");
             Debugger.text += $"[User Connection] Now Player Count : {PhotonNetwork.CurrentRoom.PlayerCount}\n";
         }
-        if (PhotonNetwork.CurrentRoom.PlayerCount >= 3 && IsGameStarted == false)
+        if ((PhotonNetwork.CurrentRoom.PlayerCount >= 3
+            || true) && IsGameStarted == false)
         {
+            int diff = 3 - PhotonNetwork.CurrentRoom.PlayerCount;
+            for(int i = 0; i < diff; i++)
+            {
+                Bots.Add(new Bot());
+            }
+
             IsGameStarted = true;
             var room = new Room();
             room.Players = new List<User>();
+            foreach (var b in Bots)
+            {
+                var u = new User(null);
+                u.IsBot = true;
+                u.BotID = 1000 + Bots.IndexOf(b);
+                u.BotInstance = b;
+                room.Players.Add(u);
+            }
             foreach (var p in PhotonNetwork.CurrentRoom.Players)
             {
                 room.Players.Add(new User(p.Value));
@@ -549,8 +577,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         NetworkDataReader_PUN reader = new NetworkDataReader_PUN(photonEvent.CustomData);
 
         User user = ThisRoomData.Players.Find((u) => photonEvent.Sender == u.Id);
-        var pac = photonEvent.Code;
-        var packet = (ePacketType_InGameServer)pac;
+        var packet = (ePacketType_InGameServer)photonEvent.Code;
         Debug.Log($"[Packet Received] User {user.Id} sent a packet {packet}.");
 
 
@@ -794,9 +821,12 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                         if (room.PlayerCounter_SuccessfullyReceivedOrders == 3)
                         {
-                            var fp = room.Players.Find((u) => room.RPSThird == u.Id);
-                            PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2URequest_SelectInOut_First);
-                            SendPacket(fp);
+                            //다 보내야 각자 알아서 애니메이션 처리가 가능함(무시는 클라이언트가)
+                            foreach (var fp in room.Players)
+                            {
+                                PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2URequest_SelectInOut_First);
+                                SendPacket(fp);
+                            }
                         }
                     }
                 }
@@ -845,66 +875,73 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                         SendIOResultAllPlayers(room, false);
 
-                        if (packet == ePacketType_InGameServer.U2SResponse_SelectInOut_First)
+                        DelayedFunctionHelper.InvokeDelayed(() =>
                         {
-                            var fp = room.Players.Find((u) => room.RPSSecond == u.Id);
-                            PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2URequest_SelectInOut_Second);
-                            SendPacket(fp);
-                        }
-                        else if (packet == ePacketType_InGameServer.U2SResponse_SelectInOut_Second)
-                        {
-                            var fp = room.Players.Find((u) => room.RPSFirst == u.Id);
-                            PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2URequest_SelectInOut_Third);
-                            SendPacket(fp);
-                        }
-                        else if (packet == ePacketType_InGameServer.U2SResponse_SelectInOut_Third)
-                        {
-                            // �� ��° ���� �� ���� ��� ����
-                            SendIOResultAllPlayers(room, true);
-
-                            const float packetDelay_FromAllPlayerSelectedIOToSendAllPlayersCardData = 1.0f;
-                            Debug.Log($"[In/Out Selection] Room {roomID} final result sent. In: {string.Join(", ", room.InPlayers)}, Out: {string.Join(", ", room.OutPlayers)}.");
-                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            if (packet == ePacketType_InGameServer.U2SResponse_SelectInOut_First)
                             {
-                                foreach (var pl in room.Players)
+                                foreach(var fp in room.Players)
                                 {
-                                    PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_SendAllPlayersCardData);
-                                    foreach (var cards in room.Cards)
-                                    {
-                                        PacketWriter.WriteInt(cards.Key);
-                                        foreach (var c in cards.Value)
-                                        {
-                                            PacketWriter.WriteByte(c.Item1); // ī�� Ÿ��
-                                            PacketWriter.WriteByte(c.Item2); // ī�� ��
-                                        }
-                                    }
-                                    SendPacket(pl);
+                                    PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2URequest_SelectInOut_Second);
+                                    SendPacket(fp);
                                 }
+                            }
+                            else if (packet == ePacketType_InGameServer.U2SResponse_SelectInOut_Second)
+                            {
+                                foreach (var fp in room.Players)
+                                {
+                                    PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2URequest_SelectInOut_Third);
+                                    SendPacket(fp);
+                                }
+                            }
+                            else if (packet == ePacketType_InGameServer.U2SResponse_SelectInOut_Third)
+                            {
+                                // �� ��° ���� �� ���� ��� ����
+                                SendIOResultAllPlayers(room, true);
 
-                                const float packetDelay_FromSendAllPlayersCardDataToShowAllCards = 1.0f;
+                                const float packetDelay_FromAllPlayerSelectedIOToSendAllPlayersCardData = 1.0f;
+                                Debug.Log($"[In/Out Selection] Room {roomID} final result sent. In: {string.Join(", ", room.InPlayers)}, Out: {string.Join(", ", room.OutPlayers)}.");
                                 DelayedFunctionHelper.InvokeDelayed(() =>
                                 {
                                     foreach (var pl in room.Players)
                                     {
-                                        PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ShowAllCards);
+                                        PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_SendAllPlayersCardData);
+                                        foreach (var cards in room.Cards)
+                                        {
+                                            PacketWriter.WriteInt(cards.Key);
+                                            foreach (var c in cards.Value)
+                                            {
+                                                PacketWriter.WriteByte(c.Item1); // ī�� Ÿ��
+                                                PacketWriter.WriteByte(c.Item2); // ī�� ��
+                                            }
+                                        }
                                         SendPacket(pl);
                                     }
-                                }, packetDelay_FromSendAllPlayersCardDataToShowAllCards);
-                            }, packetDelay_FromAllPlayerSelectedIOToSendAllPlayersCardData);
 
-                            //Task.Delay(3500).ContinueWith((_) =>
-                            DelayedFunctionHelper.InvokeDelayed(() =>
-                            {
-                                if (CalculateResult(roomID) == true)
+                                    const float packetDelay_FromSendAllPlayersCardDataToShowAllCards = 1.0f;
+                                    DelayedFunctionHelper.InvokeDelayed(() =>
+                                    {
+                                        foreach (var pl in room.Players)
+                                        {
+                                            PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ShowAllCards);
+                                            SendPacket(pl);
+                                        }
+                                    }, packetDelay_FromSendAllPlayersCardDataToShowAllCards);
+                                }, packetDelay_FromAllPlayerSelectedIOToSendAllPlayersCardData);
+
+                                //Task.Delay(3500).ContinueWith((_) =>
+                                DelayedFunctionHelper.InvokeDelayed(() =>
                                 {
-                                    //Task.Delay(3500).ContinueWith((_) =>
-                                    //DelayedFunctionHelper.InvokeDelayed(() =>
-                                    //{
-                                    //    StartNextRound(room);
-                                    //}, 3.5f);
-                                }
-                            }, 6.5f);
-                        }
+                                    if (CalculateResult(roomID) == true)
+                                    {
+                                        //Task.Delay(3500).ContinueWith((_) =>
+                                        //DelayedFunctionHelper.InvokeDelayed(() =>
+                                        //{
+                                        //    StartNextRound(room);
+                                        //}, 3.5f);
+                                    }
+                                }, 6.5f);
+                            }
+                        }, 1.0f);
                     }
                 }
                 break;
@@ -1264,7 +1301,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
                 break;
             default:
-                Debug.Log($"[Warning] Unknown packet type received from User {user.Id}. PacketByte {pac}");
+                Debug.Log($"[Warning] Unknown packet type received from User {user.Id}. PacketByte {photonEvent.Code}");
                 break;
         }
     }

@@ -18,6 +18,7 @@ public enum eIO
     None
 }
 
+[System.Serializable]
 public class Player : MonoBehaviour
 {
     public Card Card2Exchange;

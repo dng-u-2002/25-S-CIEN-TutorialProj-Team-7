@@ -68,8 +68,7 @@ public enum ePacketType_InGameServer : byte
     Broadcast_LoserOfThisRound,
 
     Broadcast_StartSpecialRule,
-    S2URequest_SelectCard2DeleteISR,
-    U2SResponse_SelectCard2DeleteISR, //유저가 스페셜 룰에서 제거할 카드를 선택했을 때 서버에 전송하는 패킷
+    U2SResponse_SelectCard2DeleteISR, //유저가 스페셜 룰에서 제거할 카드를 선택했을 때 서버에 전송하는 패킷(뭔가 좀 이상한데, Request은 없어도 Response는 알아서 날라오게 되어 있음)
     Broadcast_SomeoneSelectedCard2RemoveISR, //유저가 스페셜 룰에서 제거할 카드를 선택했을 때 다른 유저들에게 전송하는 패킷
     Broadcast_ShowCards2DeleteISR, //유저가 스페셜 룰에서 제거할 카드를 선택했을 때 다른 유저들에게 전송하는 패킷(제거할 카드 보여주기)
     GoInSpecialRule,

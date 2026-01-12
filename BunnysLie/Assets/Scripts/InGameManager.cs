@@ -84,7 +84,18 @@ public class InGameManager : MonoBehaviour
     public LocalPlayerUIDrawer LocalPlayerUIDrawer;
     public PlayerUIDrawer[] RemotePlayerUIDrawers;
     internal int RoomID;
-
+    public Player FindRemotePlayerById(int id)
+    {
+        foreach (var rp in RemotePlayers)
+        {
+            if (rp.ID == id)
+            {
+                return rp;
+            }
+        }
+        Debug.LogWarning("No Remote Player found for ID: " + id);
+        return null;
+    }
     public void SetRemotePlayersIDAndCharacters(List<int> ids, List<byte> characters)
     {
         for (int i = 0; i < ids.Count; i++)

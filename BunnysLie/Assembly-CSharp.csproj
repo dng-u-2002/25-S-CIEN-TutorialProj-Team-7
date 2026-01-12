@@ -135,6 +135,7 @@
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\ChatAppIdCheckerUI.cs" />
     <Compile Include="Assets\Scripts\Steamworks.NET\LobbyManager.cs" />
     <Compile Include="Assets\Scripts\Cards\CardDeck.cs" />
+    <Compile Include="Assets\Scripts\Network\Bot.cs" />
     <Compile Include="Assets\Photon\PhotonVoice\Demos\DemoVoicePun\Scripts\ThirdPersonController.cs" />
     <Compile Include="Assets\Scripts\CursorOnButton.cs" />
     <Compile Include="Assets\Scripts\LobbyUI\CreditPlayer.cs" />

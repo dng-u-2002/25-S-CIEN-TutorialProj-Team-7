@@ -20,6 +20,7 @@ using Voice;
 using VOYAGER_Server;
 using static InGameServer_PUN;
 
+[System.Serializable]
 public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public static InGameUser_PUN Instance { get; private set; }
@@ -192,7 +193,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             });
         }
 
-        if(PhotonNetwork.InRoom == true && InGameManager.Instance.IsStarted == true && PhotonNetwork.CurrentRoom.PlayerCount <= 2)
+        if (PhotonNetwork.InRoom == true && InGameManager.Instance.IsStarted == true && PreviousPlayerCount != PhotonNetwork.CurrentRoom.PlayerCount)
         {
             InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_NotEnoughPlayer, 3);
             AchievementManager.AddToStat_INT(StatsId.SUDDEN_END_COUNT, 1);
@@ -205,7 +206,9 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 PhotonNetwork.LoadLevel("Lobby");
             }, 2.0f);
         }
+        PreviousPlayerCount = PhotonNetwork.CurrentRoom.PlayerCount;
     }
+    int PreviousPlayerCount;
     bool IsLoaded = false;
 
 
@@ -525,6 +528,11 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     eRPS thirdPlayerRPS = (eRPS)reader.ReadByte();
                     byte thirdPlayerOrder = reader.ReadByte();
 
+                    Debug.Log(round + "Round RPS Result Received: " +
+                        $"{firstPlayerId}({firstPlayerRPS},{firstPlayerOrder}) / " +
+                        $"{secondPlayerId}({secondPlayerRPS},{secondPlayerOrder}) / " +
+                        $"{thirdPlayerId}({thirdPlayerRPS},{thirdPlayerOrder})");
+
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
                         InGameManager.Instance.ShowRPSRoundResult(round, firstPlayerId, firstPlayerRPS, firstPlayerOrder,
@@ -634,7 +642,12 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 {
                     InGameManager.Instance.LoopForAllPlayerDrawers((d) =>
                     {
-                        d.ShowGrayPanel(false);
+                        d.ShowGrayPanel(true);
+                    });
+                    InGameManager.Instance.LoopForAllPlayerDrawers((d) =>
+                    {
+                        if(d.Target.Order == 0)
+                            d.ShowGrayPanel(false);
                     });
                     if (InGameManager.Instance.LocalPlayer.Order != 0)
                         return;
@@ -643,6 +656,15 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 break;
             case ePacketType_InGameServer.S2URequest_SelectInOut_Second:
                 {
+                    InGameManager.Instance.LoopForAllPlayerDrawers((d) =>
+                    {
+                        d.ShowGrayPanel(true);
+                    });
+                    InGameManager.Instance.LoopForAllPlayerDrawers((d) =>
+                    {
+                        if (d.Target.Order == 1)
+                            d.ShowGrayPanel(false);
+                    });
                     if (InGameManager.Instance.LocalPlayer.Order != 1)
                         return;
                     NetworkResponse_SelectIO();
@@ -650,6 +672,15 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 break;
             case ePacketType_InGameServer.S2URequest_SelectInOut_Third:
                 {
+                    InGameManager.Instance.LoopForAllPlayerDrawers((d) =>
+                    {
+                        d.ShowGrayPanel(true);
+                    });
+                    InGameManager.Instance.LoopForAllPlayerDrawers((d) =>
+                    {
+                        if (d.Target.Order == 2)
+                            d.ShowGrayPanel(false);
+                    });
                     if (InGameManager.Instance.LocalPlayer.Order != 2)
                         return;
                     NetworkResponse_SelectIO();
@@ -722,6 +753,11 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     //화면에 보여줌
                     InGameManager.Instance.ShowIOResult(ins, outs, true); //true : final
                     Debug.Log($"[InOut] In Players: {string.Join(", ", ins)}, Out Players: {string.Join(", ", outs)}");
+
+                    InGameManager.Instance.LoopForAllPlayerDrawers((d) =>
+                    {
+                        d.ShowGrayPanel(false);
+                    });
                 }
                 break;
 
@@ -1356,7 +1392,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                         DelayedFunctionHelper.InvokeDelayed(() =>
                         {
-                            localInCard.CardGameObject.SetFaceAnimated(true, faceFlipDur, faceFlipEase);
+                            localInCard.CardGameObject.SetFaceAnimated(true, 1.0f, faceFlipEase);
                         }, faceFlipDelay);
 
                         // 상대 쪽으로 보낼 카드 이동

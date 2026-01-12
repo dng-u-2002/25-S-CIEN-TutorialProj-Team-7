@@ -28,8 +28,16 @@ public class NetworkDataWriter_PUN
 		packetType = 0;
 		Data.Clear();
 	}
+	public byte GetPacketType()
+    {
+        return packetType;
+    }
+    public List<object> GetDataList()
+    {
+        return Data;
+    }
 
-	public void CreateNewPacket(byte type)
+    public void CreateNewPacket(byte type)
 	{
 		Clear();
 		WritePacketType(type);

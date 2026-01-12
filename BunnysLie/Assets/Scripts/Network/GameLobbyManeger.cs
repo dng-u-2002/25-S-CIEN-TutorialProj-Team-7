@@ -324,7 +324,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         PrivateMatchingButtons.gameObject.SetActive(false);
         transform.GetChild(0).gameObject.SetActive(false);
     }
-    
+    float RoomJoinedTime = 0.0f;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -342,7 +342,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
         if(PhotonNetwork.InRoom)
         {
-            if(PhotonNetwork.CurrentRoom.PlayerCount >= 3 && IsSceneLoadingStarted == false)
+            if((PhotonNetwork.CurrentRoom.PlayerCount >= 3 || Time.time - RoomJoinedTime >= 60.0f) && IsSceneLoadingStarted == false)
             {
                 Debug.Log("방에 충분한 플레이어가 있습니다. 게임 시작 중...");
                 PresenceManager.Instance.SetStatus(FriendActivity.InGame);
@@ -545,6 +545,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
             }
         }
         Debug.Log(($"방에 참가함: {PhotonNetwork.CurrentRoom.Name}"));
+        RoomJoinedTime = Time.time;
 
         if (InGameManager.Instance != null)
         {
@@ -569,6 +570,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
                 && privObj is bool priv && priv)
             {
                 isPrivate = true;
+                RoomJoinedTime = float.PositiveInfinity; //비공개 방은 봇이 들어오면 안됨
             }
 
             SetFriendPanelActive(isPrivate);
@@ -596,9 +598,15 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            while (PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount < 3)
+            int c = PhotonNetwork.CurrentRoom.PlayerCount;
+            while (PhotonNetwork.InRoom && c < 3)
             {
-                readyPanelText.text =$"\n플레이어 대기 중... ({PhotonNetwork.CurrentRoom.PlayerCount}/3)";
+                c = PhotonNetwork.CurrentRoom.PlayerCount;
+                if(Time.time - RoomJoinedTime >= 30.0f && c == 1) //c==1로 처리하면, 봇으로 매칭이 잡힌 것 같아 보일 때 실제 사람이 들어오면 대체됨
+                {
+                    c += 1; //봇 하나 추가, 물론 겉보기임
+                }
+                readyPanelText.text =$"\n플레이어 대기 중... ({c}/3)";
                 yield return new WaitForSeconds(1f);
             }
         }
