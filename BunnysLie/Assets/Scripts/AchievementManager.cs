@@ -18,7 +18,7 @@ public enum AchievementId
     WatchCredit, //크레딧 보기 / 가족사진
     Draw5RPS, //가위바위보 5번 연속 무승부 / 천생연분
     PlayWithFriend, // 친구와 플레이 1회 진행 / 블러핑으로 다져진 우정
-    WinSpecialRuleAfterExhangeCardWithOpponent //1 vs 1 룰에서 상대와 교환 후 승리하기 / 네 카드가 탐나는데?
+    WinSpecialRuleAfterExchangeCardWithOpponent //1 vs 1 룰에서 상대와 교환 후 승리하기 / 네 카드가 탐나는데?
 }
 
 public enum StatsId
@@ -57,7 +57,7 @@ public class AchievementManager : MonoBehaviour
         { AchievementId.WatchCredit,      "WATCH_CREDIT" },
         { AchievementId.Draw5RPS,      "DRAW_RPS_5TIMES" },
         { AchievementId.PlayWithFriend,      "PLAY_WITH_FRIEND" },
-        { AchievementId.WinSpecialRuleAfterExhangeCardWithOpponent,      "WIN_SPECAILGAME_EXHANGE_OPPONENT" }
+        { AchievementId.WinSpecialRuleAfterExchangeCardWithOpponent,      "WIN_SPECIALGAME_EXCHANGE_OPPONENT" }
     };
 
     private static readonly Dictionary<StatsId, string> Sts = new()

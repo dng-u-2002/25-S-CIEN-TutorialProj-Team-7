@@ -333,7 +333,7 @@ public class Bot
                     }, additionalDelay + UnityEngine.Random.Range(2.1f, 4.0f));
                 }
                 break;
-            case ePacketType_InGameServer.S2UAsk_ExhangeCardWithOpponentInSpecialRule:
+            case ePacketType_InGameServer.S2UAsk_ExchangeCardWithOpponentInSpecialRule:
                 {
                     int asker = reader.ReadInt();
                     int asked = reader.ReadInt();
@@ -350,7 +350,7 @@ public class Bot
                         if (accept)
                         {
                             //수락
-                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
+                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExchangeCardWithOpponentISR);
                             Writer.WriteInt(user.Id);
                             Writer.WriteInt(InGameManager.Instance.RoomID);
                             Writer.WriteBool(true); //수락
@@ -358,7 +358,7 @@ public class Bot
 
                             DelayedFunctionHelper.InvokeDelayed(() =>
                             {
-                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_OpponentSelectedCardToExhangeISR);
+                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_OpponentSelectedCardToExchangeISR);
                                 Writer.WriteInt(user.Id);
                                 Writer.WriteInt(InGameManager.Instance.RoomID);
 
@@ -375,7 +375,7 @@ public class Bot
                         else
                         {
                             //거절
-                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
+                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExchangeCardWithOpponentISR);
                             Writer.WriteInt(user.Id);
                             Writer.WriteInt(InGameManager.Instance.RoomID);
                             Writer.WriteBool(false); //거절
@@ -386,7 +386,7 @@ public class Bot
                 }
                 break;
 
-            case ePacketType_InGameServer.Broadcast_ExhangeWithOpponentInSpecialRuleResult:
+            case ePacketType_InGameServer.Broadcast_ExchangeWithOpponentInSpecialRuleResult:
                 {
                     int id1 = reader.ReadInt();
                     byte type1 = reader.ReadByte();

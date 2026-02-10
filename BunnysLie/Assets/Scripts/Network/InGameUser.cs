@@ -78,16 +78,16 @@ public enum ePacketType_InGameServer : byte
     Broadcast_StartNextRound,
 
     U2SRequest_ExchangeCardWithDeckInSpecialRule,
-    S2UResponse_ExhangeCardWithDeckInSpecialRule,
+    S2UResponse_ExchangeCardWithDeckInSpecialRule,
 
-    U2SRequest_ExhangeCardWithOpponentInSpecialRule,
+    U2SRequest_ExchangeCardWithOpponentInSpecialRule,
 
-    S2UAsk_ExhangeCardWithOpponentInSpecialRule, // 상대와 카드 교환 요청
-    S2UResponse_WillAcceptExhangeCardWithOpponentISR, // 상대가 카드 교환 요청에 응답
+    S2UAsk_ExchangeCardWithOpponentInSpecialRule, // 상대와 카드 교환 요청
+    S2UResponse_WillAcceptExchangeCardWithOpponentISR, // 상대가 카드 교환 요청에 응답
     Broadcast_IsOpponentAcceptedCardExchangeISR,
 
-    U2SRequest_OpponentSelectedCardToExhangeISR, //상대가 카드를 골랐음
-    Broadcast_ExhangeWithOpponentInSpecialRuleResult, //교환 결과
+    U2SRequest_OpponentSelectedCardToExchangeISR, //상대가 카드를 골랐음
+    Broadcast_ExchangeWithOpponentInSpecialRuleResult, //교환 결과
     U2SResponse_SuccessfullyExchangedCardWithOpponentInSpecialRule, //내가 교환한 카드가 덱에 추가됨
 
     Broadcast_FinalResult,
@@ -608,14 +608,14 @@ public enum ePacketType_InGameServer : byte
 //                            () =>
 //                            {
 //                                //교환 버튼을 누름
-//                                //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+//                                //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
 //                                //Writer.WriteInt(Id);
 //                                //Writer.WriteInt(InGameManager.Instance.RoomID);
 //                                //Writer.SendPacket(ServerPeer);
 //                            },
 //                            (card) =>
 //                            {
-//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
 //                                Writer.WriteInt(Id);
 //                                Writer.WriteInt(InGameManager.Instance.RoomID);
 //                                Writer.WriteByte((byte)card.Type);
@@ -663,14 +663,14 @@ public enum ePacketType_InGameServer : byte
 //                            () =>
 //                            {
 //                                //교환 버튼을 누름
-//                                //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+//                                //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
 //                                //Writer.WriteInt(Id);
 //                                //Writer.WriteInt(InGameManager.Instance.RoomID);
 //                                //Writer.SendPacket(ServerPeer);
 //                            },
 //                            (card) =>
 //                            {
-//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
 //                                Writer.WriteInt(Id);
 //                                Writer.WriteInt(InGameManager.Instance.RoomID);
 //                                Writer.WriteByte((byte)card.Type);
@@ -690,7 +690,7 @@ public enum ePacketType_InGameServer : byte
 //                    }
 //                }
 //                break;
-//            case ePacketType_InGameServer.S2UAsk_ExhangeCardWithOpponentISR:
+//            case ePacketType_InGameServer.S2UAsk_ExchangeCardWithOpponentISR:
 //                {
 //                    int asker = reader.ReadInt();
 //                    int myId = reader.ReadInt();
@@ -705,7 +705,7 @@ public enum ePacketType_InGameServer : byte
 //                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("상대가 카드 교환을 요청했습니다", "수락", "거절",
 //                        () =>
 //                        {
-//                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
+//                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExchangeCardWithOpponentISR);
 //                            Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
 //                            Writer.WriteInt(InGameManager.Instance.RoomID);
 //                            Writer.WriteBool(true); //수락
@@ -714,7 +714,7 @@ public enum ePacketType_InGameServer : byte
 //                            InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
 //                            InGameManager.Instance.LocalPlayerUIDrawer.SelectCard2Exchange((card) =>
 //                            {
-//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_OpponentSelectedCardToExhangeISR);
+//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_OpponentSelectedCardToExchangeISR);
 //                                Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
 //                                Writer.WriteInt(InGameManager.Instance.RoomID);
 //                                Writer.WriteByte((byte)card.Type);
@@ -724,7 +724,7 @@ public enum ePacketType_InGameServer : byte
 //                        },
 //                        () =>
 //                        {
-//                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
+//                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExchangeCardWithOpponentISR);
 //                            Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
 //                            Writer.WriteInt(InGameManager.Instance.RoomID);
 //                            Writer.WriteBool(false); //거절
@@ -779,7 +779,7 @@ public enum ePacketType_InGameServer : byte
 //                }
 //                break;
 
-//            case ePacketType_InGameServer.Broadcast_ExhangeWithOpponentInSpecialRuleResult:
+//            case ePacketType_InGameServer.Broadcast_ExchangeWithOpponentInSpecialRuleResult:
 //                {
 //                    int id1 = reader.ReadInt();
 //                    byte type1 = reader.ReadByte();
@@ -835,7 +835,7 @@ public enum ePacketType_InGameServer : byte
 
 //                }
 //                break;
-//            case ePacketType_InGameServer.S2UResponse_ExhangeCardWithDeckInSpecialRule:
+//            case ePacketType_InGameServer.S2UResponse_ExchangeCardWithDeckInSpecialRule:
 //                {
 //                    int id = reader.ReadInt();
 //                    if(id == InGameManager.Instance.LocalPlayer.ID)

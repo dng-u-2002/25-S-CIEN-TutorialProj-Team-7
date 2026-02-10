@@ -285,7 +285,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             }
         }
     }
-    public void SetSpecialRuleEvents(Action onGo, Action<Card> onExchangeWithDeck, Action onExhangeWithOpponentButtonClicked, Action<Card> onExchangeWithOpponent)
+    public void SetSpecialRuleEvents(Action onGo, Action<Card> onExchangeWithDeck, Action onExchangeWithOpponentButtonClicked, Action<Card> onExchangeWithOpponent)
     {
         SpecialRuleButton_Go.onClick.RemoveAllListeners();
         SpecialRuleButton_ExchangeWithDeck.onClick.RemoveAllListeners();
@@ -332,7 +332,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
             AlreadyExchangedWithOpponent = true;
             SpecialRuleButton_ExchangeWithOpponent.interactable = false;
 
-            onExhangeWithOpponentButtonClicked?.Invoke();
+            onExchangeWithOpponentButtonClicked?.Invoke();
             SelectCard2Exchange((card) =>
             {
                 ExchangeWithOpponent?.Invoke(card);

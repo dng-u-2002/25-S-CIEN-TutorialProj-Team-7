@@ -130,7 +130,7 @@ public class QuestController : MonoBehaviour
 
         if(IsExchangedCardWithOpponent == true)
         {
-            AchievementManager.Unlock(AchievementId.WinSpecialRuleAfterExhangeCardWithOpponent);
+            AchievementManager.Unlock(AchievementId.WinSpecialRuleAfterExchangeCardWithOpponent);
         }
     }
     public static void OnLoseSpecialGame()

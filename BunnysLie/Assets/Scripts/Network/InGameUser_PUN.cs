@@ -1040,7 +1040,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             (card) =>
                             {
                                 //exchange with opponent
-                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
                                 Writer.WriteInt(Id);
                                 Writer.WriteInt(InGameManager.Instance.RoomID);
                                 Writer.WriteByte((byte)card.Type);
@@ -1100,14 +1100,14 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                                 () =>
                                 {
                                     //교환 버튼을 누름
-                                    //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+                                    //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
                                     //Writer.WriteInt(Id);
                                     //Writer.WriteInt(InGameManager.Instance.RoomID);
                                     //Writer.SendPacket(ServerPeer);
                                 },
                                 (card) =>
                                 {
-                                    Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+                                    Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
                                     Writer.WriteInt(Id);
                                     Writer.WriteInt(InGameManager.Instance.RoomID);
                                     Writer.WriteByte((byte)card.Type);
@@ -1150,7 +1150,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     }
                 }
                 break;
-            case ePacketType_InGameServer.S2UAsk_ExhangeCardWithOpponentInSpecialRule:
+            case ePacketType_InGameServer.S2UAsk_ExchangeCardWithOpponentInSpecialRule:
                 //스페셜 룰에서 상대가 카드 교환을 요청했을 때, 이 패킷이 날라옴.
                 //내가 요청받은게 맞는지 확인하고, 맞다면 수락 / 거절을 선택 및 서버에게 전송
                 //수락했다면, 교환할 카드를 선택해서 서버에게 전송
@@ -1166,7 +1166,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     InGameManager.Instance.LocalPlayerUIDrawer.StartClock_10s(() =>
                     {                            
                         //거절
-                        Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
+                        Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExchangeCardWithOpponentISR);
                         Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
                         Writer.WriteInt(InGameManager.Instance.RoomID);
                         Writer.WriteBool(false); //거절
@@ -1181,7 +1181,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         {
                             InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                             //수락
-                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
+                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExchangeCardWithOpponentISR);
                             Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
                             Writer.WriteInt(InGameManager.Instance.RoomID);
                             Writer.WriteBool(true); //수락
@@ -1191,7 +1191,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             //교환할 카드를 선택
                             InGameManager.Instance.LocalPlayerUIDrawer.SelectCard2Exchange((card) =>
                             {
-                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_OpponentSelectedCardToExhangeISR);
+                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_OpponentSelectedCardToExchangeISR);
                                 Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
                                 Writer.WriteInt(InGameManager.Instance.RoomID);
                                 Writer.WriteByte((byte)card.Type);
@@ -1203,7 +1203,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         {
                             InGameManager.Instance.LocalPlayerUIDrawer.StopClock();
                             //거절
-                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
+                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExchangeCardWithOpponentISR);
                             Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
                             Writer.WriteInt(InGameManager.Instance.RoomID);
                             Writer.WriteBool(false); //거절
@@ -1256,14 +1256,9 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
                 break;
 
-            case ePacketType_InGameServer.Broadcast_ExhangeWithOpponentInSpecialRuleResult:
+            case ePacketType_InGameServer.Broadcast_ExchangeWithOpponentInSpecialRuleResult:
                 //스페셜 룰에서 최종적으로 카드 교환이 이루어져야 할 때 이 패킷이 날라옴.
-                //네 GPT가 해줬습니다. 매우 편합니다.
                 {
-                    // ─────────────────────────────────────────────────────────────────────────────
-                    // 1) 패킷 파싱
-                    // ─────────────────────────────────────────────────────────────────────────────
-
                     int id1 = reader.ReadInt();
                     byte type1 = reader.ReadByte();
                     byte value1 = reader.ReadByte();
@@ -1273,157 +1268,116 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                     Card card1 = new Card((Card.CardType)type1, value1);
                     Card card2 = new Card((Card.CardType)type2, value2);
-
                     int localId = InGameManager.Instance.LocalPlayer.ID;
 
-                    // 내 교환이 아니면(=관전 등) 원래 코드도 아무것도 안 했으므로 그대로 탈출
-                    if (id1 != localId && id2 != localId)
-                        break;
+                    if (id1 != localId && id2 != localId) break;
+
                     InGameManager.Instance.LocalPlayerUIDrawer.ReStart30sClock2GoInSpecialRule();
 
-                    // ─────────────────────────────────────────────────────────────────────────────
-                    // 2) "내가 상대에게 내준 카드"와 "내가 받는 카드"를 통일된 관점으로 정리
-                    //    - localOutCardSpec : 내가 넘긴 카드의 (타입/값) 스펙
-                    //    - localInCard      : 내가 받는 카드(실제 Card 인스턴스, AddCard 후 GameObject 부여)
-                    //    - opponentId       : 교환 상대의 ID
-                    // ─────────────────────────────────────────────────────────────────────────────
+                    // 변수 정리
                     Card.CardType outType; byte outValue;
                     Card localInCard; int opponentId;
 
-                    if (id1 == localId)
-                    {
-                        // 내가 card1을 넘기고 card2를 받는다
-                        outType = card1.Type;
-                        outValue = card1.Value;
-                        localInCard = card2;
-                        opponentId = id2;
-                    }
-                    else
-                    {
-                        // 내가 card2를 넘기고 card1을 받는다
-                        outType = card2.Type;
-                        outValue = card2.Value;
-                        localInCard = card1;
-                        opponentId = id1;
-                    }
+                    if (id1 == localId) { outType = card1.Type; outValue = card1.Value; localInCard = card2; opponentId = id2; }
+                    else { outType = card2.Type; outValue = card2.Value; localInCard = card1; opponentId = id1; }
 
-                    // 내가 실제로 들고 있는 "넘길 카드"를 찾는다
                     Card localOutCard = InGameManager.Instance.LocalPlayer.ThisDeck.GetCardByTypeAndValue(outType, outValue);
-                    if (localOutCard == null)
-                    {
-                        Debug.LogError($"[InGameUser] Local player does not have the card {outType}-{outValue} to exchange.");
-                        break;
-                    }
+                    if (localOutCard == null) break;
 
-                    // 상대 UI 드로어 가져오기
                     var oppDrawer = InGameManager.Instance.FindDrawerByIDExceptLocal(opponentId);
-
-                    // 상대 덱에서 임시로 꺼내둘 카드(원본 코드와 동일하게 index=1 사용)
                     var opponentTempCard = oppDrawer.Target.ThisDeck.GetCard(1);
 
-                    // ─────────────────────────────────────────────────────────────────────────────
-                    // 3) 레이아웃/애니메이션을 위한 기존 위치/스케일 백업
-                    // ─────────────────────────────────────────────────────────────────────────────
+                    // --- [애니메이션 위치 저장] ---
                     int originSiblingIndex = localOutCard.CardGameObject.transform.GetSiblingIndex();
-
-                    // 상대 카드의 원위치(내가 받을 카드를 여기서부터 출발시키기 위해)
                     Vector3 oppOriginPos = opponentTempCard.CardGameObject.GetMoverPosition();
                     Vector3 oppOriginScl = opponentTempCard.CardGameObject.GetMoverScale();
-
-                    // 내가 넘길 카드의 원위치(상대가 받을 카드의 출발점)
                     Vector3 localOriginPos = localOutCard.CardGameObject.GetMoverPosition();
                     Vector3 localOriginScl = localOutCard.CardGameObject.GetMoverScale();
 
-                    // ─────────────────────────────────────────────────────────────────────────────
-                    // 4) 덱 갱신 (원본 코드 동일 순서 유지)
-                    //    - 내 덱: 넘길 카드 제거 → 받는 카드 추가
-                    //    - 상대 덱: 임시 카드 제거 → 내가 넘긴 카드 추가
-                    // ─────────────────────────────────────────────────────────────────────────────
+                    // 1. 내 덱 처리 (나가는 카드 삭제 -> 여기서 CardGameObject가 파괴될 수 있음)
                     InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(localOutCard);
                     InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(localInCard);
 
+                    // 2. 상대 덱 처리 (임시 카드 삭제, *복사본* 추가)
                     oppDrawer.Target.ThisDeck.RemoveCard(opponentTempCard);
-                    oppDrawer.Target.ThisDeck.AddCard(localOutCard);
+                    Card opponentCopyCard = new Card(localOutCard.Type, localOutCard.Value); 
+                    oppDrawer.Target.ThisDeck.AddCard(opponentCopyCard); 
 
-                    // 내가 받은 카드를 기존 자리(넘긴 카드의 인덱스)로 배치
-                    localInCard.CardGameObject.transform.SetSiblingIndex(originSiblingIndex);
-
-                    // 레이아웃 갱신
+                    // 3. UI 갱신
                     InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
                     oppDrawer.UpdateCardsLayout();
 
-                    // ─────────────────────────────────────────────────────────────────────────────
-                    // 5) 서버에 성공 응답 전송 (원본과 동일)
-                    // ─────────────────────────────────────────────────────────────────────────────
+                    // 4. 새로 받은 카드 위치 잡기
+                    if (localInCard.CardGameObject != null)
+                    {
+                        localInCard.CardGameObject.transform.SetSiblingIndex(originSiblingIndex);
+                        localInCard.CardGameObject.SetMovementTransformPosition(oppOriginPos);
+                        localInCard.CardGameObject.SetMovementTransformScale(oppOriginScl);
+                        localInCard.CardGameObject.SetFace(false);
+                    }
+
+                    // 5. 나가는 카드 처리 (이미 파괴되었을 수 있으므로 null 체크)
+                    if (localOutCard.CardGameObject != null)
+                    {
+                        localOutCard.CardGameObject.SetMovementTransformPosition(localOriginPos);
+                        localOutCard.CardGameObject.SetMovementTransformScale(localOriginScl);
+                        localOutCard.CardGameObject.SetFace(true);
+                    }
+
+                    // 서버 응답
                     Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SuccessfullyExchangedCardWithOpponentInSpecialRule);
                     Writer.WriteInt(localId);
                     Writer.WriteInt(InGameManager.Instance.RoomID);
                     Writer.SendPacket(ServerPeer);
 
-                    // ─────────────────────────────────────────────────────────────────────────────
-                    // 6) 연출(앞/뒷면 + 이동/스케일 애니메이션)
-                    //    - 내가 받은 카드는 뒷면 → 애니 후 앞면
-                    //    - 내가 넘긴 카드는 앞면 → 애니 후 뒷면
-                    //    - 타이밍/지속시간은 원본과 동일
-                    // ─────────────────────────────────────────────────────────────────────────────
+                    // --- [애니메이션 및 게임 재개] ---
                     const float moveDur = 0.75f;
                     const float faceFlipDelay = 0.5f;
-                    const float faceFlipDur = 1.2f;
-                    const float faceFlipEase = 0.4f;
-
-                    localInCard.CardGameObject.SetFace(false);
-                    localOutCard.CardGameObject.SetFace(true);
 
                     IEnumerator AnimateSwap()
                     {
-                        // 프레임 끝에서 Transform 초기 세팅(원본과 동일한 타이밍 보장)
                         yield return new WaitForEndOfFrame();
 
-                        // 시작점 세팅
-                        localInCard.CardGameObject.SetMovementTransformPosition(oppOriginPos);
-                        localInCard.CardGameObject.SetMovementTransformScale(oppOriginScl);
-
-                        localOutCard.CardGameObject.SetMovementTransformPosition(localOriginPos);
-                        localOutCard.CardGameObject.SetMovementTransformScale(localOriginScl);
-
-                        // 내 카드 자리로 이동 (로컬 좌표 기준)
-                        localInCard.CardGameObject.MoveMovementTransformPosition(Vector3.zero, moveDur, ePosition.Local);
-                        localInCard.CardGameObject.MoveMovementTransformScale(localOriginScl, moveDur);
-
-                        DelayedFunctionHelper.InvokeDelayed(() =>
+                        // 내 카드(받은 것) 이동
+                        if (localInCard.CardGameObject != null)
                         {
-                            localInCard.CardGameObject.SetFaceAnimated(true, 1.0f, faceFlipEase);
-                        }, faceFlipDelay);
+                            localInCard.CardGameObject.MoveMovementTransformPosition(Vector3.zero, moveDur, ePosition.Local);
+                            localInCard.CardGameObject.MoveMovementTransformScale(localOriginScl, moveDur);
+                            DelayedFunctionHelper.InvokeDelayed(() => {
+                                if(localInCard.CardGameObject != null) 
+                                    localInCard.CardGameObject.SetFaceAnimated(true, 1.0f, 0.4f);
+                            }, faceFlipDelay);
+                        }
 
-                        // 상대 쪽으로 보낼 카드 이동
-                        localOutCard.CardGameObject.MoveMovementTransformPosition(Vector3.zero, moveDur, ePosition.Local);
-                        localOutCard.CardGameObject.MoveMovementTransformScale(oppOriginScl, moveDur);
-
-                        DelayedFunctionHelper.InvokeDelayed(() =>
+                        // 상대 카드(보낸 것) 이동 - 살아있다면 이동
+                        if (localOutCard.CardGameObject != null)
                         {
-                            localOutCard.CardGameObject.SetFaceAnimated(false, faceFlipDur, faceFlipEase);
-                            InGameManager.Instance.LocalPlayerUIDrawer.AlreadyExchangedWithOpponent = true; //Fixed(b5 #4)
+                            localOutCard.CardGameObject.MoveMovementTransformPosition(Vector3.zero, moveDur, ePosition.Local);
+                            localOutCard.CardGameObject.MoveMovementTransformScale(oppOriginScl, moveDur);
+                            DelayedFunctionHelper.InvokeDelayed(() => {
+                                if(localOutCard.CardGameObject != null) 
+                                    localOutCard.CardGameObject.SetFaceAnimated(false, 1.2f, 0.4f);
+                            }, faceFlipDelay);
+                        }
+
+                        // ★ [핵심 수정] 게임 재개 코드를 if문 밖으로 뺐습니다.
+                        // 카드가 파괴되었든 아니든, 시간이 지나면 무조건 UI가 풀리도록 보장합니다.
+                        DelayedFunctionHelper.InvokeDelayed(() => {
+                            InGameManager.Instance.LocalPlayerUIDrawer.AlreadyExchangedWithOpponent = true;
                             InGameManager.Instance.LocalPlayerUIDrawer.RollBackSpecialRuleExchangeButtons();
                             InGameManager.Instance.LocalPlayerUIDrawer.ActivateGoButton();
                         }, faceFlipDelay);
                     }
                     StartCoroutine(AnimateSwap());
 
-                    // ─────────────────────────────────────────────────────────────────────────────
-                    // 7) 중앙 패널 UI 정리 (원본 동일)
-                    // ─────────────────────────────────────────────────────────────────────────────
                     InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(false);
                     InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
-
-
-                    //업적 준비
                     QuestController.OnExchangeCardWithOpponent();
                 }
                 break;
 
-            case ePacketType_InGameServer.S2UResponse_ExhangeCardWithDeckInSpecialRule:
-                //스페셜 룰에서 덱과 카드 교환을 요청했을 때, 이 패킷이 날라옴. (버튼 누른 즉시, 딜레이 없이)
-                //내가 보낸 요청이면 실제 데이터 교환 + 애니메이션을 처리하고, 상대가 보낸 요청이면 애니메이션만 처리하면 됨
+            case ePacketType_InGameServer.S2UResponse_ExchangeCardWithDeckInSpecialRule:
+                //스페셜 룰에서 덱과 카드 교환을 요청했을 때, 이 패킷이 날라옴.
                 {
                     int id = reader.ReadInt();
                     if (id == InGameManager.Instance.LocalPlayer.ID)
@@ -1432,44 +1386,92 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         Card card = new Card((Card.CardType)reader.ReadByte(), reader.ReadByte());
                         DelayedFunctionHelper.InvokeDelayed(() =>
                         {
-                            int originIdx = InGameManager.Instance.LocalPlayer.Card2Exchange.CardGameObject.transform.GetSiblingIndex();
-                            //기존 카드 삭제 및 새 카드 추가
-                            InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(InGameManager.Instance.LocalPlayer.Card2Exchange);
-                            InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card);
-
-                            //순서 바꾸기
-                            card.CardGameObject.transform.SetSiblingIndex(originIdx);
-                            InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
-
-                            InGameManager.Instance.LocalPlayerUIDrawer.MoveCardPosition_FromDeckPosition2LocalPosition(card, 0.75f);
-
-                            //작은 상태에서 시작해 원본 크기로 돌아옴
-                            Vector3 originScale = card.CardGameObject.GetMoverScale();
-                            card.CardGameObject.SetMovementTransformScale(originScale * 0.5f);
-                            card.CardGameObject.MoveMovementTransformScale(originScale, 0.75f);
-
-                            DelayedFunctionHelper.InvokeDelayed(() =>
+                            try // [안전장치]
                             {
-                                card.CardGameObject.SetFaceAnimated(true, 1.2f, 0.4f);
+                                // 1. 유효성 검사 (실패 시 에러를 던져서 catch 블록으로 이동시킴 -> UI 복구 보장)
+                                if (InGameManager.Instance.LocalPlayer.Card2Exchange == null)
+                                {
+                                    throw new Exception("교환할 카드(Card2Exchange)가 null입니다.");
+                                }
+                                if (InGameManager.Instance.LocalPlayer.Card2Exchange.CardGameObject == null)
+                                {
+                                    // 만약 GameObject가 없다면, 덱의 첫 번째 카드로 대체 시도 (최후의 수단)
+                                    var fallbackCard = InGameManager.Instance.LocalPlayer.ThisDeck.GetCard(0);
+                                    if (fallbackCard != null && fallbackCard.CardGameObject != null)
+                                    {
+                                        Debug.LogWarning("[Warning] Card2Exchange GameObject missing. Using fallback card.");
+                                        InGameManager.Instance.LocalPlayer.Card2Exchange = fallbackCard;
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("교환할 카드의 GameObject가 없고, 대체할 카드도 없습니다.");
+                                    }
+                                }
+
+                                int originIdx = InGameManager.Instance.LocalPlayer.Card2Exchange.CardGameObject.transform.GetSiblingIndex();
+                                
+                                // 2. 덱 데이터 갱신
+                                InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(InGameManager.Instance.LocalPlayer.Card2Exchange);
+                                InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card);
+
+                                // 3. UI 및 애니메이션 처리
+                                if(card.CardGameObject != null)
+                                {
+                                    card.CardGameObject.transform.SetSiblingIndex(originIdx);
+                                    InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
+                                    
+                                    // 애니메이션
+                                    InGameManager.Instance.LocalPlayerUIDrawer.MoveCardPosition_FromDeckPosition2LocalPosition(card, 0.75f);
+
+                                    // 스케일 애니메이션
+                                    Vector3 originScale = card.CardGameObject.GetMoverScale();
+                                    card.CardGameObject.SetMovementTransformScale(originScale * 0.5f);
+                                    card.CardGameObject.MoveMovementTransformScale(originScale, 0.75f);
+                                }
+                                else
+                                {
+                                     InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
+                                }
+
+                                // 4. 마무리 (성공 시)
+                                DelayedFunctionHelper.InvokeDelayed(() =>
+                                {
+                                    if (card.CardGameObject != null)
+                                        card.CardGameObject.SetFaceAnimated(true, 1.2f, 0.4f);
+                                    
+                                    // ★ 여기가 실행되어야 멈춤이 풀립니다.
+                                    InGameManager.Instance.LocalPlayerUIDrawer.RollBackSpecialRuleExchangeButtons();
+                                    InGameManager.Instance.LocalPlayerUIDrawer.ActivateGoButton();
+                                }, 0.9f);
+                                
+                                DelayedFunctionHelper.InvokeDelayed(() =>
+                                {
+                                    FindObjectOfType<CardDeck>().PlayShuffleAnimation();
+                                }, 1.0f);
+                            }
+                            catch (System.Exception e)
+                            {
+                                // ★ 에러 발생 시 여기서 UI를 강제로 복구하여 멈춤 방지
+                                Debug.LogError($"[Exception] 덱 교환 중 오류 발생: {e.Message}\n{e.StackTrace}");
                                 InGameManager.Instance.LocalPlayerUIDrawer.RollBackSpecialRuleExchangeButtons();
                                 InGameManager.Instance.LocalPlayerUIDrawer.ActivateGoButton();
-                            }, 0.9f);
-                            DelayedFunctionHelper.InvokeDelayed(() =>
-                            {
-                                FindObjectOfType<CardDeck>().PlayShuffleAnimation();
-                            }, 1.0f);
-                        }, 0.8f); //약간의 딜레이 추가(화면이 너무 빠르게 깜빡이는걸 방지)
+                            }
+
+                        }, 0.8f);
                     }
                     else
                     {
+                        // 상대방이 교환한 경우 (애니메이션만)
                         DelayedFunctionHelper.InvokeDelayed(() =>
                         {
-                            //내가 요청한건 아님. 에니메이션만 처리하면 됨
                             var rp = InGameManager.Instance.FindDrawerByIDExceptLocal(id);
-
-                            //굳이 카드 추가했다 삭제하지 말고, 그냥 겉으로 보기에만 움직이면 됨
-                            var c = rp.Target.ThisDeck.GetCard(1);
-                            rp.MoveCardPosition_FromDeckPosition2LocalPosition(c, 0.75f);
+                            var c = rp.Target.ThisDeck.GetCard(1); // 상대방 덱의 아무 카드나 잡아서 애니메이션
+                            
+                            if(c != null && c.CardGameObject != null)
+                            {
+                                rp.MoveCardPosition_FromDeckPosition2LocalPosition(c, 0.75f);
+                            }
+                            
                             DelayedFunctionHelper.InvokeDelayed(() =>
                             {
                                 FindObjectOfType<CardDeck>().PlayShuffleAnimation();
@@ -1478,6 +1480,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     }
                 }
                 break;
+            
             case ePacketType_InGameServer.Broadcast_ShowSpecialRuleCards:
                 //스페셜 룰에서 상대방의 카드를 보여줘야 할 때 이 패킷이 날라옴. (두 명 모두 Go를 누른 이후에, 딜레이 없이)
                 {
