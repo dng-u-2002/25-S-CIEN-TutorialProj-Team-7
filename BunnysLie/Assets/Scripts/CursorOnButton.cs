@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -31,11 +31,11 @@ public class CursorOnButton : MonoBehaviour,
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        // ¹öÆ° À§¿¡ °è¼Ó ÀÖÀ¸¸é Hover, ¾Æ´Ï¸é Default
+        // ë²„íŠ¼ ìœ„ì— ê³„ì† ìˆìœ¼ë©´ Hover, ì•„ë‹ˆë©´ Default
         CursorManager.Instance.SetState(pointerInside && btn.interactable ? CursorState.Hover : CursorState.Default);
     }
 
-    // ¹öÆ°ÀÌ ºñÈ°¼ºÈ­µÇ´Â ¼ø°£¿¡µµ Ä¿¼­¸¦ Á¤¸®
+    // ë²„íŠ¼ì´ ë¹„í™œì„±í™”ë˜ëŠ” ìˆœê°„ì—ë„ ì»¤ì„œë¥¼ ì •ë¦¬
     void OnDisable()
     {
         if (CursorManager.Instance) CursorManager.Instance.SetState(CursorState.Default);

@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +7,11 @@ public class CardDeck : MonoBehaviour
 {
     [SerializeField] List<CardObject> Cards;
 
-    // Ä«µå ÇÏ³ª°¡ Æ¢¾î³ª¿À´Â °Å¸®
+    // ì¹´ë“œ í•˜ë‚˜ê°€ íŠ€ì–´ë‚˜ì˜¤ëŠ” ê±°ë¦¬
     [SerializeField] float popDistance = 2f;
-    // ÇÑ ¹ø Æ¢¾î³ª¿À°Å³ª µ¹¾Æ¿À´Â µ¥ °É¸®´Â ½Ã°£
+    // í•œ ë²ˆ íŠ€ì–´ë‚˜ì˜¤ê±°ë‚˜ ëŒì•„ì˜¤ëŠ” ë° ê±¸ë¦¬ëŠ” ì‹œê°„
     [SerializeField] float popDuration = 0.1f;
-    // Ä«µå °£ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ ½Ã°£ Â÷ (ÃÊ)
+    // ì¹´ë“œ ê°„ ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘ ì‹œê°„ ì°¨ (ì´ˆ)
     [SerializeField] float popInterval = 0.05f;
 
     //private void Start()
@@ -20,7 +20,7 @@ public class CardDeck : MonoBehaviour
     //}
 
     /// <summary>
-    /// µ¦ ¼ÅÇÃ(ºñÁÖ¾ó) ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ
+    /// ë± ì…”í”Œ(ë¹„ì£¼ì–¼) ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘
     /// </summary>
     public void PlayShuffleAnimation()
     {
@@ -29,45 +29,45 @@ public class CardDeck : MonoBehaviour
 
     private IEnumerator _PlayShuffleAnimation()
     {
-        // ¾Ö´Ï¸ŞÀÌ¼Ç Àü ¿øÀ§Ä¡ ÀúÀå
+        // ì• ë‹ˆë©”ì´ì…˜ ì „ ì›ìœ„ì¹˜ ì €ì¥
         Vector3[] originalPositions = Cards.Select(c => c.transform.position).ToArray();
 
-        // °¢ Ä«µåº°·Î StartCoroutine È£Ãâ (¼ø¼­´ë·Î ½Ã°£Â÷¸¦ µÎ°í)
+        // ê° ì¹´ë“œë³„ë¡œ StartCoroutine í˜¸ì¶œ (ìˆœì„œëŒ€ë¡œ ì‹œê°„ì°¨ë¥¼ ë‘ê³ )
         for (int i = Cards.Count - 1; i >= 0; i--)
         {
             Transform t = Cards[i].transform;
             Vector3 origin = originalPositions[i];
-            // i * popInterval ¸¸Å­ ´ë±â ÈÄ ÆË ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+            // i * popInterval ë§Œí¼ ëŒ€ê¸° í›„ íŒ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
             StartCoroutine(PopCard(t, origin, (Cards.Count - 1 - i) * popInterval));
         }
 
-        // ¸¶Áö¸· Ä«µå°¡ ¿ÏÀüÈ÷ µ¹¾Æ¿Ã ¶§±îÁö ´ë±â
+        // ë§ˆì§€ë§‰ ì¹´ë“œê°€ ì™„ì „íˆ ëŒì•„ì˜¬ ë•Œê¹Œì§€ ëŒ€ê¸°
         float totalTime = popInterval * (Cards.Count - 1) + popDuration * 2;
         yield return new WaitForSeconds(totalTime);
     }
 
     /// <summary>
-    /// °³º° Ä«µå ÆË ¾Ö´Ï¸ŞÀÌ¼Ç: delay ÈÄ¿¡ ÆË¾Æ¿ô ¡æ ÆË¹é
+    /// ê°œë³„ ì¹´ë“œ íŒ ì• ë‹ˆë©”ì´ì…˜: delay í›„ì— íŒì•„ì›ƒ â†’ íŒë°±
     /// </summary>
     private IEnumerator PopCard(Transform t, Vector3 origin, float delay)
     {
-        // ½ÃÀÛ Áö¿¬
+        // ì‹œì‘ ì§€ì—°
         yield return new WaitForSeconds(delay);
 
-        // 1) ¿ŞÂÊÀ¸·Î Æ¢¾î³ª¿À±â
+        // 1) ì™¼ìª½ìœ¼ë¡œ íŠ€ì–´ë‚˜ì˜¤ê¸°
         float elapsed = 0f;
         while (elapsed < popDuration)
         {
             elapsed += Time.deltaTime;
             float ratio = Mathf.Clamp01(elapsed / popDuration);
-            // ºÎµå·¯¿î easing
+            // ë¶€ë“œëŸ¬ìš´ easing
             float eased = Mathf.SmoothStep(0f, 1f, ratio);
             t.position = origin + Vector3.left * popDistance * eased;
             yield return null;
         }
         t.position = origin + Vector3.left * popDistance;
 
-        // 2) ¿øÀ§Ä¡·Î µ¹¾Æ¿À±â
+        // 2) ì›ìœ„ì¹˜ë¡œ ëŒì•„ì˜¤ê¸°
         elapsed = 0f;
         while (elapsed < popDuration)
         {

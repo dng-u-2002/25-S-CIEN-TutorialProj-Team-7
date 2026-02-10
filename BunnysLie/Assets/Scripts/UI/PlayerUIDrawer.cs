@@ -355,7 +355,7 @@ public class PlayerUIDrawer : MonoBehaviour
             //Target.ID
             if (Character == 0)
             {
-                nickName = "계순";
+                nickName = "계순이";
             }
             else if (Character == 1)
             {
@@ -371,7 +371,7 @@ public class PlayerUIDrawer : MonoBehaviour
         {
             if (Character == 0)
             {
-                nickName = "계순";
+                nickName = "계순이";
             }
             else if (Character == 1)
             {
