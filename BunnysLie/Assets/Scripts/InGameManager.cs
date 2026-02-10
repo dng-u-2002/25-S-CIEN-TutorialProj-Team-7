@@ -167,7 +167,7 @@ public class InGameManager : MonoBehaviour
         }
         else
         {
-            return (card1.Value + card2.Value) % 10; // Normal case
+            return (card1.Value + card2.Value + 2) % 10; // Normal case
         }
     }
     public int CalculateLoser(Dictionary<int, Tuple<List<Card>, eIO>> status)
