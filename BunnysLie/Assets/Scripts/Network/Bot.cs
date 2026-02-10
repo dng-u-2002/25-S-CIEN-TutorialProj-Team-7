@@ -36,7 +36,7 @@ public class Bot
         var packet = (ePacketType_InGameServer)packetType;
 
         NetworkDataReader_PUN reader = new NetworkDataReader_PUN(evtData.ToArray());
-        var bot = InGameManager.Instance.FindRemotePlayerById(user.Id); //¿©±â¼­ ¶ß´Â WarningÀº ÀÏ´Ü ¹«½ÃÇØµµ µÊ
+        var bot = InGameManager.Instance.FindRemotePlayerById(user.Id); //ì—¬ê¸°ì„œ ëœ¨ëŠ” Warningì€ ì¼ë‹¨ ë¬´ì‹œí•´ë„ ë¨
         switch (packet)
         {
             case ePacketType_InGameServer.DistributeCardsFromServer:
@@ -153,7 +153,7 @@ public class Bot
                         Card deleteCard = NowCards[deleteIndex];
                         NowCards.RemoveAt(deleteIndex);
 
-                        //¼±ÅÃÇÑ Ä«µå¸¦ ÆĞÅ¶¿¡ Æ÷ÇÔ
+                        //ì„ íƒí•œ ì¹´ë“œë¥¼ íŒ¨í‚·ì— í¬í•¨
                         Writer.WriteByte((byte)deleteCard.Type);
                         Writer.WriteByte(deleteCard.Value);
                         Writer.SendPacket(ServerPeer);
@@ -192,9 +192,9 @@ public class Bot
                     while (IOResults.Count < length)
                     {
                         int i = reader.ReadInt();
-                        if (i == -1) //-1À» ±âÁØÀ¸·Î In/OutÀ» ±¸ºĞÇÔ
+                        if (i == -1) //-1ì„ ê¸°ì¤€ìœ¼ë¡œ In/Outì„ êµ¬ë¶„í•¨
                         {
-                            //ÀÌÀü±îÁö´Â In ÇÃ·¹ÀÌ¾î, ÀÌÈÄºÎÅÍ´Â Out ÇÃ·¹ÀÌ¾î
+                            //ì´ì „ê¹Œì§€ëŠ” In í”Œë ˆì´ì–´, ì´í›„ë¶€í„°ëŠ” Out í”Œë ˆì´ì–´
                             if (isInPlayerEnd == true)
                             {
                                 Debug.LogError("[InOut] Received -1 but already in player end state.");
@@ -214,11 +214,11 @@ public class Bot
                 }
                 break;
             case ePacketType_InGameServer.S2URequest_SelectInOut_First:
-                //3¸íÀÇ ÇÃ·¹ÀÌ¾î ¸ğµÎ ÀÚ½ÅÀÌ ¹ŞÀº Order¿Í¿Í ¼­¹öÀÇ Order°¡ µ¿ÀÏÇÒ ¶§, ÀÌ ÆĞÅ¶ÀÌ ³¯¶ó¿È.
+                //3ëª…ì˜ í”Œë ˆì´ì–´ ëª¨ë‘ ìì‹ ì´ ë°›ì€ Orderì™€ì™€ ì„œë²„ì˜ Orderê°€ ë™ì¼í•  ë•Œ, ì´ íŒ¨í‚·ì´ ë‚ ë¼ì˜´.
                 {
                     if (bot.Order != 0)
                         return;
-                    List<bool> ios = new List<bool>(); //³»°¡ 1¹øÀÌ¸é ¾Æ¹«°Íµµ ¾øÀ½
+                    List<bool> ios = new List<bool>(); //ë‚´ê°€ 1ë²ˆì´ë©´ ì•„ë¬´ê²ƒë„ ì—†ìŒ
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
                         SendRandomIOChoice(bot.Order, user.Id);
@@ -229,7 +229,7 @@ public class Bot
                 {
                     if (bot.Order != 1)
                         return;
-                    List<bool> ios = new List<bool>(); //³»°¡ 2¹øÀÌ¸é ¾Õ¿¡ ÇÏ³ª
+                    List<bool> ios = new List<bool>(); //ë‚´ê°€ 2ë²ˆì´ë©´ ì•ì— í•˜ë‚˜
                     //ios.Add
                     DelayedFunctionHelper.InvokeDelayed( () =>
                     {
@@ -241,7 +241,7 @@ public class Bot
                 {
                     if (bot.Order != 2)
                         return;
-                    List<bool> ios = new List<bool>(); //³»°¡ 3¹øÀÌ¸é ¾Õ¿¡ µÑ
+                    List<bool> ios = new List<bool>(); //ë‚´ê°€ 3ë²ˆì´ë©´ ì•ì— ë‘˜
                     //ios.Add
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
@@ -282,7 +282,7 @@ public class Bot
                             Card deleteCard = NowCards[deleteIndex];
                             NowCards.RemoveAt(deleteIndex);
 
-                            //¼±ÅÃÇÑ Ä«µå¸¦ ÆĞÅ¶¿¡ Æ÷ÇÔ
+                            //ì„ íƒí•œ ì¹´ë“œë¥¼ íŒ¨í‚·ì— í¬í•¨
                             Writer.WriteByte((byte)deleteCard.Type);
                             Writer.WriteByte(deleteCard.Value);
                             Writer.SendPacket(ServerPeer);
@@ -308,7 +308,7 @@ public class Bot
                                 int nowScore = InGameServer_PUN.CalculateScore(NowCards);
                                 if ((UnityEngine.Random.Range(0, 100) < ConvertScore2ExchangeWithDeckProability(nowScore)))
                                 {
-                                    //Ä«µå ±³È¯ ¿äÃ»
+                                    //ì¹´ë“œ êµí™˜ ìš”ì²­
                                     Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithDeckInSpecialRule);
                                     Writer.WriteInt(user.Id);
                                     Writer.WriteInt(InGameManager.Instance.RoomID);
@@ -339,21 +339,21 @@ public class Bot
                     int asked = reader.ReadInt();
                     if (asked != user.Id)
                     {
-                        //³»°¡ ¿äÃ»¹ŞÀº°Ô ¾Æ´Ô
+                        //ë‚´ê°€ ìš”ì²­ë°›ì€ê²Œ ì•„ë‹˜
                         return;
                     }
                     IsDoingSomethingISR = true;
                     DelayedFunctionHelper.InvokeDelayed(() =>
                     {
                         bool accept = (UnityEngine.Random.Range(0, 2) == 0) ? true : false;
-                        accept = true; //¹İµå½Ã ¼ö¶ô
+                        accept = true; //ë°˜ë“œì‹œ ìˆ˜ë½
                         if (accept)
                         {
-                            //¼ö¶ô
+                            //ìˆ˜ë½
                             Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
                             Writer.WriteInt(user.Id);
                             Writer.WriteInt(InGameManager.Instance.RoomID);
-                            Writer.WriteBool(true); //¼ö¶ô
+                            Writer.WriteBool(true); //ìˆ˜ë½
                             Writer.SendPacket(ServerPeer);
 
                             DelayedFunctionHelper.InvokeDelayed(() =>
@@ -364,21 +364,21 @@ public class Bot
 
                                 int deleteIndex = UnityEngine.Random.Range(0, NowCards.Count);
                                 Card deleteCard = NowCards[deleteIndex];
-                                //NowCards.RemoveAt(deleteIndex); ¿©±â¼­ ¸»°í ÃÖÁ¾¿¡¼­ Áö¿ò
+                                //NowCards.RemoveAt(deleteIndex); ì—¬ê¸°ì„œ ë§ê³  ìµœì¢…ì—ì„œ ì§€ì›€
 
                                 Writer.WriteByte((byte)deleteCard.Type);
                                 Writer.WriteByte((byte)deleteCard.Value);
                                 Writer.SendPacket(ServerPeer);
-                                //IsDoingSomethingISR = false; //ÀÌ°Ç Ä«µå ±³È¯ °á°ú¿¡¼­ Ã³¸®ÇÔ
+                                //IsDoingSomethingISR = false; //ì´ê±´ ì¹´ë“œ êµí™˜ ê²°ê³¼ì—ì„œ ì²˜ë¦¬í•¨
                             }, 2.0f);
                         }
                         else
                         {
-                            //°ÅÀı
+                            //ê±°ì ˆ
                             Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
                             Writer.WriteInt(user.Id);
                             Writer.WriteInt(InGameManager.Instance.RoomID);
-                            Writer.WriteBool(false); //°ÅÀı
+                            Writer.WriteBool(false); //ê±°ì ˆ
                             Writer.SendPacket(ServerPeer);
                             IsDoingSomethingISR = false;
                         }
@@ -400,7 +400,7 @@ public class Bot
 
                     int localId = user.Id;
 
-                    // ³» ±³È¯ÀÌ ¾Æ´Ï¸é(=°üÀü µî) ¿ø·¡ ÄÚµåµµ ¾Æ¹«°Íµµ ¾È ÇßÀ¸¹Ç·Î ±×´ë·Î Å»Ãâ
+                    // ë‚´ êµí™˜ì´ ì•„ë‹ˆë©´(=ê´€ì „ ë“±) ì›ë˜ ì½”ë“œë„ ì•„ë¬´ê²ƒë„ ì•ˆ í–ˆìœ¼ë¯€ë¡œ ê·¸ëŒ€ë¡œ íƒˆì¶œ
                     if (id1 != localId && id2 != localId)
                         break;
 
@@ -410,7 +410,7 @@ public class Bot
 
                     if (id1 == localId)
                     {
-                        // ³»°¡ card1À» ³Ñ±â°í card2¸¦ ¹Ş´Â´Ù
+                        // ë‚´ê°€ card1ì„ ë„˜ê¸°ê³  card2ë¥¼ ë°›ëŠ”ë‹¤
                         outType = card1.Type;
                         outValue = card1.Value;
                         localInCard = card2;
@@ -418,7 +418,7 @@ public class Bot
                     }
                     else
                     {
-                        // ³»°¡ card2¸¦ ³Ñ±â°í card1À» ¹Ş´Â´Ù
+                        // ë‚´ê°€ card2ë¥¼ ë„˜ê¸°ê³  card1ì„ ë°›ëŠ”ë‹¤
                         outType = card2.Type;
                         outValue = card2.Value;
                         localInCard = card1;
@@ -454,19 +454,19 @@ public class Bot
     {
         if(score >= 100)
         {
-            if (score >= 107) //8º°
+            if (score >= 107) //8ë³„
                 return 90;
-            if (score >= 102) //3º°
+            if (score >= 102) //3ë³„
                 return 80;
             return 70;
         }
         else
         {
-            if (score >= 7) //7´Ş
+            if (score >= 7) //7ë‹¬
                 return 60;
-            if (score >= 4) //4´Ş
+            if (score >= 4) //4ë‹¬
                 return 50;
-            if (score == 3) //3´Ş
+            if (score == 3) //3ë‹¬
                 return 60;
             return 70;
         }

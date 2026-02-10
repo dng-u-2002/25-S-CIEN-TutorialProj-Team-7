@@ -380,7 +380,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
                 return;
         }
 
-        //¾ê´Â Á÷Á¢ °¡Á®¿Í¾ß ÇÔ(±³È¯À» ÇÏ°Å³ª ÇÏ¸é CardObjectsÀÇ Index¿Í Child Index°¡ ¸ÂÁö ¾Ê°Ô µÊ)
+        //ì–˜ëŠ” ì§ì ‘ ê°€ì ¸ì™€ì•¼ í•¨(êµí™˜ì„ í•˜ê±°ë‚˜ í•˜ë©´ CardObjectsì˜ Indexì™€ Child Indexê°€ ë§ì§€ ì•Šê²Œ ë¨)
         if (Input.GetKeyDown(KeyCode.Alpha1) && CardObjects[0].SelectButton.interactable)
         {
             CardContainer.transform.GetChild(0).transform.GetComponent<CardObject>().SelectButton.onClick.Invoke();
@@ -404,7 +404,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
         {
             c.ActiveSelection(true, (card) =>
             {
-                //"¾î¶² Ä«µå¸¦ ¹ö¸±±î?" Á¦°Å
+                //"ì–´ë–¤ ì¹´ë“œë¥¼ ë²„ë¦´ê¹Œ?" ì œê±°
                 InGameManager.Instance.LocalPlayerUIDrawer.SetWordCloudTextBox(false, string.Empty, -1, true);
 
                 //Card2Exchange = card;
@@ -553,7 +553,7 @@ public class LocalPlayerUIDrawer : PlayerUIDrawer
 
         c1.CardGameObject.transform.SetSiblingIndex(idx2);
         c2.CardGameObject.transform.SetSiblingIndex(idx1);
-        //·¹ÀÌ¾Æ¿ôÀ» ¾÷µ¥ÀÌÆ®ÇØ¾ß ÇÔ.
+        //ë ˆì´ì•„ì›ƒì„ ì—…ë°ì´íŠ¸í•´ì•¼ í•¨.
         UpdateLayout();
 
         c1.CardGameObject.SetMovementTransformPosition(originPosition1);
