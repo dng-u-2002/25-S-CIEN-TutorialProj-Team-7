@@ -1,33 +1,25 @@
-/BunnysLie/Library
-/BunnysLie/[Ll]ibrary/
-/BunnysLie/[Tt]emp/
-/BunnysLie/[Oo]bj/
-/BunnysLie/[Bb]uild/
-/BunnysLie/[Bb]uilds/
-/BunnysLie/[Ll]ogs/
-/BunnysLie/[Uu]ser[Ss]ettings/
-/BunnysLie/[Aa]ssets/Plugins/Editor/JetBrains*
-*.log
-*.pidb.meta
-*.pdb.meta
-*.mdb.meta
-sysinfo.txt
-mono_crash.*
-# Builds
-*.apk
-*.aab
-*.unitypackage
-*.unitypackage.meta
-*.app
-ExportedObj/
-.consulo/
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+
+# --- Unity Project (BunnysLie) ---
+BunnysLie/[Ll]ibrary/
+BunnysLie/[Tt]emp/
+BunnysLie/[Oo]bj/
+BunnysLie/[Bb]uild/
+BunnysLie/[Bb]uilds/
+BunnysLie/[Ll]ogs/
+BunnysLie/[Uu]ser[Ss]ettings/
+BunnysLie/[Aa]ssets/Plugins/Editor/JetBrains*
+
+# --- IDE / Project Files ---
 *.csproj
-*.unityproj
 *.sln
 *.suo
 *.tmp
 *.user
 *.userprefs
+*.unityproj
 *.pidb
 *.booproj
 *.svd
@@ -35,17 +27,27 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
-/BunnysLie_clone_0
-/BunnysLie/Temp
+.vs/
+BunnysLie/.vs/
+
+# --- Server & Build Artifacts ---
+/Server/**/bin/
+/Server/**/obj/
+/Server/**/out/
 Server/BunnysLie_Server/ssh-key-private.key
-/Server/BunnysLie_Server/BunnysLie_Server/bin
-/Server/BunnysLie_Server/BunnysLie_Server/obj
-/Server/BunnysLie_Server/out
-/BunnysLie/Logs
-/BunnysLie/Logs
-/BunnysLie_clone_1
-/BunnysLie/Logs
-/BunnysLie/Logs
-/BunnysLie/Logs
-/BunnysLie/.vs
-/BunnysLie/obj
+*.apk
+*.aab
+*.app
+*.unitypackage
+*.unitypackage.meta
+
+# --- Clones & Logs ---
+BunnysLie_clone_*
+*.log
+sysinfo.txt
+mono_crash.*
+
+# --- Other Folders ---
+BunnysLie - Copy/
+ExportedObj/
+.consulo/
