@@ -19,6 +19,22 @@ public class Chating : MonoBehaviour
 
     //public NetPeer peer { get; set; }
     //public NetDataWriter writer { get; set; } = new NetDataWriter();
+
+    void Start()
+    {
+        //채팅창 on/off 동기화
+        int isActive = PlayerPrefs.GetInt("IsActive_TextChat", 1); 
+        
+        if (isActive == 0)
+        {
+            this.gameObject.SetActive(false);
+        }
+        else
+        {
+            this.gameObject.SetActive(true);
+        }
+    }
+    
     void Awake() 
     { 
         input = GetComponentInChildren<TMP_InputField>();

@@ -342,6 +342,7 @@ public class InGameSettingPanel : MonoBehaviour
         SFXVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
         VoiceChatVolumeSlider.value = PlayerPrefs.GetFloat("VoiceChatVolume", 0.5f);
         IsActive_TextChat = PlayerPrefs.GetInt("IsActive_TextChat", 1) == 1;
+        FindObjectOfType<Chating>(true)?.gameObject.SetActive(IsActive_TextChat);
         IsOn = false;
     }
 
