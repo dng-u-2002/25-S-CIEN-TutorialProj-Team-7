@@ -1594,7 +1594,13 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
             case ePacketType_InGameServer.Broadcast_FinalResult:
                 {
                     int loserID = reader.ReadInt();
-                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(string.Format(ConstStrings.Message_FinalLoser, InGameManager.Instance.FindDrawerByID(loserID).GetNickName()), InGameManager.Instance.LocalPlayerUIDrawer.Character + 5);
+                    
+                    // 꼴찌(loserID)의 Drawer를 찾아서 그 캐릭터 인덱스를 사용
+                    var loserDrawer = InGameManager.Instance.FindDrawerByID(loserID);
+        
+                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(
+                        string.Format(ConstStrings.Message_FinalLoser, loserDrawer.GetNickName()), 
+                        loserDrawer.Character + 5);
 
                     ///////////////////////////////////////////////////////////////////////////////
                     ///퀘스트 처리
