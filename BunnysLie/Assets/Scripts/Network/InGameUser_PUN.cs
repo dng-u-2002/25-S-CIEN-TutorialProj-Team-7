@@ -1257,6 +1257,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 break;
 
             case ePacketType_InGameServer.Broadcast_ExchangeWithOpponentInSpecialRuleResult:
+                //스페셜 룰에서 최종적으로 카드 교환이 이루어져야 할 때 이 패킷이 날라옴.
                 {
                     int id1 = reader.ReadInt();
                     byte type1 = reader.ReadByte();
@@ -1288,70 +1289,81 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         localInCard = card1; opponentId = id1; 
                     }
 
-                    // 2. [내 카드 찾기] 내 덱에서 실제로 나가는 카드를 찾음
+                    // 2. [내 카드 찾기]
                     Card localOutCard = InGameManager.Instance.LocalPlayer.ThisDeck.GetCardByTypeAndValue(outType, outValue);
                     if (localOutCard == null) break;
 
-                    // 3. [상대 카드 지정] ★ 복잡한 검색 없이 무조건 1번(두번째) 카드로 고정 ★
+                    // 3. [상대 카드 위치 고정] ★ 무조건 1번(오른쪽) 카드로 고정 (간략화 유지) ★
                     var oppDrawer = InGameManager.Instance.FindDrawerByIDExceptLocal(opponentId);
                     Card opponentOutCard = oppDrawer.Target.ThisDeck.GetCard(1); 
-                    // 혹시 카드가 1장뿐이라면 0번 사용
                     if (opponentOutCard == null) opponentOutCard = oppDrawer.Target.ThisDeck.GetCard(0);
 
-                    // 4. [위치 저장] 애니메이션 좌표 계산
-                    // 내 카드는 원래 내 자리에서, 상대 카드는 상대 1번 자리에서 출발/도착
+                    // 4. [위치 저장] 
                     int mySiblingIdx = localOutCard.CardGameObject.transform.GetSiblingIndex();
                     int oppSiblingIdx = opponentOutCard.CardGameObject.transform.GetSiblingIndex();
 
+                    // 목표 지점들은 미리 계산해둡니다.
                     Vector3 myPos = localOutCard.CardGameObject.GetMoverPosition(); 
                     Vector3 myScale = localOutCard.CardGameObject.GetMoverScale();
+                    
+                    // ★ 상대방 1번 카드 위치를 '출발점'으로 잡습니다.
                     Vector3 oppPos = opponentOutCard.CardGameObject.GetMoverPosition(); 
                     Vector3 oppScale = opponentOutCard.CardGameObject.GetMoverScale();
 
-                    // 5. [Dummy 생성] 화면에 보여줄 가짜 카드 생성
                     Transform uiRoot = InGameManager.Instance.LocalPlayerUIDrawer.transform;
-                    
-                    // (1) 내 카드 Dummy (나 -> 상대)
+
+                    // 5. [내 Dummy 미리 생성] (내 카드 -> 상대)
+                    // 내 카드는 곧 사라지므로 미리 복제
                     GameObject dummyMyToOpp = Instantiate(localOutCard.CardGameObject.gameObject, uiRoot);
                     dummyMyToOpp.transform.position = localOutCard.CardGameObject.transform.position;
                     dummyMyToOpp.transform.localScale = localOutCard.CardGameObject.transform.localScale;
                     CardObject scriptMyToOpp = dummyMyToOpp.GetComponent<CardObject>();
-                    scriptMyToOpp.SetFace(true); // 나는 앞면
-
-                    // (2) 상대 카드 Dummy (상대 -> 나)
-                    GameObject dummyOppToMe = Instantiate(opponentOutCard.CardGameObject.gameObject, uiRoot);
-                    dummyOppToMe.transform.position = opponentOutCard.CardGameObject.transform.position;
-                    dummyOppToMe.transform.localScale = opponentOutCard.CardGameObject.transform.localScale;
-                    CardObject scriptOppToMe = dummyOppToMe.GetComponent<CardObject>();
-                    scriptOppToMe.SetFace(false); // 상대는 뒷면
+                    scriptMyToOpp.SetFace(true);
 
                     // 6. [데이터 교환]
-                    // 내 덱
                     InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(localOutCard);
                     InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(localInCard);
 
-                    // 상대 덱 (내 카드의 복사본을 상대에게 줌)
+                    // 상대 덱에서도 '시각적으로' 1번 카드를 지웁니다. (간략화에 맞춤)
                     oppDrawer.Target.ThisDeck.RemoveCard(opponentOutCard);
                     oppDrawer.Target.ThisDeck.AddCard(new Card(localOutCard.Type, localOutCard.Value));
 
-                    // 7. [UI 갱신 및 숨기기]
+                    // 7. [UI 갱신] ★ 진짜 카드가 생성됨 ★
                     InGameManager.Instance.LocalPlayerUIDrawer.UpdateCardsLayout();
                     oppDrawer.UpdateCardsLayout();
 
-                    // (1) 새로 들어온 "진짜 내 카드" 찾아서 숨기기
+                    // 8. [상대 Dummy 생성] (상대 -> 나)
+                    // ★ 여기서 '진짜 카드(localInCard)'를 복제해서 Dummy를 만듭니다 (이미지 문제 해결)
+                    GameObject dummyOppToMe = null;
+                    CardObject scriptOppToMe = null;
+
                     if (localInCard.CardGameObject != null)
                     {
-                        localInCard.CardGameObject.transform.SetSiblingIndex(mySiblingIdx); // 내 원래 자리 유지
-                        localInCard.CardGameObject.gameObject.SetActive(false); // 애니메이션 동안 숨김
+                        // (1) 진짜 정보를 가진 카드를 복제
+                        dummyOppToMe = Instantiate(localInCard.CardGameObject.gameObject, uiRoot);
+                        scriptOppToMe = dummyOppToMe.GetComponent<CardObject>();
+                        
+                        // (2) ★ [핵심] 위치를 강제로 상대방 1번 자리(oppPos)로 옮깁니다! (간략화 적용) ★
+                        // 복제된 위치는 내 덱 위치지만, 애니메이션 시작 전에 순간이동 시키는 겁니다.
+                        scriptOppToMe.SetMovementTransformPosition(oppPos);
+                        scriptOppToMe.SetMovementTransformScale(oppScale);
+                        
+                        // (3) 뒷면으로 설정 (상대 패니까 출발할 땐 안 보임)
+                        scriptOppToMe.SetFace(false); 
+
+                        // (4) 진짜 카드는 숨겨둠 (투명인간)
+                        localInCard.CardGameObject.transform.SetSiblingIndex(mySiblingIdx);
+                        localInCard.CardGameObject.gameObject.SetActive(true);
+                        localInCard.CardGameObject.SetMovementTransformScale(Vector3.zero);
                     }
 
-                    // (2) 새로 생긴 "진짜 상대 카드" 찾아서 숨기기 (방금 내가 보낸 그 카드)
+                    // 상대방 쪽 진짜 카드도 1번 자리에 넣고 숨김
                     Card newOppCard = oppDrawer.Target.ThisDeck.GetCardByTypeAndValue(localOutCard.Type, localOutCard.Value);
                     if(newOppCard != null && newOppCard.CardGameObject != null)
                     {
-                        // 상대방 1번 자리(우리가 정한 위치)로 인덱스 맞춤
-                        newOppCard.CardGameObject.transform.SetSiblingIndex(oppSiblingIdx); 
-                        newOppCard.CardGameObject.gameObject.SetActive(false); // 애니메이션 동안 숨김
+                        newOppCard.CardGameObject.transform.SetSiblingIndex(oppSiblingIdx);
+                        newOppCard.CardGameObject.gameObject.SetActive(true);
+                        newOppCard.CardGameObject.SetMovementTransformScale(Vector3.zero);
                     }
 
                     // 서버 응답
@@ -1360,7 +1372,7 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     Writer.WriteInt(InGameManager.Instance.RoomID);
                     Writer.SendPacket(ServerPeer);
 
-                    // 8. [애니메이션 실행]
+                    // 9. [애니메이션 실행]
                     const float moveDur = 0.75f;
                     const float faceFlipDelay = 0.4f;
 
@@ -1371,14 +1383,17 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         // (1) 상대 Dummy -> 내 자리
                         if (scriptOppToMe != null)
                         {
+                            // oppPos(상대 1번 자리)에서 출발해서 myPos(내 자리)로 옴
                             scriptOppToMe.MoveMovementTransformPosition(myPos, moveDur, ePosition.World);
                             scriptOppToMe.MoveMovementTransformScale(myScale, moveDur);
+                            
                             DelayedFunctionHelper.InvokeDelayed(() => {
-                                if(scriptOppToMe != null) scriptOppToMe.SetFaceAnimated(true, 1.0f, 0.4f);
+                                // 뒤집힐 때 이미 갖고 있는 '진짜 정보'가 나옴
+                                if(scriptOppToMe != null) scriptOppToMe.SetFaceAnimated(true, 1.0f, 0.4f); 
                             }, faceFlipDelay);
                         }
 
-                        // (2) 내 Dummy -> 상대 자리 (1번 위치)
+                        // (2) 내 Dummy -> 상대 1번 자리
                         if (scriptMyToOpp != null)
                         {
                             scriptMyToOpp.MoveMovementTransformPosition(oppPos, moveDur, ePosition.World);
@@ -1388,23 +1403,22 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             }, faceFlipDelay);
                         }
 
-                        // (3) 애니메이션 종료 후 처리
+                        // (3) 종료 처리
                         yield return new WaitForSeconds(1.0f);
 
-                        // Dummy 삭제
                         if (dummyMyToOpp != null) Destroy(dummyMyToOpp);
                         if (dummyOppToMe != null) Destroy(dummyOppToMe);
 
-                        // 진짜 카드 활성화
+                        // 진짜 카드 활성화 (크기 복구)
                         if (localInCard.CardGameObject != null)
                         {
-                            localInCard.CardGameObject.gameObject.SetActive(true);
                             localInCard.CardGameObject.SetFace(true);
+                            localInCard.CardGameObject.MoveMovementTransformScale(myScale, 0.2f);
                         }
                         if (newOppCard != null && newOppCard.CardGameObject != null)
                         {
-                            newOppCard.CardGameObject.gameObject.SetActive(true);
                             newOppCard.CardGameObject.SetFace(false);
+                            newOppCard.CardGameObject.MoveMovementTransformScale(oppScale, 0.2f);
                         }
 
                         // 버튼 복구
