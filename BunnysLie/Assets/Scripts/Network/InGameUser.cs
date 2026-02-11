@@ -1,4 +1,4 @@
-//using Helpers;
+ï»¿//using Helpers;
 //using LiteNetLib;
 //using System;
 //using System.Collections;
@@ -30,9 +30,9 @@ public enum ePacketType_InGameServer : byte
 
 
     S2URequest_SelectCard2Delete,
-    U2SResponse_SelectCard2Delete, //À¯Àú°¡ »èÁ¦ÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ¼­¹ö¿¡ Àü¼ÛÇÏ´Â ÆĞÅ¶
-    Broadcast_SomeoneSelectedCard2Delete, //À¯Àú°¡ »èÁ¦ÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ´Ù¸¥ À¯Àúµé¿¡°Ô Àü¼ÛÇÏ´Â ÆĞÅ¶
-    Broadcast_ShowCards2Delete, //À¯Àú°¡ »èÁ¦ÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ´Ù¸¥ À¯Àúµé¿¡°Ô Àü¼ÛÇÏ´Â ÆĞÅ¶(»èÁ¦ÇÒ Ä«µå º¸¿©ÁÖ±â)
+    U2SResponse_SelectCard2Delete, //ìœ ì €ê°€ ì‚­ì œí•  ì¹´ë“œë¥¼ ì„ íƒí–ˆì„ ë•Œ ì„œë²„ì— ì „ì†¡í•˜ëŠ” íŒ¨í‚·
+    Broadcast_SomeoneSelectedCard2Delete, //ìœ ì €ê°€ ì‚­ì œí•  ì¹´ë“œë¥¼ ì„ íƒí–ˆì„ ë•Œ ë‹¤ë¥¸ ìœ ì €ë“¤ì—ê²Œ ì „ì†¡í•˜ëŠ” íŒ¨í‚·
+    Broadcast_ShowCards2Delete, //ìœ ì €ê°€ ì‚­ì œí•  ì¹´ë“œë¥¼ ì„ íƒí–ˆì„ ë•Œ ë‹¤ë¥¸ ìœ ì €ë“¤ì—ê²Œ ì „ì†¡í•˜ëŠ” íŒ¨í‚·(ì‚­ì œí•  ì¹´ë“œ ë³´ì—¬ì£¼ê¸°)
 
 
 
@@ -68,9 +68,9 @@ public enum ePacketType_InGameServer : byte
     Broadcast_LoserOfThisRound,
 
     Broadcast_StartSpecialRule,
-    U2SResponse_SelectCard2DeleteISR, //À¯Àú°¡ ½ºÆä¼È ·ê¿¡¼­ Á¦°ÅÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ¼­¹ö¿¡ Àü¼ÛÇÏ´Â ÆĞÅ¶(¹º°¡ Á» ÀÌ»óÇÑµ¥, RequestÀº ¾ø¾îµµ Response´Â ¾Ë¾Æ¼­ ³¯¶ó¿À°Ô µÇ¾î ÀÖÀ½)
-    Broadcast_SomeoneSelectedCard2RemoveISR, //À¯Àú°¡ ½ºÆä¼È ·ê¿¡¼­ Á¦°ÅÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ´Ù¸¥ À¯Àúµé¿¡°Ô Àü¼ÛÇÏ´Â ÆĞÅ¶
-    Broadcast_ShowCards2DeleteISR, //À¯Àú°¡ ½ºÆä¼È ·ê¿¡¼­ Á¦°ÅÇÒ Ä«µå¸¦ ¼±ÅÃÇßÀ» ¶§ ´Ù¸¥ À¯Àúµé¿¡°Ô Àü¼ÛÇÏ´Â ÆĞÅ¶(Á¦°ÅÇÒ Ä«µå º¸¿©ÁÖ±â)
+    U2SResponse_SelectCard2DeleteISR, //ìœ ì €ê°€ ìŠ¤í˜ì…œ ë£°ì—ì„œ ì œê±°í•  ì¹´ë“œë¥¼ ì„ íƒí–ˆì„ ë•Œ ì„œë²„ì— ì „ì†¡í•˜ëŠ” íŒ¨í‚·(ë­”ê°€ ì¢€ ì´ìƒí•œë°, Requestì€ ì—†ì–´ë„ ResponseëŠ” ì•Œì•„ì„œ ë‚ ë¼ì˜¤ê²Œ ë˜ì–´ ìˆìŒ)
+    Broadcast_SomeoneSelectedCard2RemoveISR, //ìœ ì €ê°€ ìŠ¤í˜ì…œ ë£°ì—ì„œ ì œê±°í•  ì¹´ë“œë¥¼ ì„ íƒí–ˆì„ ë•Œ ë‹¤ë¥¸ ìœ ì €ë“¤ì—ê²Œ ì „ì†¡í•˜ëŠ” íŒ¨í‚·
+    Broadcast_ShowCards2DeleteISR, //ìœ ì €ê°€ ìŠ¤í˜ì…œ ë£°ì—ì„œ ì œê±°í•  ì¹´ë“œë¥¼ ì„ íƒí–ˆì„ ë•Œ ë‹¤ë¥¸ ìœ ì €ë“¤ì—ê²Œ ì „ì†¡í•˜ëŠ” íŒ¨í‚·(ì œê±°í•  ì¹´ë“œ ë³´ì—¬ì£¼ê¸°)
     GoInSpecialRule,
     Broadcast_ShowSpecialRuleCards,
     Broadcast_LoserOfSpecialRule,
@@ -78,17 +78,17 @@ public enum ePacketType_InGameServer : byte
     Broadcast_StartNextRound,
 
     U2SRequest_ExchangeCardWithDeckInSpecialRule,
-    S2UResponse_ExhangeCardWithDeckInSpecialRule,
+    S2UResponse_ExchangeCardWithDeckInSpecialRule,
 
-    U2SRequest_ExhangeCardWithOpponentInSpecialRule,
+    U2SRequest_ExchangeCardWithOpponentInSpecialRule,
 
-    S2UAsk_ExhangeCardWithOpponentInSpecialRule, // »ó´ë¿Í Ä«µå ±³È¯ ¿äÃ»
-    S2UResponse_WillAcceptExhangeCardWithOpponentISR, // »ó´ë°¡ Ä«µå ±³È¯ ¿äÃ»¿¡ ÀÀ´ä
+    S2UAsk_ExchangeCardWithOpponentInSpecialRule, // ìƒëŒ€ì™€ ì¹´ë“œ êµí™˜ ìš”ì²­
+    S2UResponse_WillAcceptExchangeCardWithOpponentISR, // ìƒëŒ€ê°€ ì¹´ë“œ êµí™˜ ìš”ì²­ì— ì‘ë‹µ
     Broadcast_IsOpponentAcceptedCardExchangeISR,
 
-    U2SRequest_OpponentSelectedCardToExhangeISR, //»ó´ë°¡ Ä«µå¸¦ °ñ¶úÀ½
-    Broadcast_ExhangeWithOpponentInSpecialRuleResult, //±³È¯ °á°ú
-    U2SResponse_SuccessfullyExchangedCardWithOpponentInSpecialRule, //³»°¡ ±³È¯ÇÑ Ä«µå°¡ µ¦¿¡ Ãß°¡µÊ
+    U2SRequest_OpponentSelectedCardToExchangeISR, //ìƒëŒ€ê°€ ì¹´ë“œë¥¼ ê³¨ëìŒ
+    Broadcast_ExchangeWithOpponentInSpecialRuleResult, //êµí™˜ ê²°ê³¼
+    U2SResponse_SuccessfullyExchangedCardWithOpponentInSpecialRule, //ë‚´ê°€ êµí™˜í•œ ì¹´ë“œê°€ ë±ì— ì¶”ê°€ë¨
 
     Broadcast_FinalResult,
     SelfEmoticon,
@@ -128,7 +128,7 @@ public enum ePacketType_InGameServer : byte
 //                break;
 
 //            case ePacketType_InGameServer.Response_JoinGame:
-//                Debug.Log("´Ù¸¥ ÇÃ·¹ÀÌ¾î¸¦ ±â´Ù¸®´Â Áß...");
+//                Debug.Log("ë‹¤ë¥¸ í”Œë ˆì´ì–´ë¥¼ ê¸°ë‹¤ë¦¬ëŠ” ì¤‘...");
 //                break;
 
 //            case ePacketType_InGameServer.Broadcast_StartGame:
@@ -136,7 +136,7 @@ public enum ePacketType_InGameServer : byte
 //                // Ids of Users : List<int>
 //                int roomID = reader.ReadInt();
 //                List<int> users = new List<int>(new int[] { reader.ReadInt(), reader.ReadInt(), reader.ReadInt() });
-//                users.Remove(Id); //³»°Ç Áö¿ò
+//                users.Remove(Id); //ë‚´ê±´ ì§€ì›€
 //                NetworkResponse_Broadcast_StartGame(roomID, users);
 //                break;
 
@@ -225,7 +225,7 @@ public enum ePacketType_InGameServer : byte
 //                    {
 //                        SendMyRPSSelection2Server(rps);
 //                    });
-//                }, 3.0f); //Ä«µå ¿¡´Ï¸ŞÀÌ¼Ç µô·¹ÀÌ
+//                }, 3.0f); //ì¹´ë“œ ì—ë‹ˆë©”ì´ì…˜ ë”œë ˆì´
 //                break;
 
 //            case ePacketType_InGameServer.Broadcast_RPSRoundResult:
@@ -274,7 +274,7 @@ public enum ePacketType_InGameServer : byte
 //            //    {
 //            //        var LocalPlayerUIDrawer = FindObjectOfType<LocalPlayerUIDrawer>();
 //            //        LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
-//            //        LocalPlayerUIDrawer.ShowPanelOnScreenCenter("±â´Ù¸®´Â Áß 2");
+//            //        LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ê¸°ë‹¤ë¦¬ëŠ” ì¤‘ 2");
 //            //        InGameManager.Instance.LocalPlayer.IsOrderDetermined = true;
 //            //    }
 //            //    break;
@@ -289,9 +289,9 @@ public enum ePacketType_InGameServer : byte
 //                    }
 //                    DelayedFunctionHelper.InvokeDelayed(() =>
 //                    {
-//                        if (players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true) // ³»°¡ ¸®¸ÅÄ¡
+//                        if (players2Rematch.Contains(InGameManager.Instance.LocalPlayer.ID) == true) // ë‚´ê°€ ë¦¬ë§¤ì¹˜
 //                        {
-//                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("´Ù½Ã!");
+//                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ë‹¤ì‹œ!");
 //                            InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
 //                            DelayedFunctionHelper.InvokeDelayed(() =>
 //                            {
@@ -300,16 +300,16 @@ public enum ePacketType_InGameServer : byte
 //                                {
 //                                    SendMyRPSSelection2Server(rps);
 //                                });
-//                            }, 1.3f); //¸®¸ÅÄ¡ ½ÃÀÛ µô·¹ÀÌ
+//                            }, 1.3f); //ë¦¬ë§¤ì¹˜ ì‹œì‘ ë”œë ˆì´
 //                        }
 //                        else
 //                        {
-//                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("¸®¸ÅÄ¡¿¡ Âü¿©ÇÏÁö ¾Ê½À´Ï´Ù.\n´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡ ¸®¸ÅÄ¡ ÁßÀÔ´Ï´Ù.");
+//                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ë¦¬ë§¤ì¹˜ì— ì°¸ì—¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.\në‹¤ë¥¸ í”Œë ˆì´ì–´ê°€ ë¦¬ë§¤ì¹˜ ì¤‘ì…ë‹ˆë‹¤.");
 //                            InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenter(true);
 //                            InGameManager.Instance.LocalPlayer.IsOrderDetermined = true;
 //                            return;
 //                        }
-//                    }, 0.5f); //°¡À§¹ÙÀ§º¸ °á°ú º¸¿©ÁÖ±â µô·¹ÀÌ <- ÀÌ¹Ì ¼­¹ö¿¡ µô·¹ÀÌ°¡ ÀÖ³ª? ¾îÂ·µç Âª¾Æµµ µÊ
+//                    }, 0.5f); //ê°€ìœ„ë°”ìœ„ë³´ ê²°ê³¼ ë³´ì—¬ì£¼ê¸° ë”œë ˆì´ <- ì´ë¯¸ ì„œë²„ì— ë”œë ˆì´ê°€ ìˆë‚˜? ì–´ì¨Œë“  ì§§ì•„ë„ ë¨
 //                }
 //                break;
 
@@ -487,17 +487,17 @@ public enum ePacketType_InGameServer : byte
 //                {
 //                    byte reason = reader.ReadByte();
 //                    Debug.Log(reason);
-//                    if(reason == 10)//ÀÌÀü ½ºÆä¼È ·ê¿¡¼­ µ¿Á¡ÀÚ ¹ß»ı
+//                    if(reason == 10)//ì´ì „ ìŠ¤í˜ì…œ ë£°ì—ì„œ ë™ì ì ë°œìƒ
 //                    {
-//                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ÀÌÀü ½ºÆä¼È ·ê¿¡¼­ µ¿Á¡ÀÚ°¡ ¹ß»ıÇß½À´Ï´Ù.\n»õ·Î¿î ½ºÆä¼È ·êÀ» ½ÃÀÛÇÕ´Ï´Ù.");
+//                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ì´ì „ ìŠ¤í˜ì…œ ë£°ì—ì„œ ë™ì ìê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.\nìƒˆë¡œìš´ ìŠ¤í˜ì…œ ë£°ì„ ì‹œì‘í•©ë‹ˆë‹¤.");
 //                    }
 
 //                    int id = reader.ReadInt();
 //                    int opponentId = reader.ReadInt();
 //                    if (id != InGameManager.Instance.LocalPlayer.ID)
 //                    {
-//                        //³»°¡ ½ºÆä¼È ·êÀ» ½ÃÀÛÇÏ´Â°Ô ¾Æ´Ô
-//                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("½ºÆä¼È ·êÀÌ ½ÃÀÛµÇ¾ú½À´Ï´Ù.\nÀá½Ã ±â´Ù·ÁÁÖ¼¼¿ä.");
+//                        //ë‚´ê°€ ìŠ¤í˜ì…œ ë£°ì„ ì‹œì‘í•˜ëŠ”ê²Œ ì•„ë‹˜
+//                        InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ìŠ¤í˜ì…œ ë£°ì´ ì‹œì‘ë˜ì—ˆìŠµë‹ˆë‹¤.\nì ì‹œ ê¸°ë‹¤ë ¤ì£¼ì„¸ìš”.");
 //                        IEnumerator S()
 //                        {
 //                            yield return new WaitForSeconds(2.0f);
@@ -574,7 +574,7 @@ public enum ePacketType_InGameServer : byte
 //                            user2Cards.Add(new Card(Card.CardType.Dummy, 100));
 //                            user2Cards.Add(new Card(Card.CardType.Dummy, 100));
 //                        }
-//                        //Ä«µå Å¸ÀÔ-°ª Ãâ·Â
+//                        //ì¹´ë“œ íƒ€ì…-ê°’ ì¶œë ¥
 //                        IEnumerator S2()
 //                        {
 //                            yield return new WaitForSeconds(2.0f);
@@ -607,15 +607,15 @@ public enum ePacketType_InGameServer : byte
 //                            },
 //                            () =>
 //                            {
-//                                //±³È¯ ¹öÆ°À» ´©¸§
-//                                //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+//                                //êµí™˜ ë²„íŠ¼ì„ ëˆ„ë¦„
+//                                //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
 //                                //Writer.WriteInt(Id);
 //                                //Writer.WriteInt(InGameManager.Instance.RoomID);
 //                                //Writer.SendPacket(ServerPeer);
 //                            },
 //                            (card) =>
 //                            {
-//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
 //                                Writer.WriteInt(Id);
 //                                Writer.WriteInt(InGameManager.Instance.RoomID);
 //                                Writer.WriteByte((byte)card.Type);
@@ -662,15 +662,15 @@ public enum ePacketType_InGameServer : byte
 //                            },
 //                            () =>
 //                            {
-//                                //±³È¯ ¹öÆ°À» ´©¸§
-//                                //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+//                                //êµí™˜ ë²„íŠ¼ì„ ëˆ„ë¦„
+//                                //Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
 //                                //Writer.WriteInt(Id);
 //                                //Writer.WriteInt(InGameManager.Instance.RoomID);
 //                                //Writer.SendPacket(ServerPeer);
 //                            },
 //                            (card) =>
 //                            {
-//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule);
+//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule);
 //                                Writer.WriteInt(Id);
 //                                Writer.WriteInt(InGameManager.Instance.RoomID);
 //                                Writer.WriteByte((byte)card.Type);
@@ -690,31 +690,31 @@ public enum ePacketType_InGameServer : byte
 //                    }
 //                }
 //                break;
-//            case ePacketType_InGameServer.S2UAsk_ExhangeCardWithOpponentISR:
+//            case ePacketType_InGameServer.S2UAsk_ExchangeCardWithOpponentISR:
 //                {
 //                    int asker = reader.ReadInt();
 //                    int myId = reader.ReadInt();
 //                    if(myId != InGameManager.Instance.LocalPlayer.ID)
 //                    {
 //                        //Debug.LogWarning(Equals(asker, InGameManager.Instance.LocalPlayer.ID) + " " + myId + " " + InGameManager.Instance.LocalPlayer.ID);
-//                        //³»°¡ ¿äÃ»¹ŞÀº°Ô ¾Æ´Ô
+//                        //ë‚´ê°€ ìš”ì²­ë°›ì€ê²Œ ì•„ë‹˜
 //                        return;
 //                    }
 
-//                    //³»°¡ ¿äÃ»¹ŞÀº°ÅÀÓ
-//                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("»ó´ë°¡ Ä«µå ±³È¯À» ¿äÃ»Çß½À´Ï´Ù", "¼ö¶ô", "°ÅÀı",
+//                    //ë‚´ê°€ ìš”ì²­ë°›ì€ê±°ì„
+//                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenterWithButtons("ìƒëŒ€ê°€ ì¹´ë“œ êµí™˜ì„ ìš”ì²­í–ˆìŠµë‹ˆë‹¤", "ìˆ˜ë½", "ê±°ì ˆ",
 //                        () =>
 //                        {
-//                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
+//                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExchangeCardWithOpponentISR);
 //                            Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
 //                            Writer.WriteInt(InGameManager.Instance.RoomID);
-//                            Writer.WriteBool(true); //¼ö¶ô
+//                            Writer.WriteBool(true); //ìˆ˜ë½
 //                            Writer.SendPacket(ServerPeer);
 
 //                            InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
 //                            InGameManager.Instance.LocalPlayerUIDrawer.SelectCard2Exchange((card) =>
 //                            {
-//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_OpponentSelectedCardToExhangeISR);
+//                                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SRequest_OpponentSelectedCardToExchangeISR);
 //                                Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
 //                                Writer.WriteInt(InGameManager.Instance.RoomID);
 //                                Writer.WriteByte((byte)card.Type);
@@ -724,10 +724,10 @@ public enum ePacketType_InGameServer : byte
 //                        },
 //                        () =>
 //                        {
-//                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR);
+//                            Writer.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_WillAcceptExchangeCardWithOpponentISR);
 //                            Writer.WriteInt(InGameManager.Instance.LocalPlayer.ID);
 //                            Writer.WriteInt(InGameManager.Instance.RoomID);
-//                            Writer.WriteBool(false); //°ÅÀı
+//                            Writer.WriteBool(false); //ê±°ì ˆ
 //                            Writer.SendPacket(ServerPeer);
 
 //                            InGameManager.Instance.LocalPlayerUIDrawer.SetActivePanelOnScreenCenterWithButtons(false);
@@ -745,25 +745,25 @@ public enum ePacketType_InGameServer : byte
 
 //                        if (isAccepted)
 //                        {
-//                            //±³È¯ ¼ö¶ô
-//                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"»ó´ë°¡ ±³È¯À» ¼ö¶ôÇß½À´Ï´Ù.\nÄ«µå ¼±ÅÃÀ» ±â´Ù¸®´Â Áß...");
+//                            //êµí™˜ ìˆ˜ë½
+//                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"ìƒëŒ€ê°€ êµí™˜ì„ ìˆ˜ë½í–ˆìŠµë‹ˆë‹¤.\nì¹´ë“œ ì„ íƒì„ ê¸°ë‹¤ë¦¬ëŠ” ì¤‘...");
 //                            foreach (var rp in InGameManager.Instance.RemotePlayerUIDrawers)
 //                            {
 //                                if (rp.Target.ID == opponentId)
 //                                {
-//                                    rp.SetIOText("±³È¯ ¼ö¶ô");
+//                                    rp.SetIOText("êµí™˜ ìˆ˜ë½");
 //                                }
 //                            }
 //                        }
 //                        else
 //                        {
-//                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"»ó´ë°¡ ±³È¯À» °ÅÀıÇß½À´Ï´Ù.");
+//                            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"ìƒëŒ€ê°€ êµí™˜ì„ ê±°ì ˆí–ˆìŠµë‹ˆë‹¤.");
 //                            foreach (var rp in InGameManager.Instance.RemotePlayerUIDrawers)
 //                            {
 //                                if (rp.Target.ID == opponentId)
 //                                {
 //                                    string originText = rp.GetIOText();
-//                                    rp.SetIOText("±³È¯ °ÅÀı");
+//                                    rp.SetIOText("êµí™˜ ê±°ì ˆ");
 //                                    DelayedFunctionHelper.InvokeDelayed(() =>
 //                                    {
 //                                        rp.SetIOText(originText);
@@ -772,14 +772,14 @@ public enum ePacketType_InGameServer : byte
 //                                }
 //                            }
 //                            InGameManager.Instance.LocalPlayerUIDrawer.SetAllCards2DefaultState();
-//                            //±³È¯ °ÅÀı
-//                            //InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("»ó´ë°¡ ±³È¯À» °ÅÀıÇß½À´Ï´Ù.");
+//                            //êµí™˜ ê±°ì ˆ
+//                            //InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("ìƒëŒ€ê°€ êµí™˜ì„ ê±°ì ˆí–ˆìŠµë‹ˆë‹¤.");
 //                        }
 //                    }
 //                }
 //                break;
 
-//            case ePacketType_InGameServer.Broadcast_ExhangeWithOpponentInSpecialRuleResult:
+//            case ePacketType_InGameServer.Broadcast_ExchangeWithOpponentInSpecialRuleResult:
 //                {
 //                    int id1 = reader.ReadInt();
 //                    byte type1 = reader.ReadByte();
@@ -799,7 +799,7 @@ public enum ePacketType_InGameServer : byte
 //                            return;
 //                        }
 //                        InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(localCard);
-//                        //³»°¡ ±³È¯ÇÑ Ä«µå
+//                        //ë‚´ê°€ êµí™˜í•œ ì¹´ë“œ
 //                        InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card2);
 //                        card2.CardGameObject.SetFace(true);
 
@@ -820,7 +820,7 @@ public enum ePacketType_InGameServer : byte
 //                            return;
 //                        }
 //                        InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(localCard);
-//                        //»ó´ë°¡ ±³È¯ÇÑ Ä«µå
+//                        //ìƒëŒ€ê°€ êµí™˜í•œ ì¹´ë“œ
 //                        InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card1);
 //                        card1.CardGameObject.SetFace(true);
 
@@ -835,7 +835,7 @@ public enum ePacketType_InGameServer : byte
 
 //                }
 //                break;
-//            case ePacketType_InGameServer.S2UResponse_ExhangeCardWithDeckInSpecialRule:
+//            case ePacketType_InGameServer.S2UResponse_ExchangeCardWithDeckInSpecialRule:
 //                {
 //                    int id = reader.ReadInt();
 //                    if(id == InGameManager.Instance.LocalPlayer.ID)
@@ -846,10 +846,10 @@ public enum ePacketType_InGameServer : byte
 //                            int originIdx = InGameManager.Instance.LocalPlayer.Card2Exchange.CardGameObject.transform.GetSiblingIndex();
 //                            InGameManager.Instance.LocalPlayer.ThisDeck.RemoveCard(InGameManager.Instance.LocalPlayer.Card2Exchange);
 
-//                            //³»°¡ ¿äÃ»ÇÑ ±³È¯ÀÓ
+//                            //ë‚´ê°€ ìš”ì²­í•œ êµí™˜ì„
 //                            InGameManager.Instance.LocalPlayer.ThisDeck.AddCard(card);
 
-//                            //¼ø¼­ ¹Ù²Ù±â
+//                            //ìˆœì„œ ë°”ê¾¸ê¸°
 //                            card.CardGameObject.transform.SetSiblingIndex(originIdx);
 
 //                            //card.CardGameObject.SetFace(true);
@@ -866,7 +866,7 @@ public enum ePacketType_InGameServer : byte
 //                    }
 //                    else
 //                    {
-//                        //³»°¡ ¿äÃ»ÇÑ°Ç ¾Æ´Ô
+//                        //ë‚´ê°€ ìš”ì²­í•œê±´ ì•„ë‹˜
 //                        var rp = InGameManager.Instance.RemotePlayerUIDrawers.First((u) => u.Target.ID == id);
 
 //                        var c = rp.Target.ThisDeck.GetCard(1);
@@ -876,12 +876,12 @@ public enum ePacketType_InGameServer : byte
 //                        DelayedFunctionHelper.InvokeDelayed(() =>
 //                        {
 //                            rp.Target.ThisDeck.RemoveCard(c);
-//                            Card dummy = new Card(Card.CardType.Dummy, 100); //´õ¹Ì Ä«µå »ı¼º
+//                            Card dummy = new Card(Card.CardType.Dummy, 100); //ë”ë¯¸ ì¹´ë“œ ìƒì„±
 //                            rp.Target.ThisDeck.AddCard(dummy);
 //                            dummy.CardGameObject.SetMovementTransformPosition(InGameManager.Instance.DeckTransform.position);
 //                            dummy.CardGameObject.MoveMovementTransformPosition(Vector3.zero, 0.8f, ePosition.Local);
 //                        }, 0.9f);                        
-//                        //rp.Target.ThisDeck.RemoveCard(rp.Target.ThisDeck.GetCard(1)); //Ã¹¹øÂ° Ä«µå »èÁ¦
+//                        //rp.Target.ThisDeck.RemoveCard(rp.Target.ThisDeck.GetCard(1)); //ì²«ë²ˆì§¸ ì¹´ë“œ ì‚­ì œ
 
 //                    }
 //                }
@@ -911,7 +911,7 @@ public enum ePacketType_InGameServer : byte
 //            case ePacketType_InGameServer.Broadcast_StartNextRound:
 //                {
 //                    byte reason = reader.ReadByte();
-//                    if(reason == 0) //ÀüÆÇÀÌ 3¸í ´Ù ÀÎ & µ¿Á¡ÀÎ »óÈ²
+//                    if(reason == 0) //ì „íŒì´ 3ëª… ë‹¤ ì¸ & ë™ì ì¸ ìƒí™©
 //                    {
 
 //                    }
@@ -922,7 +922,7 @@ public enum ePacketType_InGameServer : byte
 //            case ePacketType_InGameServer.Broadcast_FinalResult:
 //                {
 //                    int loserID = reader.ReadInt();
-//                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\n°ÔÀÓÀÌ Á¾·áµÇ¾ú½À´Ï´Ù.");
+//                    InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter($"Loser: {loserID}\nê²Œì„ì´ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
 //                }
 //                break;
 //        }
@@ -932,7 +932,7 @@ public enum ePacketType_InGameServer : byte
 //    {
 //        if(InGameManager.Instance.LocalPlayer.Order == 2 && InGameManager.Instance.OutPlayerCount == 2)
 //        {
-//            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2¸íÀÌ ¸ÕÀú OUTÀ» °ñ¶ú½À´Ï´Ù.\nINÀ» ¼±ÅÃÇÕ´Ï´Ù.");
+//            InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter("2ëª…ì´ ë¨¼ì € OUTì„ ê³¨ëìŠµë‹ˆë‹¤.\nINì„ ì„ íƒí•©ë‹ˆë‹¤.");
 //            Task.Delay(2000).ContinueWith((_) =>
 //            {
 //                Writer.CreateNewPacket((byte)ePacketType_InGameServer.U2SResponse_SelectInOut_Third);
@@ -1038,7 +1038,7 @@ public enum ePacketType_InGameServer : byte
 
 //    private void NetworkResponse_Broadcast_StartGame(int roomID, List<int> remotePlayers)
 //    {
-//        Debug.Log("°ÔÀÓÀÌ ½ÃÀÛµÇ¾ú½À´Ï´Ù!");
+//        Debug.Log("ê²Œì„ì´ ì‹œì‘ë˜ì—ˆìŠµë‹ˆë‹¤!");
 //        InGameManager.Instance.RoomID = roomID;
 //        InGameManager.Instance.StartGame();
 //        InGameManager.Instance.LocalPlayer.ID = Id;
@@ -1079,8 +1079,8 @@ public enum ePacketType_InGameServer : byte
 //        GUILayout.BeginVertical();
 //        GUILayout.Space(200);
 //        GUILayout.EndVertical();
-//        GUILayout.Label($"¼­¹ö IP: {serverIP}:{serverPort}");
-//        if (GUILayout.Button("°ÔÀÓ ½ÃÀÛ"))
+//        GUILayout.Label($"ì„œë²„ IP: {serverIP}:{serverPort}");
+//        if (GUILayout.Button("ê²Œì„ ì‹œì‘"))
 //        {
 //        }
 //    }

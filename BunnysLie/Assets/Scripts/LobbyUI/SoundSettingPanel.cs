@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -136,65 +136,65 @@ public class SoundSettingPanel : MonoBehaviour
 
         MasterVolumeSlider.onValueChanged.AddListener((value01) =>
         {
-            value01 = Mathf.Clamp01(value01); // ¹üÀ§ Á¦ÇÑ
+            value01 = Mathf.Clamp01(value01); // ë²”ìœ„ ì œí•œ
 
-            // 0Àº -80dB(°ÅÀÇ ¹«À½), 1Àº 0dB(¿øº» Å©±â)
+            // 0ì€ -80dB(ê±°ì˜ ë¬´ìŒ), 1ì€ 0dB(ì›ë³¸ í¬ê¸°)
             float dB;
-            if (value01 <= 0.0001f) // 0¿¡ °¡±î¿ì¸é ¹«À½ Ã³¸®
+            if (value01 <= 0.0001f) // 0ì— ê°€ê¹Œìš°ë©´ ë¬´ìŒ ì²˜ë¦¬
             {
                 dB = -80f;
                 IsActive_MasterVolume = false;
             }
             else
             {
-                dB = Mathf.Log10(value01) * 20f + 1; // ¼±Çü dB º¯È¯
+                dB = Mathf.Log10(value01) * 20f + 1; // ì„ í˜• dB ë³€í™˜
                 IsActive_MasterVolume = true;
             }
 
             Mixer.SetFloat("MasterVolume", dB);
-            PlayerPrefs.SetFloat("MasterVolume", value01); // ÇÃ·¹ÀÌ¾î ¼³Á¤ ÀúÀå
+            PlayerPrefs.SetFloat("MasterVolume", value01); // í”Œë ˆì´ì–´ ì„¤ì • ì €ì¥
             PlayerPrefs.Save();
         });
         BGMVolumeSlider.onValueChanged.AddListener((value01) =>
         {
-            value01 = Mathf.Clamp01(value01); // ¹üÀ§ Á¦ÇÑ
+            value01 = Mathf.Clamp01(value01); // ë²”ìœ„ ì œí•œ
 
-            // 0Àº -80dB(°ÅÀÇ ¹«À½), 1Àº 0dB(¿øº» Å©±â)
+            // 0ì€ -80dB(ê±°ì˜ ë¬´ìŒ), 1ì€ 0dB(ì›ë³¸ í¬ê¸°)
             float dB;
-            if (value01 <= 0.0001f) // 0¿¡ °¡±î¿ì¸é ¹«À½ Ã³¸®
+            if (value01 <= 0.0001f) // 0ì— ê°€ê¹Œìš°ë©´ ë¬´ìŒ ì²˜ë¦¬
             {
                 dB = -80f;
                 IsActive_BGMVolume = false;
             }
             else
             {
-                dB = Mathf.Log10(value01) * 20f + 1; // ¼±Çü dB º¯È¯
+                dB = Mathf.Log10(value01) * 20f + 1; // ì„ í˜• dB ë³€í™˜
                 IsActive_BGMVolume = true;
             }
 
             Mixer.SetFloat("BGMVolume", dB);
-            PlayerPrefs.SetFloat("BGMVolume", value01); // ÇÃ·¹ÀÌ¾î ¼³Á¤ ÀúÀå
+            PlayerPrefs.SetFloat("BGMVolume", value01); // í”Œë ˆì´ì–´ ì„¤ì • ì €ì¥
             PlayerPrefs.Save();
         });
         SFXVolumeSlider.onValueChanged.AddListener((value01) =>
         {
-            value01 = Mathf.Clamp01(value01); // ¹üÀ§ Á¦ÇÑ
+            value01 = Mathf.Clamp01(value01); // ë²”ìœ„ ì œí•œ
 
-            // 0Àº -80dB(°ÅÀÇ ¹«À½), 1Àº 0dB(¿øº» Å©±â)
+            // 0ì€ -80dB(ê±°ì˜ ë¬´ìŒ), 1ì€ 0dB(ì›ë³¸ í¬ê¸°)
             float dB;
-            if (value01 <= 0.0001f) // 0¿¡ °¡±î¿ì¸é ¹«À½ Ã³¸®
+            if (value01 <= 0.0001f) // 0ì— ê°€ê¹Œìš°ë©´ ë¬´ìŒ ì²˜ë¦¬
             {
                 dB = -80f;
                 IsActive_SFXVolume = false;
             }
             else
             {
-                dB = Mathf.Log10(value01) * 20f + 1; // ¼±Çü dB º¯È¯
+                dB = Mathf.Log10(value01) * 20f + 1; // ì„ í˜• dB ë³€í™˜
                 IsActive_SFXVolume = true;
             }
 
             Mixer.SetFloat("SFXVolume", dB);
-            PlayerPrefs.SetFloat("SFXVolume", value01); // ÇÃ·¹ÀÌ¾î ¼³Á¤ ÀúÀå
+            PlayerPrefs.SetFloat("SFXVolume", value01); // í”Œë ˆì´ì–´ ì„¤ì • ì €ì¥
             PlayerPrefs.Save();
         });
 
@@ -227,14 +227,14 @@ public class SoundSettingPanel : MonoBehaviour
         VoiceChatActiveButton.onClick.AddListener(() =>
         {
             IsActive_VoiceChat = !IsActive_VoiceChat;
-            PlayerPrefs.SetInt("IsActive_VoiceChat", IsActive_VoiceChat ? 1 : 0); // ÇÃ·¹ÀÌ¾î ¼³Á¤ ÀúÀå
+            PlayerPrefs.SetInt("IsActive_VoiceChat", IsActive_VoiceChat ? 1 : 0); // í”Œë ˆì´ì–´ ì„¤ì • ì €ì¥
             PlayerPrefs.Save();
             ButtonClickSoundPlayer.Play();
         });
         TextChatActiveButton.onClick.AddListener(() =>
         {
             IsActive_TextChat = !IsActive_TextChat;
-            PlayerPrefs.SetInt("IsActive_TextChat", IsActive_TextChat ? 1 : 0); // ÇÃ·¹ÀÌ¾î ¼³Á¤ ÀúÀå
+            PlayerPrefs.SetInt("IsActive_TextChat", IsActive_TextChat ? 1 : 0); // í”Œë ˆì´ì–´ ì„¤ì • ì €ì¥
             PlayerPrefs.Save();
             ButtonClickSoundPlayer.Play();
         });

@@ -1,4 +1,4 @@
-// AchievementManager.cs
+ï»¿// AchievementManager.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,19 +6,19 @@ using Steamworks;
 
 public enum AchievementId
 {
-    ConnectWithSteam, //Steam¿¡ ¿¬µ¿ / Åä³¢ÀÇ Ä£±¸°¡ µÈ °É È¯¿µÇØ!
-    WinNoLoss,     // ÇÑ ¶ó¿îµåµµ ¾È Áö°í ÃÖÁ¾ ½Â¸® / ¿Ïº®ÇÑ ½Â¸®
-    WinPairTen,    // 10º° Æä¾î·Î ¶ó¿îµå ½Â¸® / °¡Àå ³ôÀº »ê
-    WinZeroMoon,   // 0´Ş Á·º¸·Î ¶ó¿îµå ½Â¸® / °¡Àå ±íÀº ¹Ù´Ù
-    Play2Mode5Games, //2Àå ¸ğµå 5¹ø ÇÃ·¹ÀÌ / ±ò²ûÇÑ ½ÂºÎ
-    Play3Mode5Games, //3Àå ¸ğµå 5¹ø ÇÃ·¹ÀÌ / °í¼öÀÇ ¼¼°è
-    PlayRandomMode5Games, //·£´ı ¸ğµå 5¹ø ÇÃ·¹ÀÌ / ÀåÀÎÀº µµ±¸¸¦ °¡¸®Áö ¾ÊÁö
-    WinSpecialRule5Times, //½ºÆä¼È ·ê 5¹ø ÇÃ·¹ÀÌ / Áö»ó ÃÖ°­ÀÇ Åä³¢
-    WinRoundBiggerCardsThanOutPlayer, //ÅğÃ»ÇÑ »ó´ëº¸´Ù ³ôÀº ÆĞ·Î Âü°¡ÇØ ¶ó¿îµå ½Â¸®ÇÏ±â / Åä³¢ÀÇ ºí·¯ÇÎ
-    WatchCredit, //Å©·¹µ÷ º¸±â / °¡Á·»çÁø
-    Draw5RPS, //°¡À§¹ÙÀ§º¸ 5¹ø ¿¬¼Ó ¹«½ÂºÎ / Ãµ»ı¿¬ºĞ
-    PlayWithFriend, // Ä£±¸¿Í ÇÃ·¹ÀÌ 1È¸ ÁøÇà / ºí·¯ÇÎÀ¸·Î ´ÙÁ®Áø ¿ìÁ¤
-    WinSpecialRuleAfterExhangeCardWithOpponent //1 vs 1 ·ê¿¡¼­ »ó´ë¿Í ±³È¯ ÈÄ ½Â¸®ÇÏ±â / ³× Ä«µå°¡ Å½³ª´Âµ¥?
+    ConnectWithSteam, //Steamì— ì—°ë™ / í† ë¼ì˜ ì¹œêµ¬ê°€ ëœ ê±¸ í™˜ì˜í•´!
+    WinNoLoss,     // í•œ ë¼ìš´ë“œë„ ì•ˆ ì§€ê³  ìµœì¢… ìŠ¹ë¦¬ / ì™„ë²½í•œ ìŠ¹ë¦¬
+    WinPairTen,    // 10ë³„ í˜ì–´ë¡œ ë¼ìš´ë“œ ìŠ¹ë¦¬ / ê°€ì¥ ë†’ì€ ì‚°
+    WinZeroMoon,   // 0ë‹¬ ì¡±ë³´ë¡œ ë¼ìš´ë“œ ìŠ¹ë¦¬ / ê°€ì¥ ê¹Šì€ ë°”ë‹¤
+    Play2Mode5Games, //2ì¥ ëª¨ë“œ 5ë²ˆ í”Œë ˆì´ / ê¹”ë”í•œ ìŠ¹ë¶€
+    Play3Mode5Games, //3ì¥ ëª¨ë“œ 5ë²ˆ í”Œë ˆì´ / ê³ ìˆ˜ì˜ ì„¸ê³„
+    PlayRandomMode5Games, //ëœë¤ ëª¨ë“œ 5ë²ˆ í”Œë ˆì´ / ì¥ì¸ì€ ë„êµ¬ë¥¼ ê°€ë¦¬ì§€ ì•Šì§€
+    WinSpecialRule5Times, //ìŠ¤í˜ì…œ ë£° 5ë²ˆ í”Œë ˆì´ / ì§€ìƒ ìµœê°•ì˜ í† ë¼
+    WinRoundBiggerCardsThanOutPlayer, //í‡´ì²­í•œ ìƒëŒ€ë³´ë‹¤ ë†’ì€ íŒ¨ë¡œ ì°¸ê°€í•´ ë¼ìš´ë“œ ìŠ¹ë¦¬í•˜ê¸° / í† ë¼ì˜ ë¸”ëŸ¬í•‘
+    WatchCredit, //í¬ë ˆë”§ ë³´ê¸° / ê°€ì¡±ì‚¬ì§„
+    Draw5RPS, //ê°€ìœ„ë°”ìœ„ë³´ 5ë²ˆ ì—°ì† ë¬´ìŠ¹ë¶€ / ì²œìƒì—°ë¶„
+    PlayWithFriend, // ì¹œêµ¬ì™€ í”Œë ˆì´ 1íšŒ ì§„í–‰ / ë¸”ëŸ¬í•‘ìœ¼ë¡œ ë‹¤ì ¸ì§„ ìš°ì •
+    WinSpecialRuleAfterExchangeCardWithOpponent //1 vs 1 ë£°ì—ì„œ ìƒëŒ€ì™€ êµí™˜ í›„ ìŠ¹ë¦¬í•˜ê¸° / ë„¤ ì¹´ë“œê°€ íƒë‚˜ëŠ”ë°?
 }
 
 public enum StatsId
@@ -42,7 +42,7 @@ public class AchievementManager : MonoBehaviour
     private bool _statsReady = false;
     private readonly Queue<AchievementId> _pendingUnlocks = new();
 
-    // Steamworks ÆÄÆ®³Ê ÆäÀÌÁöÀÇ API Name°ú ¹İµå½Ã 1:1 ¸ÅÄª
+    // Steamworks íŒŒíŠ¸ë„ˆ í˜ì´ì§€ì˜ API Nameê³¼ ë°˜ë“œì‹œ 1:1 ë§¤ì¹­
     private static readonly Dictionary<AchievementId, string> Ach = new()
     {
         { AchievementId.ConnectWithSteam,        "ACH_CONNECT_TO_STEAM" },
@@ -57,7 +57,7 @@ public class AchievementManager : MonoBehaviour
         { AchievementId.WatchCredit,      "WATCH_CREDIT" },
         { AchievementId.Draw5RPS,      "DRAW_RPS_5TIMES" },
         { AchievementId.PlayWithFriend,      "PLAY_WITH_FRIEND" },
-        { AchievementId.WinSpecialRuleAfterExhangeCardWithOpponent,      "WIN_SPECAILGAME_EXHANGE_OPPONENT" }
+        { AchievementId.WinSpecialRuleAfterExchangeCardWithOpponent,      "WIN_SPECIALGAME_EXCHANGE_OPPONENT" }
     };
 
     private static readonly Dictionary<StatsId, string> Sts = new()
@@ -82,9 +82,9 @@ public class AchievementManager : MonoBehaviour
         _cbStatsStored = Callback<UserStatsStored_t>.Create(OnStatsStored);
         _cbAchStored = Callback<UserAchievementStored_t>.Create(OnAchievementStored);
 
-        // 1) ¾÷Àû/½ºÅÈÀ» ¼­¹ö¿¡¼­ ·Îµå (ÀÌÈÄ¿¡¾ß SetAchievement °¡´É)
+        // 1) ì—…ì /ìŠ¤íƒ¯ì„ ì„œë²„ì—ì„œ ë¡œë“œ (ì´í›„ì—ì•¼ SetAchievement ê°€ëŠ¥)
         SteamUserStats.RequestUserStats(SteamUser.GetSteamID());
-        //SteamUserStats.RequestCurrentStats(); // ¹İµå½Ã ¼±Çà! :contentReference[oaicite:4]{index=4}
+        //SteamUserStats.RequestCurrentStats(); // ë°˜ë“œì‹œ ì„ í–‰! :contentReference[oaicite:4]{index=4}
     }
 
     private void OnStatsReceived(UserStatsReceived_t p)
@@ -96,20 +96,20 @@ public class AchievementManager : MonoBehaviour
         if ((ulong)p.m_nGameID == SteamUtils.GetAppID().m_AppId && p.m_eResult == EResult.k_EResultOK)
         {
             _statsReady = true;
-            // ´ë±â¿­ Ã³¸®
+            // ëŒ€ê¸°ì—´ ì²˜ë¦¬
             while (_pendingUnlocks.Count > 0) TryUnlock(_pendingUnlocks.Dequeue());
         }
     }
 
     private void OnStatsStored(UserStatsStored_t p) {
-        //·Î±×
+        //ë¡œê·¸
         Debug.Log($"Stats stored: {p.m_eResult}");
-        /* ÇÊ¿ä½Ã ·Î±× */
+        /* í•„ìš”ì‹œ ë¡œê·¸ */
     }
     private void OnAchievementStored(UserAchievementStored_t p) { 
-        //·Î±× Ãâ·Â
+        //ë¡œê·¸ ì¶œë ¥
         Debug.Log($"Achievement stored: {p.m_rgchAchievementName} : {p.m_nMaxProgress}, {p.m_nCurProgress}");
-        /* ÇÊ¿ä½Ã ·Î±× */
+        /* í•„ìš”ì‹œ ë¡œê·¸ */
     }
 
     public static void Unlock(AchievementId id)
@@ -145,15 +145,15 @@ public class AchievementManager : MonoBehaviour
         {
             Debug.Log($"Achievement unlocked: {api}");
         }
-            SteamUserStats.StoreStats(); // ¼­¹ö ¹İ¿µ Æ®¸®°Å (Áß¿ä) :contentReference[oaicite:5]{index=5}
+            SteamUserStats.StoreStats(); // ì„œë²„ ë°˜ì˜ íŠ¸ë¦¬ê±° (ì¤‘ìš”) :contentReference[oaicite:5]{index=5}
     }
 
-    // ÁøÇàÇü ¾÷Àû(ÆË¾÷ + ÁøÇàµµ Ç¥½Ã)
+    // ì§„í–‰í˜• ì—…ì (íŒì—… + ì§„í–‰ë„ í‘œì‹œ)
     public static void IndicateProgress(AchievementId id, int cur, int max)
     {
         if (Instance == null || !Instance._statsReady) return;
         if (!Ach.TryGetValue(id, out var api)) return;
-        // ÁøÇà ÆË¾÷ (RequestCurrentStats ¼º°ø ÈÄ¿¡¸¸ true) :contentReference[oaicite:6]{index=6}
+        // ì§„í–‰ íŒì—… (RequestCurrentStats ì„±ê³µ í›„ì—ë§Œ true) :contentReference[oaicite:6]{index=6}
         SteamUserStats.IndicateAchievementProgress(api, (uint)cur, (uint)max);
     }
 
@@ -194,7 +194,7 @@ public class AchievementManager : MonoBehaviour
         SteamUserStats.SetStat(statApiName, v);
         SteamUserStats.StoreStats();
     }
-    // ½ºÅÈ º¸Á¶: ´©Àû¿ë Á¤¼ö ½ºÅÈ ¿¹½Ã
+    // ìŠ¤íƒ¯ ë³´ì¡°: ëˆ„ì ìš© ì •ìˆ˜ ìŠ¤íƒ¯ ì˜ˆì‹œ
     public static void AddToStat(string statApiName, int delta, (AchievementId ach, int target)? gate = null)
     {
         if (Instance == null || !Instance._statsReady) return;
@@ -222,7 +222,7 @@ public class AchievementManager : MonoBehaviour
             SteamUserStats.ClearAchievement(kvp.Value);
         }
     }
-    // Å×½ºÆ®¿ë ¸®¼Â(°³¹ß Áß¿¡¸¸ »ç¿ë)
+    // í…ŒìŠ¤íŠ¸ìš© ë¦¬ì…‹(ê°œë°œ ì¤‘ì—ë§Œ ì‚¬ìš©)
     public static void Clear(AchievementId id)
     {
         if (Instance == null || !Instance._statsReady) return;

@@ -167,7 +167,7 @@ public class InGameManager : MonoBehaviour
         }
         else
         {
-            return (card1.Value + card2.Value) % 10; // Normal case
+            return (card1.Value + card2.Value + 2) % 10; // Normal case
         }
     }
     public int CalculateLoser(Dictionary<int, Tuple<List<Card>, eIO>> status)
@@ -662,11 +662,11 @@ public class InGameManager : MonoBehaviour
     }
 
     [SerializeField] AudioSource NormalBGM;
-    [SerializeField] AudioSource SpecailBGM;
-    internal void StartSpecialRule_TwoCardMode(int user1Id, int user2Id, System.Action onGo, System.Action<Card> onExchangeWithDeck, System.Action onExhangeWithOpponentButtonClicked, System.Action<Card> onExchangeWithOther)
+    [SerializeField] AudioSource SpecialBGM;
+    internal void StartSpecialRule_TwoCardMode(int user1Id, int user2Id, System.Action onGo, System.Action<Card> onExchangeWithDeck, System.Action onExchangeWithOpponentButtonClicked, System.Action<Card> onExchangeWithOther)
     {
         NormalBGM.Stop();
-        SpecailBGM.Play();
+        SpecialBGM.Play();
 
         bool isLocalObserver = (user1Id == LocalPlayer.ID || user2Id == LocalPlayer.ID) ? false : true;
         if (isLocalObserver == true)
@@ -710,7 +710,7 @@ public class InGameManager : MonoBehaviour
             () =>
             {
                 //exchange with opponent button clicked
-                onExhangeWithOpponentButtonClicked?.Invoke();
+                onExchangeWithOpponentButtonClicked?.Invoke();
             },
             (card) =>
             {
@@ -720,10 +720,10 @@ public class InGameManager : MonoBehaviour
 
         }
     }
-    internal void StartSpecialRule_ThreeCardMode(Action<Card> selectCard2Delete, int user1Id, int user2Id, System.Action onGo, System.Action<Card> onExchangeWithDeck, System.Action onExhangeWithOpponentButtonClicked, System.Action<Card> onExchangeWithOther)
+    internal void StartSpecialRule_ThreeCardMode(Action<Card> selectCard2Delete, int user1Id, int user2Id, System.Action onGo, System.Action<Card> onExchangeWithDeck, System.Action onExchangeWithOpponentButtonClicked, System.Action<Card> onExchangeWithOther)
     {
         NormalBGM.Stop();
-        SpecailBGM.Play();
+        SpecialBGM.Play();
         if (Mode != eGameMode.ThreeCards)
         {
             Debug.LogError("Cannot start special rule in ThreeCard mode when the game mode is not set to ThreeCards.");
@@ -777,7 +777,7 @@ public class InGameManager : MonoBehaviour
             () =>
             {
                 //exchange with opponent button clicked
-                onExhangeWithOpponentButtonClicked?.Invoke();
+                onExchangeWithOpponentButtonClicked?.Invoke();
             },
             (card) =>
             {
@@ -822,7 +822,7 @@ public class InGameManager : MonoBehaviour
         }
         if(NormalBGM.isPlaying == false) //Fixed(b5 #2)
             NormalBGM.Play();
-        SpecailBGM.Stop();
+        SpecialBGM.Stop();
     }
 
     internal void ShowRPSRoundResult(int round, int firstPlayerId, eRPS firstPlayerRPS, byte firstPlayerOrder, int secondPlayerId, eRPS secondPlayerRPS, byte secondPlayerOrder, int thirdPlayerId, eRPS thirdPlayerRPS, byte thirdPlayerOrder)

@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+ï»¿#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public static class CursorOnButtonBulkAdder
 {
-    // 1) ¿­¸° ¸ğµç ¾ÀÀÇ Button¿¡ CursorOnButton Ãß°¡
+    // 1) ì—´ë¦° ëª¨ë“  ì”¬ì˜ Buttonì— CursorOnButton ì¶”ê°€
     [MenuItem("Tools/Cursor/Attach 'CursorOnButton' to All Buttons (Open Scenes)")]
     public static void AttachAll()
     {
@@ -34,7 +34,7 @@ public static class CursorOnButtonBulkAdder
         Debug.Log($"[Cursor] Buttons: {total}, Added: {added}, Skipped(already had): {skipped}");
     }
 
-    // 2) ¼±ÅÃÇÑ ¿ÀºêÁ§Æ®(µé) ÇÏÀ§ÀÇ Button¿¡¸¸ Ãß°¡
+    // 2) ì„ íƒí•œ ì˜¤ë¸Œì íŠ¸(ë“¤) í•˜ìœ„ì˜ Buttonì—ë§Œ ì¶”ê°€
     [MenuItem("Tools/Cursor/Attach to Selected Hierarchy (Buttons only)")]
     public static void AttachToSelected()
     {
@@ -61,7 +61,7 @@ public static class CursorOnButtonBulkAdder
         Debug.Log($"[Cursor] Added: {added}, Skipped: {skipped} (on selection)");
     }
 
-    // 3) ¿­¸° ¸ğµç ¾À¿¡¼­ CursorOnButton Á¦°Å(µÇµ¹¸®±â¿ë)
+    // 3) ì—´ë¦° ëª¨ë“  ì”¬ì—ì„œ CursorOnButton ì œê±°(ë˜ëŒë¦¬ê¸°ìš©)
     [MenuItem("Tools/Cursor/Remove 'CursorOnButton' from All Buttons (Open Scenes)")]
     public static void RemoveAll()
     {
@@ -86,7 +86,7 @@ public static class CursorOnButtonBulkAdder
         Debug.Log($"[Cursor] Removed CursorOnButton components: {removed}");
     }
 
-    // 4) CursorManager°¡ ¾øÀ¸¸é ¸¸µé¾î ÁÖ´Â À¯Æ¿(¼±ÅÃ »çÇ×)
+    // 4) CursorManagerê°€ ì—†ìœ¼ë©´ ë§Œë“¤ì–´ ì£¼ëŠ” ìœ í‹¸(ì„ íƒ ì‚¬í•­)
     [MenuItem("Tools/Cursor/Create CursorManager (if missing)")]
     public static void EnsureCursorManager()
     {

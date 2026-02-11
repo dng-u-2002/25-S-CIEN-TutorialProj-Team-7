@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using Steamworks;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +8,7 @@ public class FriendListManager : MonoBehaviour
 {
     public enum FriendState
     {
-        //¾ê³× ¼ø¼­´ë·Î Ä£±¸ ¸ñ·Ï¿¡ ¶ä(°ªÀÌ Å«°Å)
+        //ì–˜ë„¤ ìˆœì„œëŒ€ë¡œ ì¹œêµ¬ ëª©ë¡ì— ëœ¸(ê°’ì´ í°ê±°)
         InLobby = 0,
         InGame,
         InMatching,
@@ -24,7 +24,7 @@ public class FriendListManager : MonoBehaviour
         public CSteamID id;
         public string name;
         public EPersonaState state;
-        public FriendState gameState;   // ¿ÀÁ÷ ÇöÀç ÀÌ ¾ÛÀ» ÇÃ·¹ÀÌ ÁßÀÎÁö·Î ÆÇº°
+        public FriendState gameState;   // ì˜¤ì§ í˜„ì¬ ì´ ì•±ì„ í”Œë ˆì´ ì¤‘ì¸ì§€ë¡œ íŒë³„
         public string richStatus;        // RP "status"
     }
 
@@ -36,18 +36,18 @@ public class FriendListManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
-    // ÀÓÀÇ Ã¤³Î ¹øÈ£ (0ÀÌ¸é ±âº» Ã¤³Î)
+    // ì„ì˜ ì±„ë„ ë²ˆí˜¸ (0ì´ë©´ ê¸°ë³¸ ì±„ë„)
     private const int CHANNEL = 1;
 
     private void OnEnable()
     {
-        // Äİ¹é µî·Ï
+        // ì½œë°± ë“±ë¡
         _p2pSessionRequest =
             Callback<P2PSessionRequest_t>.Create(OnP2PSessionRequest);
         _p2pSessionConnectFail =
             Callback<P2PSessionConnectFail_t>.Create(OnP2PSessionConnectFail);
 
-        // ¸±·¹ÀÌ Çã¿ë (±âº»°ª trueÁö¸¸, ¸í½ÃÀûÀ¸·Î ½áµµ µÊ)
+        // ë¦´ë ˆì´ í—ˆìš© (ê¸°ë³¸ê°’ trueì§€ë§Œ, ëª…ì‹œì ìœ¼ë¡œ ì¨ë„ ë¨)
         SteamNetworking.AllowP2PPacketRelay(true);
     }
     private Callback<P2PSessionRequest_t> _p2pSessionRequest;
@@ -57,10 +57,10 @@ public class FriendListManager : MonoBehaviour
     {
         CSteamID remote = data.m_steamIDRemote;
 
-        Debug.Log($"[Server] P2P ¼¼¼Ç ¿äÃ»: {remote}");
+        Debug.Log($"[Server] P2P ì„¸ì…˜ ìš”ì²­: {remote}");
 
-        // ¿¹: ·Îºñ¿¡ ÀÖ´Â À¯Àú¸¸ Çã¿ëÇÏ´Â ½ÄÀÇ Ã¼Å©¸¦ ¿ø·¡´Â ÇØ¾ß ÇÔ.
-        // ¿©±â¼­´Â ±ÍÂúÀ¸´Ï ÀÏ´Ü ÀüºÎ ¼ö¶ô.
+        // ì˜ˆ: ë¡œë¹„ì— ìˆëŠ” ìœ ì €ë§Œ í—ˆìš©í•˜ëŠ” ì‹ì˜ ì²´í¬ë¥¼ ì›ë˜ëŠ” í•´ì•¼ í•¨.
+        // ì—¬ê¸°ì„œëŠ” ê·€ì°®ìœ¼ë‹ˆ ì¼ë‹¨ ì „ë¶€ ìˆ˜ë½.
         bool ok = SteamNetworking.AcceptP2PSessionWithUser(remote);
         Debug.Log($"[Server] AcceptP2PSessionWithUser({remote}) = {ok}");
     }
@@ -68,13 +68,13 @@ public class FriendListManager : MonoBehaviour
     private void OnP2PSessionConnectFail(P2PSessionConnectFail_t data)
     {
         Debug.LogWarning(
-            $"[Server] P2P ¿¬°á ½ÇÆĞ: {data.m_steamIDRemote}, ¿¡·¯ÄÚµå={data.m_eP2PSessionError}");
+            $"[Server] P2P ì—°ê²° ì‹¤íŒ¨: {data.m_steamIDRemote}, ì—ëŸ¬ì½”ë“œ={data.m_eP2PSessionError}");
     }
     private void Update()
     {
         if (SteamManager.Initialized == false)
             return;
-        // µé¾î¿Â ÆĞÅ¶ÀÌ ÀÖ´ÂÁö È®ÀÎ
+        // ë“¤ì–´ì˜¨ íŒ¨í‚·ì´ ìˆëŠ”ì§€ í™•ì¸
         uint packetSize;
         while (SteamNetworking.IsP2PPacketAvailable(out packetSize, CHANNEL))
         {
@@ -89,7 +89,7 @@ public class FriendListManager : MonoBehaviour
                     out remote,
                     CHANNEL))
             {
-                // UTF-8 ¹®ÀÚ¿­·Î º¯È¯
+                // UTF-8 ë¬¸ìì—´ë¡œ ë³€í™˜
                 string msg = Encoding.UTF8.GetString(buffer, 0, (int)bytesRead);
                 if (msg.StartsWith("QRP")) // rQuest Rich Presence
                 {
@@ -101,22 +101,22 @@ public class FriendListManager : MonoBehaviour
                     else
                     {
                         state = FriendState.InLobby;
-                        //°ÔÀÓ ÁßÀº ¾Æ´Ñµ¥, ¹æ¿¡ µé¾î°¡ ÀÖÀ¸¸é ÀÌ°Ç ¸ÅÄª ÁßÀÓ
+                        //ê²Œì„ ì¤‘ì€ ì•„ë‹Œë°, ë°©ì— ë“¤ì–´ê°€ ìˆìœ¼ë©´ ì´ê±´ ë§¤ì¹­ ì¤‘ì„
                         if(PhotonNetwork.InRoom)
                         {
                             state = FriendState.InMatching;
                         }
                     }
                     SendToClient(remote, "ERP" + (int)state);
-                    Debug.Log($"[Server] {remote} ÀÇ Rich Presence ¿äÃ»¿¡ ÀÀ´ä: {(int)state}");
+                    Debug.Log($"[Server] {remote} ì˜ Rich Presence ìš”ì²­ì— ì‘ë‹µ: {(int)state}");
                 }
 
                 if (msg.StartsWith("ERP")) //rEsponse Rich Presence
                 {
-                    //Ä£±¸ÀÇ Rich Presence ÀÀ´ä
-                    string rpKey = msg.Substring(3); // "steam_display" µî
+                    //ì¹œêµ¬ì˜ Rich Presence ì‘ë‹µ
+                    string rpKey = msg.Substring(3); // "steam_display" ë“±
                     string rpValue = msg[3].ToString();
-                    Debug.Log($"[Server] {remote} ÀÇ Rich Presence '{SteamFriends.GetFriendPersonaName(remote)}' = '{rpValue}'");
+                    Debug.Log($"[Server] {remote} ì˜ Rich Presence '{SteamFriends.GetFriendPersonaName(remote)}' = '{rpValue}'");
                     //QRPResponsed[remote] = true;
                     CachedStates[remote] = (FriendState)int.Parse(rpValue);
                     ERPTime[remote] = Time.time;
@@ -125,15 +125,15 @@ public class FriendListManager : MonoBehaviour
         }
         foreach(var kv in ERPTime)
         {
-            //5ÃÊ ÀÌ³»¿¡ ÀÀ´äÀÌ ¾øÀ¸¸é NotPlayingThisGameÀ¸·Î °£ÁÖ
-            //½ºÆÀÀº ÄÑÁ® ÀÖÁö¸¸ ¿ì¸® °ÔÀÓÀÌ ¾Æ´Ñ °æ¿ìÀÓ
+            //5ì´ˆ ì´ë‚´ì— ì‘ë‹µì´ ì—†ìœ¼ë©´ NotPlayingThisGameìœ¼ë¡œ ê°„ì£¼
+            //ìŠ¤íŒ€ì€ ì¼œì ¸ ìˆì§€ë§Œ ìš°ë¦¬ ê²Œì„ì´ ì•„ë‹Œ ê²½ìš°ì„
             if (Time.time - kv.Value > 5.0f)
             {
                 var state = SteamFriends.GetFriendPersonaState(kv.Key);
                 if(state != EPersonaState.k_EPersonaStateOffline)
                 {
                     CachedStates[kv.Key] = FriendState.NotPlayingThisGame;
-                     //Debug.Log($"[Server] {SteamFriends.GetFriendPersonaName(kv.Key)} ÀÇ Rich Presence ÀÀ´ä ½Ã°£ ÃÊ°ú. NotPlayingThisGameÀ¸·Î °£ÁÖ.");
+                     //Debug.Log($"[Server] {SteamFriends.GetFriendPersonaName(kv.Key)} ì˜ Rich Presence ì‘ë‹µ ì‹œê°„ ì´ˆê³¼. NotPlayingThisGameìœ¼ë¡œ ê°„ì£¼.");
                 }
                 else
                 {
@@ -143,14 +143,14 @@ public class FriendListManager : MonoBehaviour
         }
     }
     /// <summary>
-    /// Æ¯Á¤ Å¬¶óÀÌ¾ğÆ®¿¡°Ô ¹®ÀÚ¿­ ¸Ş½ÃÁö Àü¼Û
+    /// íŠ¹ì • í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ë¬¸ìì—´ ë©”ì‹œì§€ ì „ì†¡
     /// </summary>
     public void SendToClient(CSteamID clientId, string message)
     {
         byte[] data = Encoding.UTF8.GetBytes(message);
         uint length = (uint)data.Length;
 
-        // Reliable·Î Àü¼Û (ÇÊ¿ä¿¡ µû¶ó Unreliable µîÀ¸·Î ¹Ù²ãµµ µÊ)
+        // Reliableë¡œ ì „ì†¡ (í•„ìš”ì— ë”°ë¼ Unreliable ë“±ìœ¼ë¡œ ë°”ê¿”ë„ ë¨)
         bool ok = SteamNetworking.SendP2PPacket(
             clientId,
             data,
@@ -163,13 +163,13 @@ public class FriendListManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ÇÊ¿ä ½Ã ¼¼¼Ç/Ã¤³Î Á¤¸®
+    /// í•„ìš” ì‹œ ì„¸ì…˜/ì±„ë„ ì •ë¦¬
     /// </summary>
     public void CloseClient(CSteamID clientId)
     {
-        // Æ¯Á¤ Ã¤³Î¸¸ ´İ±â
+        // íŠ¹ì • ì±„ë„ë§Œ ë‹«ê¸°
         SteamNetworking.CloseP2PChannelWithUser(clientId, CHANNEL);
-        // ÀüÃ¼ ¼¼¼Ç ´İ±â
+        // ì „ì²´ ì„¸ì…˜ ë‹«ê¸°
         SteamNetworking.CloseP2PSessionWithUser(clientId);
     }
 
@@ -178,8 +178,8 @@ public class FriendListManager : MonoBehaviour
     public Dictionary<CSteamID, float> QRPTime = new();
     //public Dictionary<CSteamID, bool> QRPResponsed = new();
     /// <summary>
-    /// onlyOnline: ¿Â¶óÀÎ Ä£±¸¸¸ °¡Á®¿ÃÁö
-    /// onlyPlayingThisGame: "ÇöÀç ÀÌ ¾ÛÀ» ÇÃ·¹ÀÌ ÁßÀÎ Ä£±¸¸¸" ÇÊÅÍ¸µÇÒÁö
+    /// onlyOnline: ì˜¨ë¼ì¸ ì¹œêµ¬ë§Œ ê°€ì ¸ì˜¬ì§€
+    /// onlyPlayingThisGame: "í˜„ì¬ ì´ ì•±ì„ í”Œë ˆì´ ì¤‘ì¸ ì¹œêµ¬ë§Œ" í•„í„°ë§í• ì§€
     /// </summary>
     public List<FriendInfo> GetFriends(bool onlyOnline, bool onlyPlayingThisGame)
     {
@@ -193,7 +193,7 @@ public class FriendListManager : MonoBehaviour
             var state = SteamFriends.GetFriendPersonaState(fid);
             //Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)} / {state}");
             //if (onlyOnline && state == EPersonaState.k_EPersonaStateOffline) continue;
-            // ÃÖ½Å Rich Presence ¿äÃ»
+            // ìµœì‹  Rich Presence ìš”ì²­
             //SteamFriends.RequestFriendRichPresence(fid);
 
             if(ERPTime.TryGetValue(fid, out var t) == false)
@@ -206,59 +206,59 @@ public class FriendListManager : MonoBehaviour
             {
                 CachedStates[fid] = FriendState.HiddenOrUnknown;
             }
-            //ÃÖ½Å ÀÀ´äÀ» ¹Ş°í 3ÃÊ°¡ Áö³­ ¾ÖµéÇÑÅ× ¿äÃ»À» º¸³¿
+            //ìµœì‹  ì‘ë‹µì„ ë°›ê³  3ì´ˆê°€ ì§€ë‚œ ì• ë“¤í•œí…Œ ìš”ì²­ì„ ë³´ëƒ„
             if (Time.time -  ERPTime[fid] > 3.0f || Time.time - QRPTime[fid] > 5.0f)
             {
-                //Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)}¿¡°Ô QRP º¸³¿");
+                //Debug.Log($"{SteamFriends.GetFriendPersonaName(fid)}ì—ê²Œ QRP ë³´ëƒ„");
                 SendToClient(fid, "QRP"); // rQuest Rich Presence
                 QRPTime[fid] = Time.time;
                 //QRPResponsed[fid] = false;
             }
 
-            // "ÇöÀç ÀÌ ¾Û ÇÃ·¹ÀÌ ÁßÀÎÁö"¸¸ ÆÇ´Ü
+            // "í˜„ì¬ ì´ ì•± í”Œë ˆì´ ì¤‘ì¸ì§€"ë§Œ íŒë‹¨
             bool playingThis = false;
             FriendGameInfo_t gi;
             //FriendState s = FriendState.HiddenOrUnknown;
 
-            if(state == EPersonaState.k_EPersonaStateOffline) //½ºÆÀ ¾ÛÀÌ ²¨Á® ÀÖ´Â °æ¿ì
+            if(state == EPersonaState.k_EPersonaStateOffline) //ìŠ¤íŒ€ ì•±ì´ êº¼ì ¸ ìˆëŠ” ê²½ìš°
             {
-                //±Ùµ¥ À§¿¡¼­ ¸·¾Æ³ö¼­ ¾îÂ÷ÇÇ ¾È µé¾î¿È
-                //ÀÌÁ¦ ¾È ¸·¾ÆµÒ
+                //ê·¼ë° ìœ„ì—ì„œ ë§‰ì•„ë†”ì„œ ì–´ì°¨í”¼ ì•ˆ ë“¤ì–´ì˜´
+                //ì´ì œ ì•ˆ ë§‰ì•„ë‘ 
                 //s = FriendState.SteamOffline;
-                //ÀÌ°Ç ERP°¡ ³¯¶ó¿Í¼­ ³»°¡ È®ÀÎÇÏ´Â°Ô ¾Æ´Ï¹Ç·Î, ¿©±â¼­ Ã³¸®ÇØÁà¾ß ÇÔ
+                //ì´ê±´ ERPê°€ ë‚ ë¼ì™€ì„œ ë‚´ê°€ í™•ì¸í•˜ëŠ”ê²Œ ì•„ë‹ˆë¯€ë¡œ, ì—¬ê¸°ì„œ ì²˜ë¦¬í•´ì¤˜ì•¼ í•¨
                 CachedStates[fid] = FriendState.SteamOffline;
             }
-            else //½ºÆÀ ¾ÛÀÌ ÄÑÁ® ÀÖ´Â °æ¿ì
+            else //ìŠ¤íŒ€ ì•±ì´ ì¼œì ¸ ìˆëŠ” ê²½ìš°
             {
-                //¿ÀÇÁ¶óÀÎ/ºñ°ø°³ -> ¿Â¶óÀÎÀÇ ÀüÈ¯¸¸ Çã¿ë
-                //·Îºñ -> ½ºÆÀ ¿Â¶óÀÎ ÀÌ·±°Å ¹æÁöÇÏ±â À§ÇÔ
+                //ì˜¤í”„ë¼ì¸/ë¹„ê³µê°œ -> ì˜¨ë¼ì¸ì˜ ì „í™˜ë§Œ í—ˆìš©
+                //ë¡œë¹„ -> ìŠ¤íŒ€ ì˜¨ë¼ì¸ ì´ëŸ°ê±° ë°©ì§€í•˜ê¸° ìœ„í•¨
                 //if(CachedStates[fid] == FriendState.HiddenOrUnknown || CachedStates[fid] == FriendState.SteamOffline || CachedStates[fid] == FriendState.NotPlayingThisGame)
                 //    CachedStates[fid] = FriendState.SteamOnline;
                 //if (SteamFriends.GetFriendGamePlayed(fid, out gi))
                 //{
-                //    //ºñ°ø°³ °èÁ¤Àº ÇöÀç ¹«½¼ °ÔÀÓ ÁßÀÎÁöµµ ¾Ë·ÁÁÖÁö ¾ÊÀ¸¹Ç·Î...
-                //    //¿©±â µé¾î¿À¸é ÀÏ´ÜÀº ºñ°ø°³ °èÁ¤Àº ¾Æ´Ô(°ø°³ °èÁ¤ÀÓ)
+                //    //ë¹„ê³µê°œ ê³„ì •ì€ í˜„ì¬ ë¬´ìŠ¨ ê²Œì„ ì¤‘ì¸ì§€ë„ ì•Œë ¤ì£¼ì§€ ì•Šìœ¼ë¯€ë¡œ...
+                //    //ì—¬ê¸° ë“¤ì–´ì˜¤ë©´ ì¼ë‹¨ì€ ë¹„ê³µê°œ ê³„ì •ì€ ì•„ë‹˜(ê³µê°œ ê³„ì •ì„)
                 //    //Debug.Log($"Game : {SteamFriends.GetFriendPersonaName(fid)} / {gi.m_gameID.AppID()}");
                 //    playingThis = (gi.m_gameID.AppID() == myApp);
 
 
                 //    if (playingThis)
                 //    {
-                //        //È®½ÇÇÏ°Ô ¿ì¸® °ÔÀÓ Áß
+                //        //í™•ì‹¤í•˜ê²Œ ìš°ë¦¬ ê²Œì„ ì¤‘
                 //        s = FriendState.PlayingThisGame;
                 //    }
                 //    else
                 //    {
-                //        //È®½ÇÇÏ°Ô ´Ù¸¥ °ÔÀÓ Áß
+                //        //í™•ì‹¤í•˜ê²Œ ë‹¤ë¥¸ ê²Œì„ ì¤‘
                 //        s = FriendState.NotPlayingThisGame;
                 //    }
                 //}
                 //else
                 //{
-                //    //¿©±â¼± °æ¿ì°¡ 2°³ÀÎµ¥, ¾Æ¿¹ ºñ°ø°³ °èÁ¤ÀÌ°Å³ª ¾Æ¹« °ÔÀÓµµ ÇÏ°í ÀÖÁö ¾ÊÀº °æ¿ìÀÓ
-                //    //±Ùµ¥ ºñ°ø°³ °èÁ¤ÀÎÁö È®ÀÎÇÏ´Â ±×·± ÇÔ¼öµµ ¾ø°í, Rich Presence·Î ¿ìÈ¸ÇÏ·Á°í ÇØµµ ºñ°ø°³ °èÁ¤Àº RP¿¡ ±×³É °ªÀÌ ¾ø¾î¼­ ¾ÈµÊ
-                //    //ÇöÀç ¿ì¸® °ÔÀÓÀ» ÇÃ·¹ÀÌÇÏÁö ¾ÊÀ½ -> RP == emtpy
-                //    //ºñ°ø°³ °èÁ¤ÀÓ -> RP == empty
+                //    //ì—¬ê¸°ì„  ê²½ìš°ê°€ 2ê°œì¸ë°, ì•„ì˜ˆ ë¹„ê³µê°œ ê³„ì •ì´ê±°ë‚˜ ì•„ë¬´ ê²Œì„ë„ í•˜ê³  ìˆì§€ ì•Šì€ ê²½ìš°ì„
+                //    //ê·¼ë° ë¹„ê³µê°œ ê³„ì •ì¸ì§€ í™•ì¸í•˜ëŠ” ê·¸ëŸ° í•¨ìˆ˜ë„ ì—†ê³ , Rich Presenceë¡œ ìš°íšŒí•˜ë ¤ê³  í•´ë„ ë¹„ê³µê°œ ê³„ì •ì€ RPì— ê·¸ëƒ¥ ê°’ì´ ì—†ì–´ì„œ ì•ˆë¨
+                //    //í˜„ì¬ ìš°ë¦¬ ê²Œì„ì„ í”Œë ˆì´í•˜ì§€ ì•ŠìŒ -> RP == emtpy
+                //    //ë¹„ê³µê°œ ê³„ì •ì„ -> RP == empty
                 //    s = FriendState.HiddenOrUnknown;
                 //}
             }
@@ -280,7 +280,7 @@ public class FriendListManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Æ¯Á¤ Ä£±¸¿¡°Ô Á÷Á¢ ÃÊ´ë(·Îºñ ¾øÀ¸¸é »ı¼º ÈÄ ´ë±â¿­ Ã³¸®).
+    /// íŠ¹ì • ì¹œêµ¬ì—ê²Œ ì§ì ‘ ì´ˆëŒ€(ë¡œë¹„ ì—†ìœ¼ë©´ ìƒì„± í›„ ëŒ€ê¸°ì—´ ì²˜ë¦¬).
     /// </summary>
     public void InviteFriend(CSteamID friendId)
     {

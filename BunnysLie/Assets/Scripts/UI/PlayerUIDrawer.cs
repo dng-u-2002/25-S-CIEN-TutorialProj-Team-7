@@ -262,15 +262,15 @@ public class PlayerUIDrawer : MonoBehaviour
             {
                 case eRPS.Rock:
                     RPSImage.sprite = RockSprite;
-                    RPSTextBox.text = "πŸ¿ß";
+                    RPSTextBox.text = "Î∞îÏúÑ";
                     break;
                 case eRPS.Paper:
                     RPSImage.sprite = PaperSprite;
-                    RPSTextBox.text = "∫∏";
+                    RPSTextBox.text = "Î≥¥";
                     break;
                 case eRPS.Scissors:
                     RPSImage.sprite = ScissorsSprite;
-                    RPSTextBox.text = "∞°¿ß";
+                    RPSTextBox.text = "Í∞ÄÏúÑ";
                     break;
             }
         }
@@ -285,11 +285,11 @@ public class PlayerUIDrawer : MonoBehaviour
             {
                 if ((ignoreSame == true))
                 {
-                    if (RPSTextBox.text == "∞°¿ß" && rps == eRPS.Scissors)
+                    if (RPSTextBox.text == "Í∞ÄÏúÑ" && rps == eRPS.Scissors)
                         return;
-                    if (RPSTextBox.text == "πŸ¿ß" && rps == eRPS.Rock)
+                    if (RPSTextBox.text == "Î∞îÏúÑ" && rps == eRPS.Rock)
                         return;
-                    if (RPSTextBox.text == "∫∏" && rps == eRPS.Paper)
+                    if (RPSTextBox.text == "Î≥¥" && rps == eRPS.Paper)
                         return;
                 }
                 ObjectMoveHelper.TryStop(RPSTextBoxAnimationID);
@@ -351,19 +351,19 @@ public class PlayerUIDrawer : MonoBehaviour
             nickName = p.NickName;
         else
         {
-            //∫ø¿”
+            //Î¥áÏûÑ
             //Target.ID
             if (Character == 0)
             {
-                nickName = "∞Ëº¯¿Ã";
+                nickName = "Í≥ÑÏàúÏù¥";
             }
             else if (Character == 1)
             {
-                nickName = "¥ﬁ∑°";
+                nickName = "Îã¨Îûò";
             }
             else
             {
-                nickName = "¥ˆ±∏";
+                nickName = "ÎçïÍµ¨";
             }
             //nickName = "Unknown";
         }
@@ -371,15 +371,15 @@ public class PlayerUIDrawer : MonoBehaviour
         {
             if (Character == 0)
             {
-                nickName = "∞Ëº¯¿Ã";
+                nickName = "Í≥ÑÏàúÏù¥";
             }
             else if (Character == 1)
             {
-                nickName = "¥ﬁ∑°";
+                nickName = "Îã¨Îûò";
             }
             else
             {
-                nickName = "¥ˆ±∏";
+                nickName = "ÎçïÍµ¨";
             }
         }
         Debug.Log($"Setting nickname for player {Target.ID} to {nickName}");

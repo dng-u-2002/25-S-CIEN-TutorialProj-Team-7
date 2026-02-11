@@ -1,10 +1,10 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [ExecuteAlways]
 public class FixedAspectLetterbox : MonoBehaviour
 {
     [SerializeField] Camera targetCamera;
-    [SerializeField] Vector2 aspect = new Vector2(16, 9); // ¿øÇÏ´Â ºñÀ²
+    [SerializeField] Vector2 aspect = new Vector2(16, 9); // ì›í•˜ëŠ” ë¹„ìœ¨
 
     int lastW, lastH;
 
@@ -28,12 +28,12 @@ public class FixedAspectLetterbox : MonoBehaviour
         float target = aspect.x / aspect.y;
         float window = (float)lastW / lastH;
 
-        if (window > target) // Ã¢ÀÌ ´õ ³ĞÀ¸¸é: ÁÂ¿ì ÇÊ·¯¹Ú½º
+        if (window > target) // ì°½ì´ ë” ë„“ìœ¼ë©´: ì¢Œìš° í•„ëŸ¬ë°•ìŠ¤
         {
             float width = target / window;
             targetCamera.rect = new Rect((1f - width) * 0.5f, 0f, width, 1f);
         }
-        else // Ã¢ÀÌ ´õ ³ôÀ¸¸é: »óÇÏ ·¹ÅÍ¹Ú½º
+        else // ì°½ì´ ë” ë†’ìœ¼ë©´: ìƒí•˜ ë ˆí„°ë°•ìŠ¤
         {
             float height = window / target;
             targetCamera.rect = new Rect(0f, (1f - height) * 0.5f, 1f, height);

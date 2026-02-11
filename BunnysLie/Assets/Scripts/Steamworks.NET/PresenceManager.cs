@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using Steamworks;
 
 public class PresenceManager : MonoBehaviour
@@ -38,9 +38,9 @@ public class PresenceManager : MonoBehaviour
     public void SetStatus(FriendActivity status)
     {
         /*
-         * 		"#Status_InLobby"	 "·Îºñ"
-		"#Status_Matchmaking"	"¸ÅÄªÁß"
-		"#Status_InGame"	"°ÔÀÓÁß"
+         * 		"#Status_InLobby"	 "ë¡œë¹„"
+		"#Status_Matchmaking"	"ë§¤ì¹­ì¤‘"
+		"#Status_InGame"	"ê²Œìž„ì¤‘"
          */
         switch (status)
         {

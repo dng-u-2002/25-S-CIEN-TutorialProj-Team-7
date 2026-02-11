@@ -1,4 +1,4 @@
-using LiteNetLib;
+ï»¿using LiteNetLib;
 using LiteNetLib.Utils;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,12 +10,12 @@ using VOYAGER_Server;
 public abstract class LiteNetLibUser : MonoBehaviour, INetEventListener
 {
 
-    [Header("¼­¹ö ¼³Á¤")]
+    [Header("ì„œë²„ ì„¤ì •")]
     public string serverIP = "127.0.0.1";
     public int serverPort = 9000;
 
 
-    // LiteNetLib °´Ã¼
+    // LiteNetLib ê°ì²´
     private NetManager ThisClient;
     protected NetPeer ServerPeer;
     protected NetworkDataWriter_PUN Writer;
@@ -39,8 +39,8 @@ public abstract class LiteNetLibUser : MonoBehaviour, INetEventListener
             AutoRecycle = true
         };
         ThisClient.Start();
-        ServerPeer = ThisClient.Connect(serverIP, serverPort, "key");  // ¼­¹ö¿¡ Á¢¼Ó ¿äÃ»
-        Debug.Log($"¼­¹ö ¿¬°á ½Ãµµ: {serverIP}:{serverPort}");
+        ServerPeer = ThisClient.Connect(serverIP, serverPort, "key");  // ì„œë²„ì— ì ‘ì† ìš”ì²­
+        Debug.Log($"ì„œë²„ ì—°ê²° ì‹œë„: {serverIP}:{serverPort}");
     }
 
     public void OnConnectionRequest(ConnectionRequest request)
@@ -68,16 +68,16 @@ public abstract class LiteNetLibUser : MonoBehaviour, INetEventListener
 
     public void OnPeerConnected(NetPeer peer)
     {
-        Debug.Log("¼­¹ö ¿¬°áµÊ: " + peer.Id);
+        Debug.Log("ì„œë²„ ì—°ê²°ë¨: " + peer.Id);
     }
 
     public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
-        Debug.Log("¼­¹ö ¿¬°á ÇØÁ¦");
+        Debug.Log("ì„œë²„ ì—°ê²° í•´ì œ");
     }
     void Update()
     {
-        // µé¾î¿À´Â ³×Æ®¿öÅ© ÀÌº¥Æ® Ã³¸® (PollEvents ¹İµå½Ã ÁÖ±â È£Ãâ)
+        // ë“¤ì–´ì˜¤ëŠ” ë„¤íŠ¸ì›Œí¬ ì´ë²¤íŠ¸ ì²˜ë¦¬ (PollEvents ë°˜ë“œì‹œ ì£¼ê¸° í˜¸ì¶œ)
         ThisClient?.PollEvents();
     }
 }

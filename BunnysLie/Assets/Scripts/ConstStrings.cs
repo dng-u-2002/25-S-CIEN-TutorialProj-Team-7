@@ -1,36 +1,36 @@
-public static class ConstStrings
+ï»¿public static class ConstStrings
 {
-    public const string Message_WaitingOpponent = "»ó´ëÀÇ ÀÀ´äÀ» ±â´Ù¸®´ÂÁß..."; //»ó´ë¿¡°Ô Ä«µå ±³È¯ ¿äÃ»À» º¸³ÂÀ» ¶§ ±â´Ù¸®´Â ¸Ş¼¼Áö
-    public const string Message_Waiting = "±â´Ù¸®´Â Áß..."; //±×³É ±â´Ù¸± ¶§ ³ª¿À´Â ¸Ş¼¼Áö
-    public const string Message_WaitingRSP = "´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡\n°¡À§¹ÙÀ§º¸¸¦ ¼±ÅÃÇÏ°í ÀÖ½À´Ï´Ù..."; //°¡À§¹ÙÀ§º¸ ±â´Ù¸± ¶§ ³ª¿À´Â ¸Ş¼¼Áö
-    public const string Message_LoserOfThisRound = "{0}¶ó¿îµå ÆĞÀÚ : {1}"; //ÀÌ¹ø ¶ó¿îµåÀÇ ÆĞÀÚ
-    public const string Message_TimeOutCount = "Á¦ÇÑ ½Ã°£ ÃÊ°ú! ·£´ıÀ¸·Î ¼±ÅÃÇÒ°Ô¿ä!\nÇöÀç ½Ã°£ ÃÊ°ú È½¼ö : {0}/4";
-    public const string message_WhenLocalShouldRematch = "¹«½ÂºÎ!\n°¡À§¹ÙÀ§º¸¸¦ ´Ù½Ã ¼±ÅÃÇØÁÖ¼¼¿ä.";
-    public const string message_WhenLocalShouldNotRematch = "´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡ °¡À§¹ÙÀ§º¸ ÁßÀÔ´Ï´Ù.\n³ª´Â {0}¹øÂ°·Î Âü°¡/ÅğÃ»À» Á¤ÇØ¿ä.";
-    public const string Message_NewSpecialRule = "ÀÌÀü 1 vs 1¿¡¼­ µ¿Á¡ÀÚ°¡ ¹ß»ıÇß¾î¿ä.\n1vs1À»  Àç½ÃÀÛ!";
-    public const string Message_StartSpecialRuleObserver = "{0}¿Í {1}°¡ µ¿Á¡!\n1 vs. 1 ·ê¿¡ °üÀüÀÚ·Î µ¹ÀÔÇØ¿ä.";
-    public const string Message_StartSpecialRulePlayer = "{0}¿Í {1}°¡ µ¿Á¡!\n1 vs. 1 ·ê·Î ½ÂºÎÇÕ½Ã´Ù!";
-    public const string Message_OpponentAskedExchangeCard = "»ó´ë°¡ Ä«µå ±³È¯À» ¿äÃ»Çß¾î¿ä.";
-    public const string message_WhenAccepted = "»ó´ë°¡ ±³È¯À» ¼ö¶ôÇß¾î¿ä.\nÄ«µå ¼±ÅÃÀ» ±â´Ù¸®´Â Áß...";
-    public const string message_WhenRejected = "»ó´ë°¡ ±³È¯À» °ÅÀıÇß¾î¿ä.";
-    public const string Message_Accept = "¼ö¶ô";
-    public const string Message_Discard = "°ÅÀı";
-    public const string Message_FinalLoser = "²ÃÂî : {0}\n°ÔÀÓÀÌ Á¾·á!";
-    public const string Message_TimeOut = "Á¦ÇÑ ½Ã°£ ÃÊ°ú È½¼ö°¡ 4È¸¸¦ ³Ñ¾ú¾î¿ä.\n°ÔÀÓ¿¡¼­ ÅğÀåÇÕ´Ï´Ù.";
-    public const string Message_NotEnoughPlayer = "´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡ °ÔÀÓÀ» ¶°³µ¾î¿ä.\nÇÃ·¹ÀÌ¾î°¡ ºÎÁ·ÇÏ¿© °ÔÀÓÀ» Á¾·áÇÒ°Ô¿ä.";
-    public const string Message_SelectOut = "2¸íÀÌ ¸ÕÀú ÅğÃ»ÇÏ¿´À¸¹Ç·Î,\nÀÚµ¿À¸·Î Âü°¡ÇÕ´Ï´Ù. ³­ ²ÃÂî Å»Ãâ!";
-    public const string Message_AllHaveSameScore = "¸ğµç ÇÃ·¹ÀÌ¾î°¡ µ¿Á¡ÀÌ¿¡¿ä.\n´ÙÀ½ ¶ó¿îµå·Î ³Ñ¾î°©´Ï´Ù.";
-    //TextCloud : ¸»Ç³¼±
-    public const string TextCloud_Card2Exchange = "¾î¶² Ä«µå¸¦\n±³È¯ÇÒ±î?";
-    public const string TextCloud_Card2Delete = "¾î¶² Ä«µå¸¦ ¹ö¸±±î?";
-    //Text : Âü°¡/ÅğÃ» º¸¿©ÁÖ´Â ÀÛÀº ÅØ½ºÆ®ºí·Ï¿¡ ³ª¿À´Â ±Û
-    public const string Text_In = "Âü°¡";
-    public const string Text_Out = "ÅğÃ»";
+    public const string Message_WaitingOpponent = "ìƒëŒ€ì˜ ì‘ë‹µì„ ê¸°ë‹¤ë¦¬ëŠ”ì¤‘..."; //ìƒëŒ€ì—ê²Œ ì¹´ë“œ êµí™˜ ìš”ì²­ì„ ë³´ëƒˆì„ ë•Œ ê¸°ë‹¤ë¦¬ëŠ” ë©”ì„¸ì§€
+    public const string Message_Waiting = "ê¸°ë‹¤ë¦¬ëŠ” ì¤‘..."; //ê·¸ëƒ¥ ê¸°ë‹¤ë¦´ ë•Œ ë‚˜ì˜¤ëŠ” ë©”ì„¸ì§€
+    public const string Message_WaitingRSP = "ë‹¤ë¥¸ í”Œë ˆì´ì–´ê°€\nê°€ìœ„ë°”ìœ„ë³´ë¥¼ ì„ íƒí•˜ê³  ìˆìŠµë‹ˆë‹¤..."; //ê°€ìœ„ë°”ìœ„ë³´ ê¸°ë‹¤ë¦´ ë•Œ ë‚˜ì˜¤ëŠ” ë©”ì„¸ì§€
+    public const string Message_LoserOfThisRound = "{0}ë¼ìš´ë“œ íŒ¨ì : {1}"; //ì´ë²ˆ ë¼ìš´ë“œì˜ íŒ¨ì
+    public const string Message_TimeOutCount = "ì œí•œ ì‹œê°„ ì´ˆê³¼! ëœë¤ìœ¼ë¡œ ì„ íƒí• ê²Œìš”!\ní˜„ì¬ ì‹œê°„ ì´ˆê³¼ íšŸìˆ˜ : {0}/4";
+    public const string message_WhenLocalShouldRematch = "ë¬´ìŠ¹ë¶€!\nê°€ìœ„ë°”ìœ„ë³´ë¥¼ ë‹¤ì‹œ ì„ íƒí•´ì£¼ì„¸ìš”.";
+    public const string message_WhenLocalShouldNotRematch = "ë‹¤ë¥¸ í”Œë ˆì´ì–´ê°€ ê°€ìœ„ë°”ìœ„ë³´ ì¤‘ì…ë‹ˆë‹¤.\në‚˜ëŠ” {0}ë²ˆì§¸ë¡œ ì°¸ê°€/í‡´ì²­ì„ ì •í•´ìš”.";
+    public const string Message_NewSpecialRule = "ì´ì „ 1 vs 1ì—ì„œ ë™ì ìê°€ ë°œìƒí–ˆì–´ìš”.\n1vs1ì„  ì¬ì‹œì‘!";
+    public const string Message_StartSpecialRuleObserver = "{0}ì™€ {1}ê°€ ë™ì !\n1 vs. 1 ë£°ì— ê´€ì „ìë¡œ ëŒì…í•´ìš”.";
+    public const string Message_StartSpecialRulePlayer = "{0}ì™€ {1}ê°€ ë™ì !\n1 vs. 1 ë£°ë¡œ ìŠ¹ë¶€í•©ì‹œë‹¤!";
+    public const string Message_OpponentAskedExchangeCard = "ìƒëŒ€ê°€ ì¹´ë“œ êµí™˜ì„ ìš”ì²­í–ˆì–´ìš”.";
+    public const string message_WhenAccepted = "ìƒëŒ€ê°€ êµí™˜ì„ ìˆ˜ë½í–ˆì–´ìš”.\nì¹´ë“œ ì„ íƒì„ ê¸°ë‹¤ë¦¬ëŠ” ì¤‘...";
+    public const string message_WhenRejected = "ìƒëŒ€ê°€ êµí™˜ì„ ê±°ì ˆí–ˆì–´ìš”.";
+    public const string Message_Accept = "ìˆ˜ë½";
+    public const string Message_Discard = "ê±°ì ˆ";
+    public const string Message_FinalLoser = "ê¼´ì°Œ : {0}\nê²Œì„ì´ ì¢…ë£Œ!";
+    public const string Message_TimeOut = "ì œí•œ ì‹œê°„ ì´ˆê³¼ íšŸìˆ˜ê°€ 4íšŒë¥¼ ë„˜ì—ˆì–´ìš”.\nê²Œì„ì—ì„œ í‡´ì¥í•©ë‹ˆë‹¤.";
+    public const string Message_NotEnoughPlayer = "ë‹¤ë¥¸ í”Œë ˆì´ì–´ê°€ ê²Œì„ì„ ë– ë‚¬ì–´ìš”.\ní”Œë ˆì´ì–´ê°€ ë¶€ì¡±í•˜ì—¬ ê²Œì„ì„ ì¢…ë£Œí• ê²Œìš”.";
+    public const string Message_SelectOut = "2ëª…ì´ ë¨¼ì € í‡´ì²­í•˜ì˜€ìœ¼ë¯€ë¡œ,\nìë™ìœ¼ë¡œ ì°¸ê°€í•©ë‹ˆë‹¤. ë‚œ ê¼´ì°Œ íƒˆì¶œ!";
+    public const string Message_AllHaveSameScore = "ëª¨ë“  í”Œë ˆì´ì–´ê°€ ë™ì ì´ì—ìš”.\në‹¤ìŒ ë¼ìš´ë“œë¡œ ë„˜ì–´ê°‘ë‹ˆë‹¤.";
+    //TextCloud : ë§í’ì„ 
+    public const string TextCloud_Card2Exchange = "ì–´ë–¤ ì¹´ë“œë¥¼\nêµí™˜í• ê¹Œ?";
+    public const string TextCloud_Card2Delete = "ì–´ë–¤ ì¹´ë“œë¥¼ ë²„ë¦´ê¹Œ?";
+    //Text : ì°¸ê°€/í‡´ì²­ ë³´ì—¬ì£¼ëŠ” ì‘ì€ í…ìŠ¤íŠ¸ë¸”ë¡ì— ë‚˜ì˜¤ëŠ” ê¸€
+    public const string Text_In = "ì°¸ê°€";
+    public const string Text_Out = "í‡´ì²­";
 
-    public const string Message_ReGame = "´Ù½Ã °ÔÀÓÇÒ±î¿ä?";
-    public const string Text_ReGame_Yes = "ÀÌ¾îÇÏ±â";
-    public const string Text_ReGame_No = "³ª°¡±â";
-    public const string Message_WaitingReGame = "´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡\nÀÌ¾îÇÏ±â¸¦ ¼±ÅÃÇÏ°í ÀÖ½À´Ï´Ù...";
-    public const string Message_SomeoneDisagreedReGame = "´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡\nÀÌ¾îÇÏ±â¸¦ °ÅÀıÇß½À´Ï´Ù.";
-    public const string Message_AllAgreedReGame = "¸ğµç ÇÃ·¹ÀÌ¾î°¡\nÀÌ¾îÇÏ±â¸¦ ¼±ÅÃÇß½À´Ï´Ù!";
+    public const string Message_ReGame = "ë‹¤ì‹œ ê²Œì„í• ê¹Œìš”?";
+    public const string Text_ReGame_Yes = "ì´ì–´í•˜ê¸°";
+    public const string Text_ReGame_No = "ë‚˜ê°€ê¸°";
+    public const string Message_WaitingReGame = "ë‹¤ë¥¸ í”Œë ˆì´ì–´ê°€\nì´ì–´í•˜ê¸°ë¥¼ ì„ íƒí•˜ê³  ìˆìŠµë‹ˆë‹¤...";
+    public const string Message_SomeoneDisagreedReGame = "ë‹¤ë¥¸ í”Œë ˆì´ì–´ê°€\nì´ì–´í•˜ê¸°ë¥¼ ê±°ì ˆí–ˆìŠµë‹ˆë‹¤.";
+    public const string Message_AllAgreedReGame = "ëª¨ë“  í”Œë ˆì´ì–´ê°€\nì´ì–´í•˜ê¸°ë¥¼ ì„ íƒí–ˆìŠµë‹ˆë‹¤!";
 }

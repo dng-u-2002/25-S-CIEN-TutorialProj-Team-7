@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using Steamworks;
 using System.Collections.Generic;
 using Photon.Pun;
@@ -8,13 +8,13 @@ public class LobbyManager : MonoBehaviour
 {
     public static LobbyManager Instance { get; private set; }
 
-    [Tooltip("·Îºñ ÃÖ´ë ÀÎ¿ø (°ÔÀÓ ¼¼¼Ç ÀÎ¿ø°ú ¹«°ü).")]
-    public int MaxMembers = 50; // ÇÊ¿ä¿¡ ¸Â°Ô Á¶Á¤
+    [Tooltip("ë¡œë¹„ ìµœëŒ€ ì¸ì› (ê²Œì„ ì„¸ì…˜ ì¸ì›ê³¼ ë¬´ê´€).")]
+    public int MaxMembers = 50; // í•„ìš”ì— ë§ê²Œ ì¡°ì •
 
     public CSteamID CurrentLobby { get; private set; } = CSteamID.Nil;
     public bool InLobby => CurrentLobby.IsValid();
 
-    // ·Îºñ »ı¼º ÈÄ ÃÊ´ëÇØ¾ß ÇÏ´Â Ä£±¸¸¦ ÀÓ½Ã·Î º¸°üÇÏ´Â Å¥
+    // ë¡œë¹„ ìƒì„± í›„ ì´ˆëŒ€í•´ì•¼ í•˜ëŠ” ì¹œêµ¬ë¥¼ ì„ì‹œë¡œ ë³´ê´€í•˜ëŠ” í
     private readonly Queue<CSteamID> _pendingInvites = new Queue<CSteamID>();
 
     // Events
@@ -72,7 +72,7 @@ public class LobbyManager : MonoBehaviour
         SteamFriends.ActivateGameOverlayInviteDialog(CurrentLobby);
     }
 
-    /// <summary>·Îºñ°¡ ¾øÀ¸¸é »ı¼º -> »ı¼º ¿Ï·á ½Ã ÃÊ´ë Àü¼Û.</summary>
+    /// <summary>ë¡œë¹„ê°€ ì—†ìœ¼ë©´ ìƒì„± -> ìƒì„± ì™„ë£Œ ì‹œ ì´ˆëŒ€ ì „ì†¡.</summary>
     public void InviteFriendDirect(CSteamID friendId)
     {
         if (!InLobby)
@@ -124,7 +124,7 @@ public class LobbyManager : MonoBehaviour
         //PresenceManager.Instance?.SetConnect($"lobby:{CurrentLobby.m_SteamID}");
         //PresenceManager.Instance?.SetPlayerGroup(CurrentLobby.ToString());
 
-        // ·Îºñ°¡ »ı°åÀ¸´Ï ´ë±â¿­ÀÇ ÃÊ´ë Ã³¸®
+        // ë¡œë¹„ê°€ ìƒê²¼ìœ¼ë‹ˆ ëŒ€ê¸°ì—´ì˜ ì´ˆëŒ€ ì²˜ë¦¬
         while (_pendingInvites.Count > 0)
             InviteFriendDirect(_pendingInvites.Dequeue());
 
@@ -195,7 +195,7 @@ public class LobbyManager : MonoBehaviour
         if (ulong.TryParse(connect.Substring(prefix.Length), out var raw))
         {
             var lobbyId = new CSteamID(raw);
-            Debug.Log($"[Lobby] Presence connect ¡æ JoinLobby {lobbyId}");
+            Debug.Log($"[Lobby] Presence connect â†’ JoinLobby {lobbyId}");
             SteamMatchmaking.JoinLobby(lobbyId);
         }
     }

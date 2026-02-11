@@ -334,16 +334,16 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
     //    Broadcast_StartNextRound,
     //    U2SRequest_ExchangeCardWithDeckInSpecialRule,
-    //    S2UResponse_ExhangeCardWithDeckInSpecialRule,
+    //    S2UResponse_ExchangeCardWithDeckInSpecialRule,
 
-    //    U2SRequest_ExhangeCardWithOpponentInSpecialRule,
+    //    U2SRequest_ExchangeCardWithOpponentInSpecialRule,
 
-    //    S2UAsk_ExhangeCardWithOpponentInSpecialRule, // ���� ī�� ��ȯ ��û
-    //    S2UResponse_WillAcceptExhangeCardWithOpponentISR, // ��밡 ī�� ��ȯ ��û�� ����
+    //    S2UAsk_ExchangeCardWithOpponentInSpecialRule, // ���� ī�� ��ȯ ��û
+    //    S2UResponse_WillAcceptExchangeCardWithOpponentISR, // ��밡 ī�� ��ȯ ��û�� ����
     //    Broadcast_IsOpponentAcceptedCardExchangeISR,
 
-    //    U2SRequest_OpponentSelectedCardToExhangeISR, //��밡 ī�带 �����
-    //    Broadcast_ExhangeWithOpponentInSpecialRuleResult, //��ȯ ���
+    //    U2SRequest_OpponentSelectedCardToExchangeISR, //��밡 ī�带 �����
+    //    Broadcast_ExchangeWithOpponentInSpecialRuleResult, //��ȯ ���
     //    U2SResponse_SuccessfullyExchangedCardWithOpponentInSpecialRule,
 
     //    Broadcast_FinalResult
@@ -1088,7 +1088,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                             foreach (var rp in room.Players)
                             {
-                                PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_ExhangeCardWithDeckInSpecialRule);
+                                PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2UResponse_ExchangeCardWithDeckInSpecialRule);
                                 PacketWriter.WriteInt(id);
                                 PacketWriter.WriteByte(newCard.Item1); // �� ī�� Ÿ��
                                 PacketWriter.WriteByte(newCard.Item2); // �� ī�� ��
@@ -1099,7 +1099,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
                 break;
 
-            case ePacketType_InGameServer.U2SRequest_ExhangeCardWithOpponentInSpecialRule:
+            case ePacketType_InGameServer.U2SRequest_ExchangeCardWithOpponentInSpecialRule:
                 {
                     int id = reader.ReadInt();
                     int roomID = reader.ReadInt();
@@ -1128,7 +1128,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                         foreach (var pl in room.Players)
                         {
-                            PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2UAsk_ExhangeCardWithOpponentInSpecialRule);
+                            PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.S2UAsk_ExchangeCardWithOpponentInSpecialRule);
                             PacketWriter.WriteInt(id); // ��û�� ���� ID
                             PacketWriter.WriteInt(opponentID); // ��� ���� ID
                             SendPacket(pl);
@@ -1136,7 +1136,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     }
                 }
                 break;
-            case ePacketType_InGameServer.S2UResponse_WillAcceptExhangeCardWithOpponentISR:
+            case ePacketType_InGameServer.S2UResponse_WillAcceptExchangeCardWithOpponentISR:
                 {
                     int id = reader.ReadInt();
                     int roomID = reader.ReadInt();
@@ -1180,7 +1180,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                     }
                 }
                 break;
-            case ePacketType_InGameServer.U2SRequest_OpponentSelectedCardToExhangeISR:
+            case ePacketType_InGameServer.U2SRequest_OpponentSelectedCardToExchangeISR:
                 {
                     int id = reader.ReadInt();
                     int roomID = reader.ReadInt();
@@ -1209,7 +1209,7 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
                         foreach (var pl in room.Players)
                         {
-                            PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ExhangeWithOpponentInSpecialRuleResult);
+                            PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ExchangeWithOpponentInSpecialRuleResult);
                             PacketWriter.WriteInt(id); // ��û�� ���� ID
                             if (room.Cards2ExchangeInSpecialRule.TryGetValue(id, out var card))
                             {
@@ -1238,6 +1238,25 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                             }
                             SendPacket(pl);
                         }
+                        
+                        // 서버는 클라이언트의 애니메이션 종료를 기다리지 않고 바로 데이터를 바꿉니다.
+                        if (room.Cards2ExchangeInSpecialRule.ContainsKey(id) && room.Cards2ExchangeInSpecialRule.ContainsKey(opponentID))
+                        {
+                            var cardFromRequester = room.Cards2ExchangeInSpecialRule[id];       // 방금 고른 카드
+                            var cardFromTarget = room.Cards2ExchangeInSpecialRule[opponentID];  // 아까 신청자가 고른 카드
+
+                            // [중요] 실제 덱 데이터 교환 (List에서 제거하고 추가)
+                
+                            // 1. 신청자(Target)가 준 카드를 수락자(Requester)에게 줌
+                            room.Cards[id].Remove(cardFromRequester);
+                            room.Cards[id].Add(cardFromTarget);
+
+                            // 2. 수락자(Requester)가 준 카드를 신청자(Target)에게 줌
+                            room.Cards[opponentID].Remove(cardFromTarget);
+                            room.Cards[opponentID].Add(cardFromRequester);
+                
+                            Debug.Log($"[Server] Force Exchanged cards between {id} and {opponentID} immediately.");
+                        }
                     }
                 }
                 break;
@@ -1258,20 +1277,6 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
                         {
                             //��� ������ ī�� ��ȯ�� �Ϸ�����
                             Debug.Log($"[Special Rule] All players have successfully exchanged cards with their opponents.");
-
-
-                            //������ ī�� ����
-                            int player1 = room.NowSpecialRulePlayers[0];
-                            int player2 = room.NowSpecialRulePlayers[1];
-
-                            var player1Card = room.Cards2ExchangeInSpecialRule[player1];
-                            var player2Card = room.Cards2ExchangeInSpecialRule[player2];
-
-                            room.Cards[player1].Remove(player1Card);
-                            room.Cards[player1].Add(player2Card); // �÷��̾� 1�� ī�忡 �÷��̾� 2�� ī�带 �߰�
-
-                            room.Cards[player2].Remove(player2Card);
-                            room.Cards[player2].Add(player1Card); // �÷��̾� 2�� ī�忡 �÷��̾� 1�� ī�带 �߰�
                             room.PlayerCountWhoAcceptedExchangeInSpecialRule = 0;
                         }
                     }
@@ -1427,12 +1432,42 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if (finalLoser != -1)
         {
+            // 1. 최종 결과 전송
             foreach (var pl in room.Players)
             {
                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_FinalResult);
                 PacketWriter.WriteInt(finalLoser);
                 SendPacket(pl);
             }
+            
+            // 게임이 끝났으니, 재시작 동의 목록을 초기화하고 봇들을 미리 넣어둡니다.
+            room.PlayersAgreedReGame.Clear();
+            
+            int botCount = 0;
+            foreach (var user in room.Players)
+            {
+                if (user.IsBot) // 봇이라면
+                {
+                    if (!room.PlayersAgreedReGame.Contains(user.Id))
+                    {
+                        room.PlayersAgreedReGame.Add(user.Id); // 동의 목록에 추가
+                        botCount++;
+                    }
+                }
+            }
+
+            // 봇이 한 명이라도 있다면, 현재 동의 현황(봇들 포함)을 사람들에게 알림
+            if (botCount > 0)
+            {
+                Debug.Log($"[Server] {botCount} Bots auto-agreed to ReGame.");
+                foreach (var pl in room.Players)
+                {
+                    PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ReGameResult);
+                    PacketWriter.WriteByte((byte)room.PlayersAgreedReGame.Count);
+                    SendPacket(pl);
+                }
+            }
+
             return;
         }
 

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,8 +6,8 @@ public class QuestController : MonoBehaviour
 {
     //InGameManager.Instance.GetUserIDs(), InGameManager.Instance.GetAllCards(), InGameManager.Instance.LocalPlayer.ID, InGameManager.Instance.Mode, RoundCounter
 
-    static bool IsAlreadyOnceLoseExceptSpecialRule = false; //ÇÑ ¶ó¿îµå¿¡¼­¶óµµ Áø ÀûÀÌ ÀÖ´Â°¡?
-    static bool IsAlreadyOnceLoseIncludeSpecialRule = false; //ÇÑ ¶ó¿îµå¿¡¼­¶óµµ Áø ÀûÀÌ ÀÖ´Â°¡?
+    static bool IsAlreadyOnceLoseExceptSpecialRule = false; //í•œ ë¼ìš´ë“œì—ì„œë¼ë„ ì§„ ì ì´ ìˆëŠ”ê°€?
+    static bool IsAlreadyOnceLoseIncludeSpecialRule = false; //í•œ ë¼ìš´ë“œì—ì„œë¼ë„ ì§„ ì ì´ ìˆëŠ”ê°€?
 
     static bool IsExchangedCardWithOpponent = false;
     static float StartTime = 0.0f;
@@ -31,7 +31,7 @@ public class QuestController : MonoBehaviour
         var rnd = InGameManager.Instance.IsRandomMode;
         var round = InGameUser_PUN.Instance.RoundCounter;
 
-        //ÇÑ ¶ó¿îµåµµ ÁöÁö ¾Ê°í ½Â¸®ÇÏ±â
+        //í•œ ë¼ìš´ë“œë„ ì§€ì§€ ì•Šê³  ìŠ¹ë¦¬í•˜ê¸°
         if(IsAlreadyOnceLoseIncludeSpecialRule == false)
         {
             AchievementManager.Unlock(AchievementId.WinNoLoss);
@@ -60,22 +60,22 @@ public class QuestController : MonoBehaviour
 
         var localCard = cards[localId];
 
-        //10º° Á·º¸·Î ¶ó¿îµå ½Â¸®ÇÏ±â
+        //10ë³„ ì¡±ë³´ë¡œ ë¼ìš´ë“œ ìŠ¹ë¦¬í•˜ê¸°
         if (localCard[0].Value == 9 && localCard[1].Value == 9)
         {
             AchievementManager.Unlock(AchievementId.WinPairTen);
         }
 
-        //0´Ş Á·º¸·Î ¶ó¿îµå ½Â¸®ÇÏ±â
+        //0ë‹¬ ì¡±ë³´ë¡œ ë¼ìš´ë“œ ìŠ¹ë¦¬í•˜ê¸°
         if (localCard[0].Value != localCard[1].Value && (localCard[0].Value + localCard[1].Value + 2) % 10 == 0)
         {
             AchievementManager.Unlock(AchievementId.WinZeroMoon);
         }
 
-        if(InGameManager.Instance.LocalPlayerUIDrawer.GetIOText() == ConstStrings.Text_In) //³»°¡ ÀÎ
+        if(InGameManager.Instance.LocalPlayerUIDrawer.GetIOText() == ConstStrings.Text_In) //ë‚´ê°€ ì¸
         {
             int loserScore = 0;
-            //»ó´ë°¡ ¾Æ¿ô
+            //ìƒëŒ€ê°€ ì•„ì›ƒ
             if(InGameManager.Instance.RemotePlayerUIDrawers[0].GetIOText() == ConstStrings.Text_Out)
             {
                 loserScore = InGameServer_PUN.CalculateScore(InGameManager.Instance.RemotePlayerUIDrawers[0].Target.ThisDeck.GetCardsAsList());
@@ -130,7 +130,7 @@ public class QuestController : MonoBehaviour
 
         if(IsExchangedCardWithOpponent == true)
         {
-            AchievementManager.Unlock(AchievementId.WinSpecialRuleAfterExhangeCardWithOpponent);
+            AchievementManager.Unlock(AchievementId.WinSpecialRuleAfterExchangeCardWithOpponent);
         }
     }
     public static void OnLoseSpecialGame()

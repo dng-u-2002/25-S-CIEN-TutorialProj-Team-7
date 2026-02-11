@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public enum CursorState { Default, Hover, Pressed, Disabled }
 
@@ -12,7 +12,7 @@ public class CursorManager : MonoBehaviour
     [SerializeField] Texture2D pressedCursor;
     [SerializeField] Texture2D disabledCursor;
 
-    [Header("Hotspots (ÇÈ¼¿ ÁÂÇ¥, ÀÌ¹ÌÁö ÁÂ»ó´Ü=0,0)")]
+    [Header("Hotspots (í”½ì…€ ì¢Œí‘œ, ì´ë¯¸ì§€ ì¢Œìƒë‹¨=0,0)")]
     [SerializeField] Vector2 defaultHotspot;
     [SerializeField] Vector2 hoverHotspot;
     [SerializeField] Vector2 pressedHotspot;
@@ -46,10 +46,10 @@ public class CursorManager : MonoBehaviour
             case CursorState.Disabled: tex = disabledCursor; hot = disabledHotspot; break;
         }
 
-        Cursor.SetCursor(tex, hot, CursorMode.ForceSoftware); // Auto¸é °¡´ÉÇÏ¸é ÇÏµå¿ş¾î Ä¿¼­ »ç¿ë
+        Cursor.SetCursor(tex, hot, CursorMode.ForceSoftware); // Autoë©´ ê°€ëŠ¥í•˜ë©´ í•˜ë“œì›¨ì–´ ì»¤ì„œ ì‚¬ìš©
     }
 
-    // Æ÷Ä¿½º ÀÒ°Å³ª ºñÈ°¼ºÈ­µÉ ¶§ ±âº»À¸·Î º¹±Í(Ä¿¼­°¡ °É¸®´Â »óÈ² ¹æÁö)
+    // í¬ì»¤ìŠ¤ ìƒê±°ë‚˜ ë¹„í™œì„±í™”ë  ë•Œ ê¸°ë³¸ìœ¼ë¡œ ë³µê·€(ì»¤ì„œê°€ ê±¸ë¦¬ëŠ” ìƒí™© ë°©ì§€)
     void OnApplicationFocus(bool focus) { if (!focus) SetState(CursorState.Default); }
     void OnDisable() { if (Instance == this) Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto); }
 }

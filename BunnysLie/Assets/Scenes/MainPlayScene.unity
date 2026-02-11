@@ -1052,9 +1052,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.00017526746
     y: 0
-    width: 1
+    width: 0.99964947
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -2028,6 +2028,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87310f3fbe19e0479c2d325fa457124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Card2Exchange:
+    Value: 0
+    Type: 0
+    CardGameObject: {fileID: 0}
   _ID: 0
   IsLocal: 0
   IsOrderDetermined: 0
@@ -9726,6 +9730,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87310f3fbe19e0479c2d325fa457124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Card2Exchange:
+    Value: 0
+    Type: 0
+    CardGameObject: {fileID: 0}
   _ID: 0
   IsLocal: 0
   IsOrderDetermined: 0
@@ -11402,6 +11410,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87310f3fbe19e0479c2d325fa457124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Card2Exchange:
+    Value: 0
+    Type: 0
+    CardGameObject: {fileID: 0}
   _ID: 0
   IsLocal: 1
   IsOrderDetermined: 0
@@ -16133,7 +16145,7 @@ MonoBehaviour:
   OutPlayerCount: 0
   ButtonClickSound: {fileID: 2040274976}
   NormalBGM: {fileID: 1851025400}
-  SpecailBGM: {fileID: 1459357541}
+  SpecialBGM: {fileID: 1459357541}
 --- !u!4 &2040274974
 Transform:
   m_ObjectHideFlags: 0

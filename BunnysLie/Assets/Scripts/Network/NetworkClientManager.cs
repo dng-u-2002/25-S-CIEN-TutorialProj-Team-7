@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
@@ -17,23 +17,23 @@ public class NetworkClientManager : MonoBehaviour//, INetEventListener
     //[SerializeField] string tmpPassword;
     //public static NetworkClientManager Instance { get; private set; }
 
-    //[Header("¼­¹ö ¼³Á¤")]
+    //[Header("ì„œë²„ ì„¤ì •")]
     //public string serverIP = "127.0.0.1";
     //public int serverPort_login = 9000;
     //public int serverPort_ingame = 9001;
 
-    //[Header("ÇÁ¸®ÆÕ")]
-    //public GameObject playerPrefab;  // ³×Æ®¿öÅ© ÇÃ·¹ÀÌ¾î »ı¼º¿ë
+    //[Header("í”„ë¦¬íŒ¹")]
+    //public GameObject playerPrefab;  // ë„¤íŠ¸ì›Œí¬ í”Œë ˆì´ì–´ ìƒì„±ìš©
 
-    //// LiteNetLib °´Ã¼
+    //// LiteNetLib ê°ì²´
     //private NetManager ThisClient;
     //private NetPeer ServerPeer;
     //private NetDataWriter Writer;
 
-    //// ³» Å¬¶óÀÌ¾ğÆ® ID (¼­¹ö°¡ ÇÒ´ç)
+    //// ë‚´ í´ë¼ì´ì–¸íŠ¸ ID (ì„œë²„ê°€ í• ë‹¹)
     //private string Id;
 
-    //// Á¢¼ÓµÈ ¸ğµç ÇÃ·¹ÀÌ¾î(³» ·ÎÄÃ Æ÷ÇÔ)ÀÇ °´Ã¼
+    //// ì ‘ì†ëœ ëª¨ë“  í”Œë ˆì´ì–´(ë‚´ ë¡œì»¬ í¬í•¨)ì˜ ê°ì²´
     //private ConcurrentDictionary<string, GameObject> Players
     //    = new ConcurrentDictionary<string, GameObject>();
 
@@ -46,22 +46,22 @@ public class NetworkClientManager : MonoBehaviour//, INetEventListener
 
     //void Start()
     //{
-    //    // (1) µ¥ÀÌÅÍ Á÷·ÄÈ­ µµ¿ì¹Ì
+    //    // (1) ë°ì´í„° ì§ë ¬í™” ë„ìš°ë¯¸
     //    Writer = new NetDataWriter();
 
-    //    // (2) Å¬¶óÀÌ¾ğÆ® ¸Å´ÏÀú »ı¼º ¹× ½ÃÀÛ
+    //    // (2) í´ë¼ì´ì–¸íŠ¸ ë§¤ë‹ˆì € ìƒì„± ë° ì‹œì‘
     //    ThisClient = new NetManager(this)
     //    {
     //        AutoRecycle = true
     //    };
     //    ThisClient.Start();
-    //    ServerPeer = ThisClient.Connect(serverIP, serverPort_login, "MMO");  // ¼­¹ö¿¡ Á¢¼Ó ¿äÃ»
-    //    Debug.Log($"¼­¹ö ¿¬°á ½Ãµµ: {serverIP}:{serverPort_login}");
+    //    ServerPeer = ThisClient.Connect(serverIP, serverPort_login, "MMO");  // ì„œë²„ì— ì ‘ì† ìš”ì²­
+    //    Debug.Log($"ì„œë²„ ì—°ê²° ì‹œë„: {serverIP}:{serverPort_login}");
     //}
 
     //void Update()
     //{
-    //    // µé¾î¿À´Â ³×Æ®¿öÅ© ÀÌº¥Æ® Ã³¸® (PollEvents ¹İµå½Ã ÁÖ±â È£Ãâ)
+    //    // ë“¤ì–´ì˜¤ëŠ” ë„¤íŠ¸ì›Œí¬ ì´ë²¤íŠ¸ ì²˜ë¦¬ (PollEvents ë°˜ë“œì‹œ ì£¼ê¸° í˜¸ì¶œ)
     //    ThisClient.PollEvents();
     //}
 
@@ -70,17 +70,17 @@ public class NetworkClientManager : MonoBehaviour//, INetEventListener
     //    ThisClient.Stop();
     //}
 
-    //#region INetEventListener ±¸Çö
+    //#region INetEventListener êµ¬í˜„
 
     //public void OnPeerConnected(NetPeer peer)
     //{
-    //    Debug.Log("¼­¹ö ¿¬°áµÊ: " + peer.Id);
+    //    Debug.Log("ì„œë²„ ì—°ê²°ë¨: " + peer.Id);
     //}
 
     //public void OnPeerDisconnected(NetPeer peer, DisconnectInfo info)
     //{
-    //    Debug.Log("¼­¹ö ¿¬°á ÇØÁ¦");
-    //    // ¸ğµÎ »èÁ¦
+    //    Debug.Log("ì„œë²„ ì—°ê²° í•´ì œ");
+    //    // ëª¨ë‘ ì‚­ì œ
     //    foreach (var kv in Players)
     //        Destroy(kv.Value);
     //    Players.Clear();
@@ -92,10 +92,10 @@ public class NetworkClientManager : MonoBehaviour//, INetEventListener
 
     //#endregion
 
-    //#region ÆĞÅ¶ Àü¼Û ÇÔ¼ö
+    //#region íŒ¨í‚· ì „ì†¡ í•¨ìˆ˜
 
     ///// <summary>
-    ///// ·ÎÄÃ À§Ä¡/È¸Àü Á¤º¸¸¦ ¼­¹ö·Î Àü¼Û
+    ///// ë¡œì»¬ ìœ„ì¹˜/íšŒì „ ì •ë³´ë¥¼ ì„œë²„ë¡œ ì „ì†¡
     ///// </summary>
     //public void SendMovement(Vector3 position, float rotY)
     //{
@@ -103,17 +103,17 @@ public class NetworkClientManager : MonoBehaviour//, INetEventListener
     //        return;
 
     //    //Writer.Reset();
-    //    //Writer.Put((byte)PacketType.Handle_Movement);  // ¸Ş½ÃÁö Å¸ÀÔ
+    //    //Writer.Put((byte)PacketType.Handle_Movement);  // ë©”ì‹œì§€ íƒ€ì…
     //    //Writer.Put(position.x);
     //    //Writer.Put(position.y);
     //    //Writer.Put(position.z);
     //    //Writer.Put(rotY);
-    //    //// ReliableSequenced: ¼ø¼­ º¸Àå, Áßº¹ ÆĞÅ¶ Á¦°Å
+    //    //// ReliableSequenced: ìˆœì„œ ë³´ì¥, ì¤‘ë³µ íŒ¨í‚· ì œê±°
     //    //ServerPeer.Send(Writer, DeliveryMethod.ReliableSequenced);
     //}
 
     ///// <summary>
-    ///// °ø°İ ¸í·É(Å¸°Ù ÁÂÇ¥)À» ¼­¹ö·Î Àü¼Û
+    ///// ê³µê²© ëª…ë ¹(íƒ€ê²Ÿ ì¢Œí‘œ)ì„ ì„œë²„ë¡œ ì „ì†¡
     ///// </summary>
     //public void SendAttack(Vector3 targetPos)
     //{
@@ -125,27 +125,27 @@ public class NetworkClientManager : MonoBehaviour//, INetEventListener
     //    //Writer.Put(targetPos.x);
     //    //Writer.Put(targetPos.y);
     //    //Writer.Put(targetPos.z);
-    //    //// ReliableOrdered: ¼ø¼­ Áß¿ä
+    //    //// ReliableOrdered: ìˆœì„œ ì¤‘ìš”
     //    //ServerPeer.Send(Writer, DeliveryMethod.ReliableOrdered);
     //}
 
     //#endregion
 
-    //#region »óÅÂ ºê·ÎµåÄ³½ºÆ® Ã³¸®
+    //#region ìƒíƒœ ë¸Œë¡œë“œìºìŠ¤íŠ¸ ì²˜ë¦¬
 
     //void HandleStateBroadcast(NetPacketReader reader)
     //{
-    //    int count = reader.GetInt();  // ÇÃ·¹ÀÌ¾î ¼ö
+    //    int count = reader.GetInt();  // í”Œë ˆì´ì–´ ìˆ˜
     //    for (int i = 0; i < count; i++)
     //    {
     //        string id = reader.GetString();
-    //        if(id == Id) continue;  // ³» ÇÃ·¹ÀÌ¾î´Â ¹«½Ã
+    //        if(id == Id) continue;  // ë‚´ í”Œë ˆì´ì–´ëŠ” ë¬´ì‹œ
     //        float px = reader.GetFloat();
     //        float py = reader.GetFloat();
     //        float pz = reader.GetFloat();
     //        float ry = reader.GetFloat();
 
-    //        // ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ® ¾øÀ¸¸é »ı¼º, ÀÖÀ¸¸é À§Ä¡/È¸Àü °»½Å
+    //        // í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ ì—†ìœ¼ë©´ ìƒì„±, ìˆìœ¼ë©´ ìœ„ì¹˜/íšŒì „ ê°±ì‹ 
     //        var go = Players.GetOrAdd(id, _ => CreatePlayerObject(id, isLocal: false));
     //        go.transform.position = new Vector3(px, py, pz);
     //        go.transform.rotation = Quaternion.Euler(0, ry, 0);
@@ -160,7 +160,7 @@ public class NetworkClientManager : MonoBehaviour//, INetEventListener
     //    var v = go.GetComponent<PlayerCharacterCreator>();
     //    var chara= v.CreateCharacter(new CharacterData
     //    {
-    //        Class = eCharacterClass.Eltanin,  // ¿¹½Ã·Î Eltanin Å¬·¡½º »ç¿ë
+    //        Class = eCharacterClass.Eltanin,  // ì˜ˆì‹œë¡œ Eltanin í´ë˜ìŠ¤ ì‚¬ìš©
     //        Name = id
     //    });
     //    //go.GetComponent<PlayerInput>()?.Initialize(isLocal);
@@ -178,10 +178,10 @@ public class NetworkClientManager : MonoBehaviour//, INetEventListener
     //    {
     //        case PacketType.HandShake:
     //            Id = reader.GetString();
-    //            Debug.Log("³» Å¬¶óÀÌ¾ğÆ® ID: " + Id);
+    //            Debug.Log("ë‚´ í´ë¼ì´ì–¸íŠ¸ ID: " + Id);
     //            break;
     //        case PacketType.InitializationResponse_InGame:
-    //            // ³» ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ® »ı¼º
+    //            // ë‚´ í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ ìƒì„±
     //            var p = CreatePlayerObject(Id, isLocal: true);
     //            Players.TryAdd(Id, p);
     //            break;
@@ -196,16 +196,16 @@ public class NetworkClientManager : MonoBehaviour//, INetEventListener
     //            if (success)
     //            {
     //                Writer.Reset();
-    //                Writer.Put((byte)PacketType.InitializationRequest_InGame);  // ¸Ş½ÃÁö Å¸ÀÔ
+    //                Writer.Put((byte)PacketType.InitializationRequest_InGame);  // ë©”ì‹œì§€ íƒ€ì…
     //                Writer.Put(ComputeSHA256(tmpUserName + tmpPassword));
-    //                // ReliableSequenced: ¼ø¼­ º¸Àå, Áßº¹ ÆĞÅ¶ Á¦°Å
+    //                // ReliableSequenced: ìˆœì„œ ë³´ì¥, ì¤‘ë³µ íŒ¨í‚· ì œê±°
     //                ServerPeer.Send(Writer, DeliveryMethod.ReliableSequenced);
 
     //            }
     //            else
     //            {
     //                string errorMsg = reader.GetString();
-    //                Debug.LogError($"·Î±×ÀÎ ½ÇÆĞ: {errorMsg}");
+    //                Debug.LogError($"ë¡œê·¸ì¸ ì‹¤íŒ¨: {errorMsg}");
     //            }
     //            break;
     //    }
