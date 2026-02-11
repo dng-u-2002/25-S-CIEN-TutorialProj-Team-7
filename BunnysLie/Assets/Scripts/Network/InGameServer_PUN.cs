@@ -1432,12 +1432,42 @@ public class InGameServer_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if (finalLoser != -1)
         {
+            // 1. 최종 결과 전송
             foreach (var pl in room.Players)
             {
                 PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_FinalResult);
                 PacketWriter.WriteInt(finalLoser);
                 SendPacket(pl);
             }
+            
+            // 게임이 끝났으니, 재시작 동의 목록을 초기화하고 봇들을 미리 넣어둡니다.
+            room.PlayersAgreedReGame.Clear();
+            
+            int botCount = 0;
+            foreach (var user in room.Players)
+            {
+                if (user.IsBot) // 봇이라면
+                {
+                    if (!room.PlayersAgreedReGame.Contains(user.Id))
+                    {
+                        room.PlayersAgreedReGame.Add(user.Id); // 동의 목록에 추가
+                        botCount++;
+                    }
+                }
+            }
+
+            // 봇이 한 명이라도 있다면, 현재 동의 현황(봇들 포함)을 사람들에게 알림
+            if (botCount > 0)
+            {
+                Debug.Log($"[Server] {botCount} Bots auto-agreed to ReGame.");
+                foreach (var pl in room.Players)
+                {
+                    PacketWriter.CreateNewPacket((byte)ePacketType_InGameServer.Broadcast_ReGameResult);
+                    PacketWriter.WriteByte((byte)room.PlayersAgreedReGame.Count);
+                    SendPacket(pl);
+                }
+            }
+
             return;
         }
 
