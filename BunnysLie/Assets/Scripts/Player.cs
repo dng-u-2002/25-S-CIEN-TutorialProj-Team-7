@@ -157,12 +157,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_R.onClick.Invoke();
+            InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_S.onClick.Invoke();
             KeyboardCallback = null;
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_S.onClick.Invoke();
+            InGameManager.Instance.LocalPlayerUIDrawer.RPSButton_R.onClick.Invoke();
             KeyboardCallback = null;
         }
         if (Input.GetKeyDown(KeyCode.D))
