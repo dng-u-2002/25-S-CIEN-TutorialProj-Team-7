@@ -233,8 +233,16 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
     }
     void SetupEventListeners()
     {
-        PrevButton_ShowPrivateRoomButtons.onClick.AddListener(() => ShowPrivateMathcingButtons());
-        RealButton_ShowPrivateCodeEnterPanelButton.onClick.AddListener(() => ShowPrivateRoomPanel());
+        PrevButton_ShowPrivateRoomButtons.onClick.AddListener(() =>
+        {
+            ShowPrivateMathcingButtons();
+            ButtonClickSoundPlayer.Play();
+        });
+        RealButton_ShowPrivateCodeEnterPanelButton.onClick.AddListener(() =>
+        {
+            ShowPrivateRoomPanel();
+            ButtonClickSoundPlayer.Play();
+        });
         foreach(var bb in CancleBackButtons)
         {
             bb.onClick.AddListener(() =>
@@ -287,7 +295,11 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
             CreatePrivateRoom();
             ButtonClickSoundPlayer.Play();
         });
-        joinPrivateRoomButton.onClick.AddListener(() => JoinPrivateRoom());
+        joinPrivateRoomButton.onClick.AddListener(() =>
+        {
+            JoinPrivateRoom();
+            ButtonClickSoundPlayer.Play();
+        });
         
         cancelMatchmakingButton.onClick.AddListener(() => CancelMatching());
         cancelMatchmakingButton2.onClick.AddListener(() => CancelMatching());
