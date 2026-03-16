@@ -197,14 +197,15 @@ public class InGameUser_PUN : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             InGameManager.Instance.LocalPlayerUIDrawer.ShowPanelOnScreenCenter(ConstStrings.Message_NotEnoughPlayer, 3);
             AchievementManager.AddToStat_INT(StatsId.SUDDEN_END_COUNT, 1);
-            var d = FindFirstObjectByType<PunVoiceClient>();
-            if (d != null)
-                Destroy(d.gameObject);
-            PhotonNetwork.LeaveRoom();
+            
             DelayedFunctionHelper.InvokeDelayed(() =>
             {
+                var d = FindFirstObjectByType<PunVoiceClient>();
+                if (d != null) Destroy(d.gameObject);
+        
+                PhotonNetwork.LeaveRoom();
                 PhotonNetwork.LoadLevel("Lobby");
-            }, 2.0f);
+            }, 3.0f);
         }
         PreviousPlayerCount = PhotonNetwork.CurrentRoom.PlayerCount;
     }
